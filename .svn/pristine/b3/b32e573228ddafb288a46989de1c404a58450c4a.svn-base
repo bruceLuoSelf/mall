@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="shortcut icon" href="http://images001.5173cdn.com/images/common/1y/ico.ico">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <meta name="author" content=" ">
+    <meta name="Copyright" content=" ">
+    <meta name="Description" content=" ">
+    <meta name="Keywords" content="">
+    <title>5173.com-网络游戏|装备|游戏币|游戏帐号|寄售担保交易|游戏点卡|代练-安全快速贴心游戏交易服务平台</title>
+    <link href="./css/servicer_vote.css" rel="stylesheet"/>
+    <script src="./js/jquery.js" type="text/javascript"></script>
+    <script src="./js/jquery.cookie.js" type="text/javascript"></script>
+    <script src="./js/jquery.json-2.4.min.js" type="text/javascript"></script>
+    <script src="./js/jquery.vticker.js" type="text/javascript"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/business/servicerVote.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="container">
+    <div class="winners_module">
+        <div class="title">中奖名单：</div>
+        <div class="winners">
+            <ul>
+                <li><span class="col_1">me***ry</span><span class="col_2">获得</span><span class="col_3">10Q币</span></li>
+                <li><span class="col_1">te***eta</span><span class="col_2">获得</span><span class="col_3">10话费</span></li>
+                <li><span class="col_1">a24***5240</span><span class="col_2">获得</span><span class="col_3">10Q币</span></li>
+                <li><span class="col_1">313***638nea</span><span class="col_2">获得</span><span class="col_3">10话费</span></li>
+                <li><span class="col_1">Res***eShadow</span><span class="col_2">获得</span><span class="col_3">10Q币</span></li>
+                <li><span class="col_1">ma5***27</span><span class="col_2">获得</span><span class="col_3">10话费</span></li>
+                <li><span class="col_1">li***_1ove</span><span class="col_2">获得</span><span class="col_3">20Q币</span></li>
+                <li><span class="col_1">pa***yuan456</span><span class="col_2">获得</span><span class="col_3">20话费</span></li>
+                <li><span class="col_1">a5***450</span><span class="col_2">获得</span><span class="col_3">音箱</span></li>
+                <li><span class="col_1">79***25</span><span class="col_2">获得</span><span class="col_3">豆浆机</span></li>
+                <li><span class="col_1">qi***an_103</span><span class="col_2">获得</span><span class="col_3">10话费</span></li>
+                <li><span class="col_1">x***0</span><span class="col_2">获得</span><span class="col_3">10Q币</span></li>
+                <li><span class="col_1">l**b</span><span class="col_2">获得</span><span class="col_3">20Q币</span></li>
+                <li><span class="col_1">92***1258a</span><span class="col_2">获得</span><span class="col_3">20话费</span></li>
+                <li><span class="col_1">ji***99</span><span class="col_2">获得</span><span class="col_3">10Q币</span></li>
+                <li><span class="col_1">11***77090</span><span class="col_2">获得</span><span class="col_3">10话费</span></li>
+                <li><span class="col_1">xd***000</span><span class="col_2">获得</span><span class="col_3">10Q币</span></li>
+                <li><span class="col_1">51**00</span><span class="col_2">获得</span><span class="col_3">10话费</span></li>
+                <li><span class="col_1">123***033</span><span class="col_2">获得</span><span class="col_3">10Q币</span></li>
+                <li><span class="col_1">che***28881</span><span class="col_2">获得</span><span class="col_3">10话费</span></li>
+                <li><span class="col_1">RRR***322313</span><span class="col_2">获得</span><span class="col_3">音箱</span></li>
+                <li><span class="col_1">584***77</span><span class="col_2">获得</span><span class="col_3">豆浆机</span></li>
+                <li><span class="col_1">Iwa***re</span><span class="col_2">获得</span><span class="col_3">20话费</span></li>
+                <li><span class="col_1">g***sir</span><span class="col_2">获得</span><span class="col_3">音箱</span></li>
+                <li><span class="col_1">y***ngz</span><span class="col_2">获得</span><span class="col_3">20Q币</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="top"></div>
+    <div class="servicers">
+        <div class="column1"></div>
+        <div class="column2">
+            <div class="servicer" dataId="1000064"></div>
+            <div class="servicer" dataId="1000065"></div>
+            <div class="servicer" dataId="1000044"></div>
+            <div class="servicer" dataId="1000075"></div>
+            <div class="servicer" dataId="1000068"></div>
+            <div class="servicer" dataId="1000074"></div>
+        </div>
+    </div>
+    <div class="votes">
+        <div class="column1"></div>
+        <div class="column2">
+            <div class="vote"><a href="###" dataId="1000064">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000065">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000044">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000075">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000068">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000074">投我</a></div>
+        </div>
+    </div>
+    <div style="height:5px"></div>
+    <div class="servicers">
+        <div class="column1"></div>
+        <div class="column2">
+            <div class="servicer" dataId="1000076"></div>
+            <div class="servicer" dataId="1000078"></div>
+            <div class="servicer" dataId="1000073"></div>
+            <div class="servicer" dataId="1000077"></div>
+            <div class="servicer" dataId="1000045"></div>
+            <div class="servicer" dataId="1000072"></div>
+        </div>
+    </div>
+    <div class="votes">
+        <div class="column1"></div>
+        <div class="column2">
+            <div class="vote"><a href="###" dataId="1000076">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000078">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000073">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000077">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000045">投我</a></div>
+            <div class="vote"><a href="###" dataId="1000072">投我</a></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,362 @@
+package com.wzitech.gamegold.shorder.business.impl;
+
+import com.google.common.collect.Maps;
+import com.wzitech.chaos.framework.server.common.AbstractBusinessObject;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.enums.DeliveryOrderStatus;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.shorder.business.IDeliveryOrderLogManager;
+import com.wzitech.gamegold.shorder.business.IDeliverySubOrderManager;
+import com.wzitech.gamegold.shorder.business.ISystemConfigManager;
+import com.wzitech.gamegold.shorder.dao.IDeliveryOrderLogDao;
+import com.wzitech.gamegold.shorder.dao.IDeliverySubOrderDao;
+import com.wzitech.gamegold.shorder.dao.IDeliverySubOrderRedisDao;
+import com.wzitech.gamegold.shorder.entity.DeliverySubOrder;
+import com.wzitech.gamegold.shorder.entity.OrderLog;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 出货子订单管理
+ *
+ * @author yemq
+ */
+@Component
+public class DeliverySubOrderManagerImpl extends AbstractBusinessObject implements IDeliverySubOrderManager {
+    @Autowired
+    IDeliveryOrderLogDao deliveryOrderLogDao;
+    @Autowired
+    IDeliveryOrderLogManager deliveryOrderLogManager;
+    @Autowired
+    private IDeliverySubOrderDao deliverySubOrderDao;
+    @Autowired
+    private IDeliverySubOrderRedisDao deliverysub;
+    @Autowired
+    private ISystemConfigManager systemConfigManager;
+
+    /**
+     * 查询等待发送给机器人的订单
+     *
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<DeliverySubOrder> queryWaitForProcessOrders() {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("status", DeliveryOrderStatus.WAIT_TRADE.getCode());
+        return deliverySubOrderDao.selectByMap(params, "create_time", true);
+    }
+
+    /**
+     * 改变订单状态
+     *
+     * @param id     出货子订单ID
+     * @param status
+     */
+    @Override
+    @Transactional
+    public void changeState(long id, int status) {
+        DeliverySubOrder order = deliverySubOrderDao.selectByIdForUpdate(id);
+        order.setStatus(status);
+        deliverySubOrderDao.update(order);
+    }
+
+    /**
+     * 查找所有符合条件的数据
+     *
+     * @param paramMap
+     * @return
+     */
+    @Override
+    public List<DeliverySubOrder> querySubOrders(Map<String, Object> paramMap) {
+        return deliverySubOrderDao.selectByMap(paramMap);
+    }
+
+    /**
+     * 分页查找订单
+     *
+     * @param map
+     * @param start
+     * @param pageSize
+     * @param orderBy
+     * @param isAsc
+     * @return
+     */
+    @Override
+    public GenericPage<DeliverySubOrder> queryListInPage(Map<String, Object> map, int start, int pageSize, String orderBy, boolean isAsc) {
+        if (null == map) {
+            map = new HashMap<String, Object>();
+        }
+
+        //检查分页参数
+        if (pageSize < 1) {
+            throw new IllegalArgumentException("分页pageSize参数必须大于1");
+        }
+
+        if (start < 0) {
+            throw new IllegalArgumentException("分页startIndex参数必须大于0");
+        }
+
+        return deliverySubOrderDao.selectByMap(map, pageSize, start, orderBy, isAsc);
+    }
+
+    /**
+     * 根据主订单id查找子订单列表
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<DeliverySubOrder> querySubOrdersByOrderId(Long id) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("chId", id);
+        return deliverySubOrderDao.selectByMap(params);
+    }
+
+    /**
+     * 查询账号是否在交易中
+     *
+     * @param buyerAccount
+     * @param buyerId
+     * @param gameName
+     * @param regionName
+     * @param serverName
+     * @param raceName
+     * @param gameAccount
+     * @return
+     */
+    public boolean queryGameAccountIsInTrading(String buyerAccount, String buyerId, String gameName, String regionName,
+                                               String serverName, String raceName, String gameAccount) {
+        StringBuilder s = new StringBuilder();
+        s.append(DeliveryOrderStatus.TRADING.getCode()).append(",");
+        s.append(DeliveryOrderStatus.MANUAL_INTERVENTION.getCode()).append(",");
+        s.append(DeliveryOrderStatus.APPLY_COMPLETE_PART.getCode());
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("buyerAccount", buyerAccount);
+        params.put("buyerUid", buyerId);
+        params.put("gameName", gameName);
+        params.put("region", regionName);
+        params.put("server", serverName);
+        params.put("gameRace", raceName);
+        params.put("gameAccount", gameAccount);
+        params.put("multiStatus", s.toString());
+        params.put("locked", true);
+        int count = deliverySubOrderDao.countByMap(params);
+        return (count > 0) ? true : false;
+    }
+
+    /**
+     * 查找异常转人工订单
+     *
+     * @param queryMap
+     * @return
+     */
+    @Override
+    public List<DeliverySubOrder> queryMachineAbnormalTurnManualOrderList(Map<String, Object> queryMap) {
+        List<DeliverySubOrder> deliverySubOrders = deliverySubOrderDao.queryMachineAbnormalTurnManualOrderList(queryMap);
+        return deliverySubOrders;
+    }
+
+    /**
+     * 查询交易超时的订单(一直未点上游戏交易或是一直在排队的订单，超过30分钟后将被视为交易超时)
+     *
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<Long> queryWithdrawalTradeTimeoutOrders() {
+        return deliverySubOrderDao.queryWithdrawalTradeTimeoutOrders();
+    }
+
+    @Override
+    public DeliverySubOrder queryUniqueSubOrder(Long id) {
+        return deliverySubOrderDao.selectByUniqueId(id);
+    }
+
+    /**
+     * 推送消息实现
+     *
+     * @param orderId
+     * @param message
+     */
+    @Override
+    public void pushMessage(String orderId, String message) {
+        OrderLog orderLog = new OrderLog();
+        orderLog.setOrderId(orderId);
+        //插入日志消息
+        orderLog.setLog(message);
+        deliveryOrderLogManager.writeLog(orderLog);
+    }
+
+    /**
+     * 取消订单
+     *
+     * @param orderId
+     */
+    @Override
+    public void cancellationOfOrder(String orderId, String reason, String remarks) {
+        List<DeliverySubOrder> deliverySubOrderList = deliverySubOrderDao.queryAllByOrderIdForUpdate(orderId);
+        if (deliverySubOrderList == null || deliverySubOrderList.size() != 1) {
+            throw new SystemException(ResponseCodes.TroppoMachineArtificialDeliverySubOrder.getCode(),
+                    ResponseCodes.TroppoMachineArtificialDeliverySubOrder.getMessage());
+        }
+        DeliverySubOrder deliverySubOrder = deliverySubOrderList.get(0);
+        if (deliverySubOrder != null) {
+            deliverySubOrder.setStatus(DeliveryOrderStatus.CANCEL.getCode());
+            deliverySubOrder.setRemarks(remarks);
+            deliverySubOrder.setUpdateTime(new Date());
+            deliverySubOrderDao.update(deliverySubOrder);
+            logger.info("由于" + reason + "原因，客服进行订单取消操作:{}");
+            //插入对应日志内容
+            OrderLog orderLog = new OrderLog();
+            orderLog.setOrderId(orderId);
+            orderLog.setCreateTime(new Date());
+            orderLog.setLog("订单取消");
+            deliveryOrderLogManager.writeLog(orderLog);
+        }
+
+    }
+    /**
+     * 取消订单
+     *
+     * @param
+     */
+    @Override
+    public void robotWithdrawalOrder(long id) {
+        DeliverySubOrder deliverySubOrder = deliverySubOrderDao.selectByIdForUpdate(id);
+        if (deliverySubOrder==null){
+            throw new SystemException(ResponseCodes.EmptyMachineArtificialDeliveryOrder.getCode(),
+                    ResponseCodes.EmptyMachineArtificialDeliveryOrder.getMessage());
+        }
+            deliverySubOrder.setStatus(DeliveryOrderStatus.CANCEL.getCode());
+            deliverySubOrder.setUpdateTime(new Date());
+            deliverySubOrderDao.update(deliverySubOrder);
+            logger.info("由于30分钟订单没有交易进行订单取消操作:{}");
+            //插入对应日志内容
+            OrderLog orderLog = new OrderLog();
+            orderLog.setCreateTime(new Date());
+            orderLog.setLog("订单取消");
+            deliveryOrderLogManager.writeLog(orderLog);
+
+
+    }
+
+
+    /**
+     * 根据订单id查询子订单列表 并锁表
+     *  ZW_C_JB_00004 sunyang
+     * @param orderId
+     * @return
+     */
+    @Override
+    public List<DeliverySubOrder> queryAllByOrderIdForUpdate(String orderId) {
+        if (StringUtils.isBlank(orderId)) {
+            throw new SystemException(ResponseCodes.EmptyOrderInfo.getCode(),
+                    ResponseCodes.EmptyOrderInfo.getMessage());
+        }
+        List<DeliverySubOrder> deliverySubOrders = deliverySubOrderDao.queryAllByOrderIdForUpdate(orderId);
+        if (deliverySubOrders == null || deliverySubOrders.size() <= 0) {
+            throw new SystemException(ResponseCodes.OrderLogIdInvalid.getCode(),
+                    ResponseCodes.OrderLogIdInvalid.getMessage());
+        }
+        return deliverySubOrders;
+    }
+
+    @Override
+    public List<DeliverySubOrder> queryWaitForTradeOrders(Long chId, Boolean locked) {
+        return deliverySubOrderDao.queryWaitForTradeOrders(chId, locked);
+    }
+
+    @Override
+    public DeliverySubOrder selectByOrderId(Long id, String orderId) {
+        return deliverySubOrderDao.selectByRobotId(id,orderId);
+    }
+
+
+
+    /**
+     * 查询主订单下所有子订单的输入发货数量
+     * @param id
+     * */
+    @Override
+    public Long queryInputCount(Long id) {
+        Long count = 0L;
+        List<DeliverySubOrder> deliverySubOrders = querySubOrdersByOrderId(id);
+        if (deliverySubOrders.size() > 0) {
+            for (DeliverySubOrder subOrder : deliverySubOrders) {
+                if (subOrder.getShInputCount() != null) {
+                    count += subOrder.getShInputCount();
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
+     * 根据子订单id查询子订单信息
+     * */
+    @Override
+    public DeliverySubOrder findSubOrderById(Long id){
+        return deliverySubOrderDao.findSubOrderById(id);
+    }
+
+    @Override
+    public Integer getOrderStatus(Long id) {
+        if(id==null){
+            throw new SystemException(ResponseCodes.NoSubOrder.getCode(),
+                    ResponseCodes.NoSubOrder.getMessage());
+        }
+        DeliverySubOrder deliverySubOrder=deliverysub.get(id.toString());
+        if(deliverySubOrder!=null){
+            return deliverySubOrder.getStatus();
+        }else {
+            DeliverySubOrder deliverySubOrderDB=deliverySubOrderDao.selectById(id);
+            if(deliverySubOrderDB==null){
+                throw new SystemException(ResponseCodes.OrderLogIdInvalid.getCode(),
+                        ResponseCodes.OrderLogIdInvalid.getMessage());
+            }else {
+                deliverysub.save(deliverySubOrderDB);
+                return deliverySubOrderDB.getStatus();
+            }
+        }
+    }
+
+    /**
+     * according to appealOrder to find subOrder details
+     * */
+    @Override
+    public  DeliverySubOrder findSubOrderByAppealOrder(String appealOrder){
+        return deliverySubOrderDao.findSubOrderByAppealOrder(appealOrder);
+    }
+
+    @Override
+    public  DeliverySubOrder findSubOrderByOrderId(String orderId){
+        return deliverySubOrderDao.findSubOrderByOrderId(orderId);
+    }
+
+    /**
+     * 邮寄收货自动化响应超时订单
+     */
+    @Override
+    public List<Long> queryMachineSellerDeliveryTimeoutOrders() {
+        int tradeTimeOut = systemConfigManager.sellerDeliveryTimeOut();
+        return deliverySubOrderDao.queryMachineSellerDeliveryTimeOutOrders(tradeTimeOut);
+    }
+
+    /**
+     * 邮寄与拍卖收货自动化响应超时订单
+     */
+    @Override
+    public List<Long> queryAllMachineSellerDeliveryTimeoutOrders() {
+        int tradeTimeOut = systemConfigManager.allSellerDeliveryTimeOut();
+        return deliverySubOrderDao.queryMachineSellerDeliveryTimeOutOrders(tradeTimeOut);
+    }
+}

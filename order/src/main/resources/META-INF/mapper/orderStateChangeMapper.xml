@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzitech.gamegold.order.entity.orderSyncEO">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.orderSyncEO">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="THIRD_ORDER_NO" property="thirdOrderNo" jdbcType="VARCHAR" />
+		<result column="STATE_INFO" property="stateInfo" jdbcType="VARCHAR" />
+		<result column="REASON_ID" property="reasonId" jdbcType="VARCHAR" />
+		<result column="REASON_DES" property="reasonDes" jdbcType="VARCHAR" />
+		<result column="SENT_STATE" property="sentState" jdbcType="NUMERIC" javaType="int" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<association column="SUB_ORDER_ID" property="conResultInfo" select="selectConfigResult" jdbcType="NUMERIC" javaType="long"/>
+	</resultMap>
+	
+	<!-- 查询客服信息 -->
+	<select id="selectConfigResult" parameterType="long" resultMap="com.wzitech.gamegold.order.entity.ConfigResultInfoEO.BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_CONFIGRESULT" WHERE "ID" = #{id}
+    </select>
+</mapper>

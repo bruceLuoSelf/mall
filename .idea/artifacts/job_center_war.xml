@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="job-center:war">
+    <output-path>$PROJECT_DIR$/gamegold-job-Center/target</output-path>
+    <root id="archive" name="job-center.war">
+      <element id="artifact" artifact-name="job-center:war exploded" />
+    </root>
+  </artifact>
+</component>

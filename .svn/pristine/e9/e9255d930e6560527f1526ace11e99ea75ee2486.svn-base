@@ -1,0 +1,785 @@
+/************************************************************************************
+ * Copyright 2013 WZITech Corporation. All rights reserved.
+ * <p/>
+ * 模	块：		GoodsInfoServiceImpl
+ * 包	名：		com.wzitech.gamegold.facade.frontend.service.goods.impl
+ * 项目名称：	gamegold-facade-frontend
+ * 作	者：		HeJian
+ * 创建时间：	2014-1-15
+ * 描	述：
+ * 更新纪录：	1. HeJian 创建于 2014-1-15 下午12:01:01
+ ************************************************************************************/
+package com.wzitech.gamegold.facade.frontend.service.goods.impl;
+
+
+import com.google.common.collect.Lists;
+import com.wzitech.chaos.framework.server.common.AbstractBaseService;
+import com.wzitech.chaos.framework.server.common.IServiceResponse;
+import com.wzitech.chaos.framework.server.common.ResponseStatus;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.common.utils.BeanMapper;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.constants.ServicesContants;
+import com.wzitech.gamegold.common.enums.GoodsCat;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.common.game.IGameInfoManager;
+import com.wzitech.gamegold.common.game.entity.AnalysisUrlResponse;
+import com.wzitech.gamegold.facade.frontend.service.goods.IGoodsInfoService;
+import com.wzitech.gamegold.facade.frontend.service.goods.dto.GoodsDTO;
+import com.wzitech.gamegold.facade.frontend.service.goods.dto.QueryGoodsInfoResponse;
+import com.wzitech.gamegold.facade.frontend.service.goods.dto.QueryGoodsRequest;
+import com.wzitech.gamegold.facade.frontend.service.goods.dto.QueryGoodsResponse;
+import com.wzitech.gamegold.goods.business.IGoodsInfoManager;
+import com.wzitech.gamegold.goods.business.IHotRecommendConfigManager;
+import com.wzitech.gamegold.goods.entity.GoodsInfo;
+import com.wzitech.gamegold.goods.entity.HotRecommendConfig;
+import com.wzitech.gamegold.order.business.IGameConfigManager;
+import com.wzitech.gamegold.order.entity.GameConfigEO;
+import com.wzitech.gamegold.repository.business.ICategoryRepositoryManager;
+import com.wzitech.gamegold.repository.business.IRepositoryManager;
+import com.wzitech.gamegold.repository.business.ISellerSettingManager;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import com.wzitech.gamegold.repository.entity.SellerSetting;
+import com.wzitech.gamegold.shorder.business.IShGameConfigManager;
+import com.wzitech.gamegold.shorder.entity.ShGameConfig;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import java.math.BigDecimal;
+import java.util.*;
+
+/**
+ * 商品服务端接口实现类
+ *
+ * @author HeJian
+ *         <p>
+ *         Update History
+ *         Date         Name            Reason For Update
+ *         ----------------------------------------------
+ *         2017/5/12    wrf              ZW_C_JB_00008商城增加通货
+ */
+@Service("GoodsInfoService")
+@Path("goods")
+@Produces("application/json;charset=UTF-8")
+@Consumes("application/json;charset=UTF-8")
+public class GoodsInfoServiceImpl extends AbstractBaseService implements IGoodsInfoService {
+    @Autowired
+    IGoodsInfoManager goodsInfoManager;
+
+    @Autowired
+    IGameInfoManager gameInfoManager;
+
+    @Autowired
+    IGameConfigManager gameConfigManager;
+
+    @Autowired
+    IHotRecommendConfigManager hotRecommendConfigManager;
+
+    @Autowired
+    IRepositoryManager repositoryManager;
+
+    @Autowired
+    ICategoryRepositoryManager categoryRepositoryManager;
+
+    @Autowired
+    ISellerSettingManager sellerSettingManager;
+
+    @Autowired
+    IShGameConfigManager shGameConfigManager;
+
+    @Path("querygoods")
+    @POST
+    @Override
+    public IServiceResponse queryGoods(QueryGoodsRequest queryGoodsRequest,
+                                       @Context HttpServletRequest request) {
+        logger.debug("当前查询商品:{}", queryGoodsRequest);
+        // 初始化返回数据
+        QueryGoodsResponse response = new QueryGoodsResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            Map<String, Object> queryMap = new HashMap<String, Object>();
+            if (queryGoodsRequest.getIsDeleted() != null) {
+                queryMap.put("isDeleted", queryGoodsRequest.getIsDeleted());
+            }
+            if (StringUtils.isNotEmpty(queryGoodsRequest.getGameName())) {
+                queryMap.put("backGameName", queryGoodsRequest.getGameName());
+            }
+            if (StringUtils.isNotEmpty(queryGoodsRequest.getGoodsTypeName())) {
+                queryMap.put("goodsTypeName", queryGoodsRequest.getGoodsTypeName());
+            }
+            if (StringUtils.isNotEmpty(queryGoodsRequest.getServer())) {
+                queryMap.put("backServer", queryGoodsRequest.getServer());
+            }
+            if (StringUtils.isNotEmpty(queryGoodsRequest.getRegion())) {
+                queryMap.put("backRegion", queryGoodsRequest.getRegion());
+            }
+            if (StringUtils.isNotEmpty(queryGoodsRequest.getGameRace())) {
+                queryMap.put("backGameRace", queryGoodsRequest.getGameRace());
+            }
+            if (StringUtils.isNotEmpty(queryGoodsRequest.getTitle())) {
+                queryMap.put("title", queryGoodsRequest.getTitle());
+            }
+            if (queryGoodsRequest.getGoodsId() != null) {
+                queryMap.put("id", queryGoodsRequest.getGoodsId());
+            }
+            GenericPage<GoodsInfo> goodsInfos = goodsInfoManager.queryGoodsInfo(queryMap, queryGoodsRequest.getPageSize(),
+                    queryGoodsRequest.getPubSize(), queryGoodsRequest.getOrderBy(), queryGoodsRequest.getIsAsc());
+            response.setGoodsInfos(goodsInfos);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询商品发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询商品发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询商品响应信息:{}", response);
+        return response;
+    }
+
+    @Path("selectgoods")
+    @GET
+    @Override
+    public IServiceResponse selectGoods(@QueryParam("") QueryGoodsRequest selectGoodsRequest,
+                                        @Context HttpServletRequest request) {
+        logger.debug("当前查询商品:{}", selectGoodsRequest);
+        // 初始化返回数据
+        QueryGoodsResponse response = new QueryGoodsResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            AnalysisUrlResponse analysisUrlResponse = gameInfoManager.analysisUrl(selectGoodsRequest.getCurrentUrl());
+            if (analysisUrlResponse == null) {
+                response.setGoodsList(new ArrayList<GoodsInfo>(0));
+            } else if (StringUtils.isEmpty(analysisUrlResponse.getGameName())
+                    || StringUtils.isEmpty(analysisUrlResponse.getGameRegion())
+                    || StringUtils.isEmpty(analysisUrlResponse.getGameServer())) {
+                response.setGoodsList(new ArrayList<GoodsInfo>(0));
+            } else {
+                String gameImageUrl = "";
+                if (StringUtils.isNotEmpty(analysisUrlResponse.getGameName())) {
+                    GameConfigEO gameConfigEO = gameConfigManager.selectGameConfig(analysisUrlResponse.getGameName(), analysisUrlResponse.getGoodsTypeName());
+                    if (gameConfigEO != null) {
+                        gameImageUrl = gameConfigEO.getGameImage();
+                    }
+                }
+
+                List<GoodsInfo> goodsList = new ArrayList<GoodsInfo>();
+                for (int i = 1; i <= 3; i++) {
+                    // 条件查询，当前页面各个栏目的商品
+                    GoodsInfo goods = goodsInfoManager.getMaxSaleGoods(analysisUrlResponse.getGameName(), analysisUrlResponse.getGoodsTypeName(), /**ZW_C_JB_00008_20170512 add   **/
+                            analysisUrlResponse.getGameRegion(), analysisUrlResponse.getGameServer(), analysisUrlResponse.getGameRace(), i);
+                    if (goods != null) {
+                        goods.setImageUrls(gameImageUrl);
+                        goodsList.add(goods);
+                    }
+                }
+                // 获取该游戏安心买热卖商品配置
+                HotRecommendConfig hotRecommendConfig = hotRecommendConfigManager.getConfigFromRedis(analysisUrlResponse.getGameName(), analysisUrlResponse.getGoodsTypeName());
+                response.setHotRecommendConfig(hotRecommendConfig);
+                response.setGoodsList(goodsList);
+            }
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询商品发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询商品发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询商品响应信息:{}", response);
+        return response;
+    }
+
+    @Path("singlegoods")
+    @GET
+    @Override
+    public IServiceResponse querySingleGoods(@QueryParam("") QueryGoodsRequest selectGoodsRequest,
+                                             @Context HttpServletRequest request) {
+        logger.debug("当前查询商品:{}", selectGoodsRequest);
+        // 初始化返回数据
+        QueryGoodsResponse response = new QueryGoodsResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            // 条件查询，当前页面各个栏目的商品
+            GoodsInfo goods = goodsInfoManager.getMaxSaleGoods(selectGoodsRequest.getGameName(), selectGoodsRequest.getGoodsTypeName(), /**ZW_C_JB_00008_20170512 add   **/
+                    selectGoodsRequest.getRegion(), selectGoodsRequest.getServer(), selectGoodsRequest.getGameRace(),
+                    selectGoodsRequest.getGoodsCat());
+            response.setGoodsInfo(goods);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询商品发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询商品发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询商品响应信息:{}", response);
+        return response;
+    }
+
+    /**
+     * 提供便民中心，查价格接口
+     *
+     * @param queryUnitPriceRequest
+     * @param request
+     * @return
+     */
+    @Path("queryunitprice")
+    @GET
+    @Override
+    public IServiceResponse queryUnitPrice(@QueryParam("") QueryGoodsRequest queryUnitPriceRequest,
+                                           @Context HttpServletRequest request) {
+        logger.debug("当前查询商品:{}", queryUnitPriceRequest);
+        // 初始化返回数据
+        QueryGoodsResponse response = new QueryGoodsResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            /*// 条件查询
+            List<GoodsInfo> goods = goodsInfoManager.queryUnitPrice(queryUnitPriceRequest.getGameID(),
+                    queryUnitPriceRequest.getRegionID(), queryUnitPriceRequest.getServerID(), queryUnitPriceRequest.getRaceID(), "ID", true);
+            response.setGoodsList(goods);*/
+
+            if (queryUnitPriceRequest == null) {
+                responseStatus.setStatus(ResponseCodes.IllegalArguments.getCode(), ResponseCodes.IllegalArguments.getMessage());
+                return response;
+            } else if (StringUtils.isBlank(queryUnitPriceRequest.getGameName())
+                    || StringUtils.isBlank(queryUnitPriceRequest.getRegion())
+                    || StringUtils.isBlank(queryUnitPriceRequest.getServer())) {
+                responseStatus.setStatus(ResponseCodes.IllegalArguments.getCode(), ResponseCodes.IllegalArguments.getMessage());
+                return response;
+            }
+
+            // 获取该游戏安心买热卖商品配置,本方法未被内部使用固定为游戏币
+            HotRecommendConfig hotRecommendConfig = hotRecommendConfigManager.getConfigFromRedis(queryUnitPriceRequest.getGameName(), ServicesContants.GOODS_TYPE_GOLD);/**ZW_C_JB_00008_20170512 end**/
+            if (hotRecommendConfig != null) {
+                // 获取游戏配置信息
+                GameConfigEO gameConfigEO = gameConfigManager.selectGameConfig(queryUnitPriceRequest.getGameName(), queryUnitPriceRequest.getGoodsTypeName());
+
+                // 是否显示栏目1的最低价商品
+                if (hotRecommendConfig.isShowCategory23()) {
+                    // 获取栏目1的最低价商品
+                    Map<String, Object> queryMap = new HashMap<String, Object>();
+                    queryMap.put("backGameName", queryUnitPriceRequest.getGameName());
+                    queryMap.put("backRegion", queryUnitPriceRequest.getRegion());
+                    queryMap.put("backServer", queryUnitPriceRequest.getServer());
+                    queryMap.put("gameRace", queryUnitPriceRequest.getGameRace());
+                    queryMap.put("goodsTypeName", queryUnitPriceRequest.getGoodsTypeName()); /**ZW_C_JB_00008_20170512 end**/
+                    List<RepositoryInfo> repositoryInfos = categoryRepositoryManager.queryCategoryRepository(queryMap, null);
+                    if (!CollectionUtils.isEmpty(repositoryInfos)) {
+                        int goodsCat = GoodsCat.Cat1.getCode(); // 最低价设置为栏目1
+                        String title = "";
+                        if (StringUtils.equals(queryUnitPriceRequest.getGameName(), "天涯明月刀")) {
+                            title = "当前最低价<br/>购买零风险<br/>交易无上限";
+                        } else {
+                            title = "当前最低价";
+                        }
+                        GoodsInfo goodsInfo = convertToGoodsInfo(repositoryInfos.get(0), gameConfigEO, goodsCat, title,
+                                queryUnitPriceRequest.getGameID(), queryUnitPriceRequest.getRegionID(),
+                                queryUnitPriceRequest.getServerID(), queryUnitPriceRequest.getRaceID());
+                        response.setGoodsList(Lists.newArrayList(goodsInfo));
+                    }
+                }
+            }
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询商品发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询商品发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询商品响应信息:{}", response);
+        return response;
+    }
+
+    /**
+     * 根据游戏区服阵营，查询1条最低价商品
+     *
+     * @param queryGoodsRequest
+     * @param request
+     * @return
+     */
+    @Path("queryLowerPriceGoods")
+    @GET
+    @Override
+    public IServiceResponse queryLowerPriceGoods(@QueryParam("") QueryGoodsRequest queryGoodsRequest,
+                                                 @Context HttpServletRequest request) {
+        // 初始化返回数据
+        QueryGoodsInfoResponse response = new QueryGoodsInfoResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+
+        if (queryGoodsRequest == null) {
+            responseStatus.setStatus(ResponseCodes.IllegalArguments.getCode(), ResponseCodes.IllegalArguments.getMessage());
+            return response;
+        } else if (StringUtils.isBlank(queryGoodsRequest.getGameName())
+                || StringUtils.isBlank(queryGoodsRequest.getRegion())
+                || StringUtils.isBlank(queryGoodsRequest.getServer())) {
+            responseStatus.setStatus(ResponseCodes.IllegalArguments.getCode(), ResponseCodes.IllegalArguments.getMessage());
+            return response;
+        }
+
+        try {
+            // 获取该游戏安心买热卖商品配置,本方法未被内部使用,默认为游戏币
+            HotRecommendConfig hotRecommendConfig = hotRecommendConfigManager.getConfigFromRedis(queryGoodsRequest.getGameName(), queryGoodsRequest.getGoodsTypeName());/**ZW_C_JB_00008_20170512 end**/
+            if (hotRecommendConfig != null) {
+                // 获取游戏配置信息
+                GameConfigEO gameConfigEO = gameConfigManager.selectGameConfig(queryGoodsRequest.getGameName(), queryGoodsRequest.getGoodsTypeName());
+
+                // 是否显示栏目1的最低价商品
+                if (hotRecommendConfig.isShowCategory23()) {
+                    // 获取栏目1的最低价商品
+                    Map<String, Object> queryMap = new HashMap<String, Object>();
+                    queryMap.put("backGameName", queryGoodsRequest.getGameName());
+                    queryMap.put("backRegion", queryGoodsRequest.getRegion());
+                    queryMap.put("backServer", queryGoodsRequest.getServer());
+                    queryMap.put("gameRace", queryGoodsRequest.getGameRace());
+                    queryMap.put("goodsTypeName", queryGoodsRequest.getGoodsTypeName()); /**ZW_C_JB_00008_20170512 add**/
+                    List<RepositoryInfo> repositoryInfos = categoryRepositoryManager.queryCategoryRepository(queryMap, null);
+                    if (!CollectionUtils.isEmpty(repositoryInfos)) {
+                        int goodsCat = GoodsCat.Cat1.getCode(); // 最低价设置为栏目1
+                        String title = "";
+                        if (StringUtils.equals(queryGoodsRequest.getGameName(), "天涯明月刀")) {
+                            title = "当前最低价<br/>购买零风险<br/>交易无上限";
+                        } else {
+                            title = "当前最低价";
+                        }
+                        List<GoodsDTO> goodsInfoList = convertToGoods(repositoryInfos, gameConfigEO, goodsCat, title);
+                        if (!CollectionUtils.isEmpty(goodsInfoList)) {
+                            response.setGoodsInfo(goodsInfoList.get(0));
+                        }
+                    }
+                }
+            }
+
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询商品发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询商品发生未知异常:{}", ex);
+        }
+        return response;
+    }
+
+    /**
+     * 查询所有栏目商品
+     *
+     * @param request
+     * @return
+     */
+    @Path("QueryAllCategoryGoods")
+    @GET
+    @Override
+    public IServiceResponse queryAllCategoryGoods(@QueryParam("") QueryGoodsRequest request) {
+        logger.debug("查询所有栏目商品:{}", request);
+        // 初始化返回数据
+        QueryGoodsInfoResponse response = new QueryGoodsInfoResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            AnalysisUrlResponse analysisUrlResponse = null;
+            if(StringUtils.isNotBlank(request.getGameName())){
+                analysisUrlResponse = new AnalysisUrlResponse();
+                //测试用 start
+                analysisUrlResponse.setGameName(request.getGameName());
+                analysisUrlResponse.setGameRegion(request.getRegion());
+                analysisUrlResponse.setGameServer(request.getServer());
+                analysisUrlResponse.setGoodsTypeName(request.getGoodsTypeName());
+            } else {
+                analysisUrlResponse = gameInfoManager.analysisUrl(request.getCurrentUrl());
+            }
+            logger.info("栏位url解析结果:{}", ToStringBuilder.reflectionToString(analysisUrlResponse));
+
+            //测试用 end
+            if (analysisUrlResponse == null) {
+                response.setGoodsList(new ArrayList<GoodsDTO>(0));
+            } else if (StringUtils.isEmpty(analysisUrlResponse.getGameName())
+                    || StringUtils.isEmpty(analysisUrlResponse.getGameRegion())
+                    || StringUtils.isEmpty(analysisUrlResponse.getGameServer())
+                    || StringUtils.isEmpty(analysisUrlResponse.getGoodsTypeName())) {
+                response.setGoodsList(new ArrayList<GoodsDTO>(0));
+            } else {
+                /**ZW_C_JB_00008_20170512 start   **/ //用来查询的参数实体
+                ShGameConfig shGameConfig = new ShGameConfig();
+                shGameConfig.setGameName(analysisUrlResponse.getGameName());
+                shGameConfig.setGoodsTypeName(analysisUrlResponse.getGoodsTypeName());
+
+                ShGameConfig theDataForbrowser=null; //用于接受查询结果的实体
+
+
+                //如果商品类型不为游戏币而又禁用就查询游戏币的允许状态,如果允许就按照游戏币查询,如果禁止就什么都不展示
+                 theDataForbrowser = shGameConfigManager.selectShGameConfig(shGameConfig);
+                if (!shGameConfig.getGoodsTypeName().equals(ServicesContants.GOODS_TYPE_GOLD)) {
+                    if (theDataForbrowser == null || !theDataForbrowser.getEnableMall()) {
+                        shGameConfig.setGoodsTypeName(ServicesContants.GOODS_TYPE_GOLD);
+                        theDataForbrowser = shGameConfigManager.selectShGameConfig(shGameConfig);
+                    }
+                }
+
+                if (null==theDataForbrowser || null==theDataForbrowser.getEnableMall()) {
+                    response.setGoodsList(new ArrayList<GoodsDTO>(0));
+                } else {
+                    queryCategoryCodes(response, analysisUrlResponse, theDataForbrowser);
+                    //如果是通货，并且三个栏位均无值，则查询游戏币栏位
+                    if (!theDataForbrowser.getGoodsTypeName().equals(ServicesContants.GOODS_TYPE_GOLD) && response.getGoodsList().size() == 0) {
+                        shGameConfig.setGameName(analysisUrlResponse.getGameName());
+                        shGameConfig.setGoodsTypeName(ServicesContants.GOODS_TYPE_GOLD);
+                        theDataForbrowser = shGameConfigManager.selectShGameConfig(shGameConfig);
+                        if (null!=theDataForbrowser&&theDataForbrowser.getEnableMall()) {
+                            queryCategoryCodes(response, analysisUrlResponse,theDataForbrowser);
+                        }
+                    }
+                }
+            }
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+            /**ZW_C_JB_00008_20170512 end   **/
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询所有栏目商品发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询所有栏目商品发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询所有栏目商品响应信息:{}", response);
+        return response;
+    }
+
+    private void queryCategoryCodes(QueryGoodsInfoResponse response, AnalysisUrlResponse analysisUrlResponse, ShGameConfig theDataForbrowser) {
+        List<GoodsDTO> goodsList = new ArrayList<GoodsDTO>();
+        // 获取该游戏安心买热卖商品配置
+        HotRecommendConfig hotRecommendConfig = hotRecommendConfigManager.getConfigFromRedis(analysisUrlResponse.getGameName(), theDataForbrowser.getGoodsTypeName()); /**ZW_C_JB_00008_20170512 mod**/
+        if (hotRecommendConfig != null) {
+            // 获取游戏配置信息
+            GameConfigEO gameConfigEO = gameConfigManager.selectGameConfig(analysisUrlResponse.getGameName(), theDataForbrowser.getGoodsTypeName());
+            // 获取栏目2的自定义商品信息
+            GoodsInfo goods = null;
+            String gameId = null, regionId = null, serverId = null, raceId = null;
+
+            //通货不开通栏位二
+            for (int i = 1; i < 4; i++) {
+                // 获取栏目2商品
+                goods = goodsInfoManager.getMaxSaleGoods(
+                        analysisUrlResponse.getGameName(),
+                        theDataForbrowser.getGoodsTypeName(),
+                        analysisUrlResponse.getGameRegion(),
+                        analysisUrlResponse.getGameServer(),
+                        analysisUrlResponse.getGameRace(),
+                        i);
+                if (goods != null && goods.getIsDeleted() == false) {
+                    // 只获取一条
+                    goods.setGoodsCat(GoodsCat.Cat2.getCode()); // 强制设置为栏目2
+                    String image = "";
+                    if (gameConfigEO != null && StringUtils.isNotBlank(gameConfigEO.getGameImage())) {
+                        image = gameConfigEO.getGameImage();
+                    }
+                    goods.setImageUrls(image);
+                    gameId = goods.getGameId();
+                    regionId = goods.getRegionId();
+                    serverId = goods.getServerId();
+                    raceId = goods.getRaceId();
+
+                    break;
+                }
+            }
+
+
+            // 是否显示栏目1的最低价商品
+            if (hotRecommendConfig.isShowCategory23()) {
+                // 栏目2单价
+                BigDecimal biggestUnitPrice = (goods != null && goods.getIsDeleted() == false) ? goods.getUnitPrice() : null;
+
+                // 获取栏目1的最低价商品
+                Map<String, Object> queryMap = new HashMap<String, Object>();
+                queryMap.put("backGameName", analysisUrlResponse.getGameName());
+                queryMap.put("backRegion", analysisUrlResponse.getGameRegion());
+                queryMap.put("backServer", analysisUrlResponse.getGameServer());
+                queryMap.put("gameRace", analysisUrlResponse.getGameRace());
+                queryMap.put("goodsTypeName", theDataForbrowser.getGoodsTypeName());
+                List<RepositoryInfo> repositoryInfos = categoryRepositoryManager.queryCategoryRepository(queryMap, biggestUnitPrice);
+                if (!CollectionUtils.isEmpty(repositoryInfos)) {
+                    int goodsCat = GoodsCat.Cat1.getCode(); // 最低价设置为栏目1
+                    String title = "";
+                    if (StringUtils.equals(analysisUrlResponse.getGameName(), "天涯明月刀")) {
+                        title = "当前最低价<br/>购买零风险<br/>交易无上限";
+                    } else {
+                        title = "当前最低价";
+                    }
+                    List<GoodsDTO> goodsInfoList = convertToGoods(repositoryInfos, gameConfigEO, goodsCat, title, gameId, regionId, serverId, raceId);
+                    if (!CollectionUtils.isEmpty(goodsInfoList)) {
+                        //栏位一
+                        goodsList.add(goodsInfoList.get(0));
+                    }
+                }
+            }
+            //栏位二
+            if (goods != null) {
+                GoodsDTO goodsDTO = BeanMapper.map(goods, GoodsDTO.class);
+                goodsList.add(goodsDTO);
+            }
+
+            // 查询一条单价最低库存最多的卖家店铺库存
+            Map<String, Object> queryMap = new HashMap<String, Object>();
+            queryMap.put("backGameName", analysisUrlResponse.getGameName());
+            queryMap.put("backRegion", analysisUrlResponse.getGameRegion());
+            queryMap.put("backServer", analysisUrlResponse.getGameServer());
+            queryMap.put("gameRace", analysisUrlResponse.getGameRace());
+            queryMap.put("onShowShopRepository", true);// 只显示店铺库存
+            queryMap.put("goodsTypeName", theDataForbrowser.getGoodsTypeName()); /**ZW_C_JB_00008_20170512 add**/
+            List<RepositoryInfo> repositoryInfos = categoryRepositoryManager.queryCategoryRepository(queryMap, null);
+            if (!CollectionUtils.isEmpty(repositoryInfos)) {
+                int goodsCat = GoodsCat.Cat3.getCode(); // 店铺设置为栏目3
+
+                String title = "金牌店铺";
+                if (StringUtils.equals(analysisUrlResponse.getGameName(), "天涯明月刀")) {
+                    title += "<br/>提供等价物";
+                }
+
+                List<GoodsDTO> goodsInfoList = convertToGoods(repositoryInfos, gameConfigEO, goodsCat,
+                        title, gameId, regionId, serverId, raceId);
+                if (!CollectionUtils.isEmpty(goodsInfoList)) {
+                    goodsList.add(goodsInfoList.get(0));
+                }
+            }
+        }
+        response.setUnitName(theDataForbrowser.getUnitName());
+        response.setMinBuyAmount(theDataForbrowser.getMinBuyAmount());
+        response.setAnalysisUrlResponse(analysisUrlResponse);
+        response.setGoodsList(goodsList);
+        response.setHotRecommendConfig(hotRecommendConfig);
+    }
+
+    /**
+     * 根据栏目查询单个商品信息
+     *
+     * @param request
+     * @return
+     */
+    @Path("QuerySingleCategoryGoods")
+    @GET
+    @Override
+    public IServiceResponse querySingleCategoryGoods(@QueryParam("") QueryGoodsRequest request) {
+        logger.debug("当前查询商品:{}", request);
+        // 初始化返回数据
+        QueryGoodsInfoResponse response = new QueryGoodsInfoResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            // 获取游戏配置信息
+            GameConfigEO gameConfigEO = gameConfigManager.selectGameConfig(request.getGameName(), request.getGoodsTypeName());
+            if (request.getGoodsCat() == GoodsCat.Cat1.getCode()) {
+                // 获取该游戏安心买热卖商品配置,
+                HotRecommendConfig hotRecommendConfig = hotRecommendConfigManager.getConfigFromRedis(request.getGameName(), request.getGoodsTypeName());/**ZW_C_JB_00008_20170512 end**/
+                // 是否可以显示栏目1的数据
+                if (hotRecommendConfig.isShowCategory23()) {
+                    // 获取栏目1的最低单价库存
+                    Map<String, Object> queryMap = new HashMap<String, Object>();
+                    queryMap.put("backGameName", request.getGameName());
+                    queryMap.put("backRegion", request.getRegion());
+                    queryMap.put("backServer", request.getServer());
+                    queryMap.put("gameRace", request.getGameRace());
+                    queryMap.put("goodsTypeName", request.getGoodsTypeName());
+                    List<RepositoryInfo> repositoryInfos = categoryRepositoryManager.queryCategoryRepository(queryMap, null);
+                    if (!CollectionUtils.isEmpty(repositoryInfos)) {
+                        String title = "当前最低价";
+                        List<GoodsDTO> goodsInfos = convertToGoods(repositoryInfos, gameConfigEO, request.getGoodsCat(), title);
+                        if (!CollectionUtils.isEmpty(goodsInfos)) {
+                            response.setGoodsInfo(goodsInfos.get(0));
+                        }
+                    }
+                }
+            } else if (request.getGoodsCat() == GoodsCat.Cat2.getCode()) {
+                for (int i = 1; i < 4; i++) {
+                    // 条件查询，当前页面各个栏目的商品
+                    GoodsInfo goods = goodsInfoManager.getMaxSaleGoods(
+                            request.getGameName(),
+                            request.getGoodsTypeName(),/**ZW_C_JB_00008_20170512 add   **/
+                            request.getRegion(),
+                            request.getServer(),
+                            request.getGameRace(),
+                            i);
+                    if (goods != null) {
+                        goods.setGoodsCat(GoodsCat.Cat2.getCode()); // 强制设置为栏目2
+                        GoodsDTO goodsDTO = BeanMapper.map(goods, GoodsDTO.class);
+                        response.setGoodsInfo(goodsDTO);
+                        break;
+                    }
+                }
+
+            } else if (request.getGoodsCat() == GoodsCat.Cat3.getCode()) {
+                // 卖家店铺商品
+//                SellerSetting sellerSetting = sellerSettingManager.querySellSetting(request.getGameName(), request.getRegion());
+//                if (sellerSetting != null) {
+//                    Map<String, Object> queryMap = new HashMap<String, Object>();
+//                    queryMap.put("backGameName", request.getGameName());
+//                    queryMap.put("backRegion", request.getRegion());
+//                    queryMap.put("backServer", request.getServer());
+//                    queryMap.put("gameRace", request.getGameRace());
+//                    queryMap.put("loginAccount", sellerSetting.getLoginAccount());
+//                    List<RepositoryInfo> repositoryInfos = categoryRepositoryManager.queryCategoryRepository(queryMap, null);
+//                    if (!CollectionUtils.isEmpty(repositoryInfos)) {
+//                        Long id = -100L;
+//                        String title = "卖家店铺商品";
+//                        List<GoodsDTO> goodsInfoList = convertToGoods(repositoryInfos, gameConfigEO, request.getGoodsCat(), id, title);
+//                        if (!CollectionUtils.isEmpty(goodsInfoList)) {
+//                            response.setGoodsInfo(goodsInfoList.get(0));
+//                        }
+//                    }
+//                }
+                Map<String, Object> queryMap = new HashMap<String, Object>();
+                queryMap.put("backGameName", request.getGameName());
+                queryMap.put("backRegion", request.getRegion());
+                queryMap.put("backServer", request.getServer());
+                queryMap.put("gameRace", request.getGameRace());
+                queryMap.put("onShowShopRepository", true); // 只显示店铺库存
+                queryMap.put("loginAccount", request.getLoginAccount());
+                queryMap.put("goodsTypeName", request.getGoodsTypeName());/**ZW_C_JB_00008_20170512 add**/
+                List<RepositoryInfo> repositoryInfos = categoryRepositoryManager.queryCategoryRepository(queryMap, null);
+                if (!CollectionUtils.isEmpty(repositoryInfos)) {
+                    String title = "卖家店铺商品";
+                    List<GoodsDTO> goodsInfoList = convertToGoods(repositoryInfos, gameConfigEO, request.getGoodsCat(), title);
+                    if (!CollectionUtils.isEmpty(goodsInfoList)) {
+                        response.setGoodsInfo(goodsInfoList.get(0));
+                    }
+                }
+            }
+
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询商品发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询商品发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询商品响应信息:{}", response);
+        return response;
+    }
+
+    /**
+     * @param repositoryList
+     * @param gameConfig
+     * @param goodsCat
+     * @param title
+     * @return
+     */
+    private List<GoodsDTO> convertToGoods(List<RepositoryInfo> repositoryList, GameConfigEO gameConfig, int goodsCat,
+                                          String title) {
+        return convertToGoods(repositoryList, gameConfig, goodsCat, title, null, null, null, null);
+    }
+
+    /**
+     * 将库存数据转换成商品信息
+     *
+     * @param repositoryList
+     * @param gameConfig
+     * @param goodsCat
+     * @param title
+     * @param gameId
+     * @param regionId
+     * @param serverId
+     * @param raceId
+     * @return
+     */
+    private List<GoodsDTO> convertToGoods(List<RepositoryInfo> repositoryList, GameConfigEO gameConfig, int goodsCat,
+                                          String title, String gameId, String regionId, String serverId, String raceId) {
+        List<GoodsDTO> goods = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(repositoryList)) {
+            Random rand = new Random();
+            for (int i = 0; i < repositoryList.size(); i++) {
+                RepositoryInfo repository = repositoryList.get(i);
+                GoodsDTO dto = new GoodsDTO();
+                dto.setId(repository.getId());
+                dto.setGoodsCat(goodsCat);
+                dto.setTitle(title);
+                dto.setGoodsTypeName(repository.getGoodsTypeName()); /**ZW_C_JB_00008_20170512 add**/
+                dto.setGoodsTypeId(repository.getGoodsTypeId()); /**ZW_C_JB_00008_20170512 add**/
+                if (gameConfig != null) {
+                    dto.setImageUrls(gameConfig.getGameImage());
+                    dto.setDeliveryTime(gameConfig.getMailTime());
+                } else {
+                    dto.setDeliveryTime(20);
+                }
+
+                dto.setMoneyName(repository.getMoneyName());
+                dto.setGameName(repository.getGameName());
+                dto.setRegion(repository.getRegion());
+                dto.setServer(repository.getServer());
+                dto.setGameRace(repository.getGameRace());
+                dto.setUnitPrice(repository.getUnitPrice());
+                dto.setSellableCount(repository.getSellableCount());
+                dto.setSellerLoginAccount(repository.getLoginAccount());
+                dto.setIsDeleted(false);
+                dto.setGameId(gameId);
+                dto.setRegionId(regionId);
+                dto.setServerId(serverId);
+                dto.setRaceId(raceId);
+
+                goods.add(dto);
+            }
+        }
+
+        return goods;
+    }
+
+    private GoodsInfo convertToGoodsInfo(RepositoryInfo repository, GameConfigEO gameConfig, int goodsCat,
+                                         String title, String gameId, String regionId, String serverId, String raceId) {
+        GoodsInfo goods = new GoodsInfo();
+        goods.setId(repository.getId());
+        goods.setImageUrls(gameConfig.getGameImage());
+        goods.setGoodsCat(goodsCat);
+        goods.setTitle(title);
+
+        if (gameConfig != null) {
+            goods.setDeliveryTime(gameConfig.getMailTime());
+        } else {
+            goods.setDeliveryTime(20);
+        }
+
+        goods.setMoneyName(repository.getMoneyName());
+        goods.setGameName(repository.getGameName());
+        goods.setRegion(repository.getRegion());
+        goods.setServer(repository.getServer());
+        goods.setGameRace(repository.getGameRace());
+        goods.setUnitPrice(repository.getUnitPrice());
+        goods.setSellableCount(repository.getSellableCount().intValue());
+        goods.setSellerLoginAccount(repository.getLoginAccount());
+        goods.setIsDeleted(false);
+        goods.setGameId(gameId);
+        goods.setRegionId(regionId);
+        goods.setServerId(serverId);
+        goods.setRaceId(raceId);
+
+        return goods;
+    }
+}

@@ -1,0 +1,59 @@
+package com.wzitech.gamegold.facade.frontend;
+
+import java.util.Date;
+
+import com.wzitech.gamegold.order.business.IOrderInfoManager;
+import com.wzitech.gamegold.order.business.impl.orderstate.Paid;
+import com.wzitech.gamegold.order.business.impl.orderstate.State;
+import org.apache.commons.lang3.time.DateUtils;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
+import com.wzitech.gamegold.order.business.IAutoConfigManager;
+import com.wzitech.gamegold.order.dao.IOrderInfoDBDAO;
+import com.wzitech.gamegold.order.entity.OrderInfoEO;
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@TestExecutionListeners( { DependencyInjectionTestExecutionListener.class,
+		DirtiesContextTestExecutionListener.class,
+		TransactionalTestExecutionListener.class})
+@ContextConfiguration(locations = {"classpath:/META-INF/gold-facade-frontend-context.xml"})
+@ActiveProfiles("development")
+public class AutoConfigTest {
+
+	@Autowired
+    IOrderInfoManager orderInfoManager;
+	
+	@Autowired
+	IAutoConfigManager autoConfigManager;
+
+    @Autowired
+    State paid;
+
+    @Test
+    public void paidTest() {
+        paid.handle("YX1506290000880");
+    }
+	
+	@Test
+	public void configTest(){
+        OrderInfoEO orderInfo = orderInfoManager.selectById("YX1503060000633");
+		autoConfigManager.autoConfigOrder(orderInfo);
+	}
+	
+	@Test
+	public void timeTest(){
+		Date now = new Date();
+		Date TransTime = DateUtils.addSeconds(now, -1800);
+		System.out.println(TransTime);
+	}
+}

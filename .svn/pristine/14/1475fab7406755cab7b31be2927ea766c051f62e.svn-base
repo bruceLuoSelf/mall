@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.MessageRuleLog">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.order.entity.MessageRuleLog">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long"/>
+        <result column="MESSAGE_RULE_ID" property="messageRuleId" jdbcType="NUMERIC"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR" typeHandler="GenericEnumTypeHandler"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+
+        <association property="operator" select="com.wzitech.gamegold.repository.entity.SellerInfo.selectServicer"
+                     column="OPERATOR_ID"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.wzitech.gamegold.order.entity.MessageRuleLog" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO "TBL_GAMEGOLD_MESSAGE_RULE_LOG"("MESSAGE_RULE_ID","TYPE","OPERATOR_ID","CREATE_TIME")
+        VALUES(
+            #{messageRuleId},
+            #{type,typeHandler=GenericEnumTypeHandler},
+            #{operator.id},
+            #{createTime}
+        )
+    </insert>
+
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+      SELECT * FROM "TBL_GAMEGOLD_MESSAGE_RULE_LOG" WHERE "ID"=#{id}
+    </select>
+
+    <select id="selectByRuleId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_MESSAGE_RULE_LOG" WHERE "MESSAGE_RULE_ID"=#{messageRuleId} ORDER BY "CREATE_TIME" DESC
+    </select>
+
+    <delete id="deleteByRuleId" parameterType="Long">
+      DELETE FROM "TBL_GAMEGOLD_MESSAGE_RULE_LOG" WHERE "MESSAGE_RULE_ID"=#{ruleId}
+    </delete>
+
+    <delete id="deleteLastLog" parameterType="Long">
+        DELETE FROM "TBL_GAMEGOLD_MESSAGE_RULE_LOG"
+        WHERE "ID"=(SELECT "ID" FROM "TBL_GAMEGOLD_MESSAGE_RULE_LOG" WHERE "MESSAGE_RULE_ID"=#{ruleId} ORDER BY "CREATE_TIME" ASC LIMIT 1)
+    </delete>
+
+    <sql id="selectSql" >
+      <where>
+          <if test="messageRuleId != null">
+            "MESSAGE_RULE_ID"=#{messageRuleId}
+          </if>
+      </where>
+    </sql>
+
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.order.entity.MessageRuleLog">
+        SELECT * FROM "TBL_GAMEGOLD_MESSAGE_RULE_LOG" "LOG"
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_MESSAGE_RULE_LOG" "LOG"
+        <include refid="selectSql"/>
+    </select>
+</mapper>

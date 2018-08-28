@@ -1,0 +1,138 @@
+package com.wzitech.gamegold.order.business.impl;
+
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.gamegold.common.constants.ServicesContants;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.common.enums.UserType;
+import com.wzitech.gamegold.common.servicer.IServicerOrderManager;
+import com.wzitech.gamegold.order.business.IArrangeTraderManager;
+import com.wzitech.gamegold.order.business.IServiceSortManager;
+import com.wzitech.gamegold.order.dao.IConfigResultInfoDBDAO;
+import com.wzitech.gamegold.order.entity.ConfigResultInfoEO;
+import com.wzitech.gamegold.repository.business.IAutoDeliverSettingManager;
+import com.wzitech.gamegold.repository.business.ISellerManager;
+import com.wzitech.gamegold.repository.entity.SellerInfo;
+import com.wzitech.gamegold.usermgmt.business.IUserInfoManager;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 安排交易员
+ *
+ * @author yemq
+ */
+@Component
+public class ArrangeTraderManagerImpl implements IArrangeTraderManager {
+    private static final Logger logger = LoggerFactory.getLogger(ArrangeTraderManagerImpl.class);
+    @Autowired
+    IServicerOrderManager servicerOrderManager;
+    @Autowired
+    IUserInfoManager userInfoManager;
+    @Autowired
+    ISellerManager sellerManager;
+    @Autowired
+    IServiceSortManager serviceSortManager;
+    @Autowired
+    IAutoDeliverSettingManager autoDeliverSettingManager;
+    @Autowired
+    IConfigResultInfoDBDAO configResultInfoDBDAO;
+
+    /**
+     * 对配单安排交易员，寄售走寄售交易，担保走担保交易
+     *
+     * @param configResult 配单记录
+     * @param sellerLoginAccount 卖家账号
+     * @param serviceId 当前选择的客服
+     */
+    @Override
+    public void arrangeTrader(ConfigResultInfoEO configResult, String sellerLoginAccount, Long serviceId, String gameName, String region) {
+        SellerInfo seller = sellerManager.querySellerInfo(sellerLoginAccount);
+        configResult.setIsHelper(seller.getIsHelper()==null?false:seller.getIsHelper()); //小助手
+
+        if (seller.getIsShielded()) {
+
+            boolean isOpenRobot = false;
+
+            //只有游戏币，查询是否开通了寄售全自动机器人发货
+            if(ServicesContants.GOODS_TYPE_GOLD.equals(configResult.getGoodsTypeName())){
+                if (!StringUtils.isBlank(gameName) || !StringUtils.isBlank(region)) {
+                    isOpenRobot = autoDeliverSettingManager.isEnableSetting(gameName, region);
+                }
+                if (isOpenRobot) {
+                    // 判断该子订单之前是否是从寄售全自动机器人退回的
+                    if (configResult.getIsSendBackFromRobot() != null && configResult.getIsSendBackFromRobot()) {
+                        // 之前是从寄售机器人退回的，则这单不再配给寄售机器人
+                        isOpenRobot = false;
+                    } else {
+                        // 查询该游戏账号是否有寄售物服在发货，有的话不转寄售机器人
+                        Long count = configResultInfoDBDAO.selectCountByGameAccount(configResult.getRepositoryId());
+                        if (count > 0) {
+                            // 如果同一个卖家游戏账号有寄售物服在等待发货的话，不转寄售机器人处理
+                            isOpenRobot = false;
+                        }
+                    }
+                }
+            }
+
+            if (isOpenRobot) {
+                configResult.setOptionId(null);
+                configResult.setIsConsignment(true); // 注明是寄售交易
+                configResult.setIsJsRobot(true);  // 注明寄售全自动机器人发货
+                configResult.setIsSendBackFromRobot(false);
+            } else {
+                logger.info("配单开始，分配寄售客服开始：{}", configResult);
+                // 如果是寄售且非机器人发货的，安排寄售客服
+                Long traderId = serviceSortManager.getNextServiceId(UserType.ConsignmentService.getCode(), null);
+                if (traderId == null) {
+                    throw new SystemException(ResponseCodes.EmptyTraderList.getCode(), ResponseCodes.EmptyTraderList.getMessage());
+                }
+
+                configResult.setOptionId(traderId);
+                configResult.setIsConsignment(true); // 注明是寄售交易
+                configResult.setIsJsRobot(false);  // 不是寄售全自动机器人发货
+                configResult.setIsSendBackFromRobot(false);
+                logger.info("配单开始，分配寄售客服结束：{}", configResult);
+
+                // 客服待发货订单数量+1
+                serviceSortManager.incOrderCount(traderId);
+            }
+        } else {
+            // 如果是担保，安排担保客服，即下单页选择的担保客服保持不变
+            configResult.setOptionId(serviceId);
+            configResult.setIsConsignment(false); // 注明是担保交易
+            configResult.setIsJsRobot(false); // 注明是担保交易
+        }
+    }
+
+    /**
+     * 获取当前所有的寄售客服
+     *
+     * @return List<UserInfoEO>
+     */
+    public List<UserInfoEO> getConsignmentServices() {
+        List<String> servicers = servicerOrderManager.sortServicer();
+        if (servicers == null || servicers.size() == 0) {
+            return null;
+        }
+        List<UserInfoEO> userList = new ArrayList<UserInfoEO>();
+        for (int i = 0; i < servicers.size(); i++) {
+            UserInfoEO userInfoEO = userInfoManager.findDBUserById(servicers.get(i));
+
+            if (userInfoEO == null
+                    || (userInfoEO.getIsDeleted() != null && userInfoEO.getIsDeleted() == true)
+                    || (userInfoEO.getUserType() != UserType.ConsignmentService.getCode())) {
+                continue;
+            }
+            userList.add(userInfoEO);
+        }
+
+        return userList;
+    }
+}

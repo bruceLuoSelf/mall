@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.GameConfigEO">
+
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.GameConfigEO">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="GAME_ID" property="gameId" jdbcType="VARCHAR" />
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+		<result column="PLACE_NAME" property="placeName" jdbcType="VARCHAR" />
+		<result column="PLACE_IMAGE" property="placeImage" jdbcType="VARCHAR" />
+		<result column="GAME_IMAGE" property="gameImage" jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MAIL_TIME" property="mailTime" jdbcType="NUMERIC" javaType="int" />
+		<result column="AUTO_PLAY_TIME" property="autoPlayTime" jdbcType="NUMERIC" javaType="int" />
+		<result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN" />
+		<result column="COMMISION" property="commision" jdbcType="NUMERIC" />
+		<!-- 新增'商品类型' ZW_C_JB_00008_20170524 ADD        START-->
+		<result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR" />
+		<result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="NUMERIC" javaType="long"/>
+		<!-- 新增'商品类型' ZW_C_JB_00008_20170524 ADD        END-->
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.order.entity.GameConfigEO"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_TRADE_PLACE"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameId != null and gameId != ''">
+                "GAME_ID",
+            </if>
+			<if test="gameName != null and gameName != ''">
+				"GAME_NAME",
+			</if>
+			<!-- ZW_C_JB_00008_20170524 ADD             START-->
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				"GOODS_TYPE_NAME",
+			</if>
+			<if test="goodsTypeId != null and goodsTypeId != ''">
+				"GOODS_TYPE_ID",
+			</if>
+			<!-- ZW_C_JB_00008_20170524 ADD             END-->
+			<if test="placeName != null and placeName != ''">
+				"PLACE_NAME",
+			</if>
+			<if test="placeImage != null and placeImage != ''">
+				"PLACE_IMAGE",
+			</if>
+			<if test="gameImage != null and gameImage != ''">
+				"GAME_IMAGE",
+			</if>
+			<if test="lastUpdateTime != null">
+				"LAST_UPDATE_TIME",
+			</if>
+			<if test="createTime != null">
+				"CREATE_TIME",
+			</if>
+			<if test="mailTime != null">
+				"MAIL_TIME",
+			</if>
+			<if test="autoPlayTime != null">
+				"AUTO_PLAY_TIME",
+			</if>
+			<if test="isDeleted != null">
+				"IS_DELETED",
+			</if>
+			<if test="commision != null">
+				"COMMISION"
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameId != null and gameId != ''">
+                #{gameId},
+            </if>
+			<if test="gameName != null and gameName != ''">
+				#{gameName},
+			</if>
+			<!-- ZW_C_JB_00008_20170524 ADD        START-->
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				#{goodsTypeName},
+			</if>
+			<if test="goodsTypeId != null and goodsTypeId != ''">
+				#{goodsTypeId},
+			</if>
+			<!-- ZW_C_JB_00008_20170524 ADD        END-->
+			<if test="placeName != null and placeName != ''">
+				#{placeName},
+			</if>
+			<if test="placeImage != null and placeImage != ''">
+				#{placeImage},
+			</if>
+			<if test="gameImage != null and gameImage != ''">
+				#{gameImage},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="mailTime != null">
+				#{mailTime},
+			</if>
+			<if test="autoPlayTime != null">
+				#{autoPlayTime},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+			<if test="commision != null">
+				#{commision}
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate"
+		parameterType="com.wzitech.gamegold.order.entity.GameConfigEO">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE "TBL_GAMEGOLD_TRADE_PLACE"
+			<set>
+                <if test="item.gameId != null and item.gameId != ''">
+                    "GAME_ID"= #{item.gameId},
+                </if>
+				<if test="item.gameName != null and item.gameName != ''">
+					"GAME_NAME"= #{item.gameName},
+				</if>
+				<if test="item.placeName != null and item.placeName != ''">
+					"PLACE_NAME"= #{item.placeName},
+				</if>
+				<if test="item.gameImage != null and item.gameImage != ''">
+					"GAME_IMAGE"= #{item.gameImage},
+				</if>
+				<if test="item.mailTime != null">
+					"MAIL_TIME"= #{item.mailTime},
+				</if>
+				<if test="item.autoPlayTime != null">
+					"AUTO_PLAY_TIME"= #{item.autoPlayTime},
+				</if>
+				<if test="item.placeImage != null">
+					"PLACE_IMAGE"= #{item.placeImage},
+				</if>
+				<if test="item.lastUpdateTime != null">
+					"LAST_UPDATE_TIME"= #{item.lastUpdateTime},
+				</if>
+				<if test="item.isDeleted != null">
+					"IS_DELETED"= #{item.isDeleted},
+				</if>
+				<if test="item.commision != null">
+					"COMMISION"= #{item.commision}
+				</if>
+			</set>
+			<where>
+				"ID" = #{item.id}
+			</where>
+		</foreach>
+	</update>
+    
+    <sql id="selectSql">
+		<where>
+			<if test="isDeleted != null">
+				"IS_DELETED" = #{isDeleted}
+			</if>
+			<if test="id != null">
+				AND	"ID"= #{id}
+			</if>
+            <if test="gameId != null and gameId != ''">
+                AND  "GAME_ID"= #{gameId}
+            </if>
+			<if test="gameName != null and gameName != ''">
+				AND "GAME_NAME" = #{gameName}
+			</if>
+			<if test="placeName != null and placeName != ''">
+				AND "PLACE_NAME" = #{placeName}
+			</if>
+			<!--  增加通货查询 ZW_C_JB_00008_20170525 MODIFY START-->
+			<if test="goodsTypeName == null or  goodsTypeName == '' or goodsTypeName == '游戏币'">
+				AND ("GOODS_TYPE_NAME" = '游戏币' or "GOODS_TYPE_NAME" is NULL or "GOODS_TYPE_NAME" = '')
+			</if>
+            <if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName != '全部' and goodsTypeName != '游戏币'">
+                AND  "GOODS_TYPE_NAME" = #{goodsTypeName}
+            </if>
+            <!--  增加通货查询 ZW_C_JB_00008_20170525 MODIFY END-->
+		</where>
+	</sql>
+	
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.GameConfigEO">
+		 SELECT * FROM "TBL_GAMEGOLD_TRADE_PLACE"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		 SELECT COUNT(1) FROM "TBL_GAMEGOLD_TRADE_PLACE"
+		<include refid="selectSql"/>
+	</select>
+	
+	<!-- 通过商品的ID，获得商品信息 -->
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.GameConfigEO">
+		 SELECT * FROM "TBL_GAMEGOLD_TRADE_PLACE"
+		 <where>
+		 	"ID" = #{id}
+		 </where>
+	</select>
+
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.GameConfigEO">
+		${value}
+	</select>
+
+    <!-- 获取商城的所有游戏名称和ID -->
+    <select id="queryGameNameIdList" resultMap="BaseResultMap">
+        SELECT "ID","GAME_ID","GAME_NAME" FROM "TBL_GAMEGOLD_TRADE_PLACE" WHERE "IS_DELETED"=false
+    </select>
+</mapper>

@@ -1,0 +1,338 @@
+/************************************************************************************
+ * Copyright 2012 WZITech Corporation. All rights reserved.
+ * <p/>
+ * 模	块：		AccountServiceImpl
+ * 包	名：		com.wzitech.chinabeauty.facade.service.usermgmt.impl
+ * 项目名称：	chinabeauty-facade-frontend
+ * 作	者：		SunChengfei
+ * 创建时间：	2013-9-26
+ * 描	述：
+ * 更新纪录：	1. SunChengfei 创建于 2013-9-26 下午2:51:45
+ ************************************************************************************/
+package com.wzitech.gamegold.facade.backend.action.fundmgmt;
+
+import com.wzitech.gamegold.common.context.CurrentUserContext;
+import com.wzitech.gamegold.common.enums.OrderState;
+import com.wzitech.gamegold.common.enums.RefererType;
+import com.wzitech.gamegold.common.enums.UserType;
+import com.wzitech.gamegold.facade.backend.contant.WebServerContants;
+import com.wzitech.gamegold.facade.backend.excel.ExportExcel;
+import com.wzitech.gamegold.facade.backend.extjs.AbstractAction;
+import com.wzitech.gamegold.facade.backend.util.WebServerUtil;
+import com.wzitech.gamegold.funds.business.ITransactionInfoManager;
+import com.wzitech.gamegold.funds.entity.TransactionInfo;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+@Controller
+@Scope("prototype")
+public class ExportTransactionFlowAction extends AbstractAction {
+
+    private Integer orderState;
+
+    private String loginAccount;
+
+    private Long servicerId;
+
+    private Date statementStartTime;
+
+    private Date statementEndTime;
+
+    private InputStream inputStream;
+
+    private Integer refererType;
+    /**
+     * 商品类目id
+     */
+    private Integer goodsTypeId;
+
+    /**
+     * 商品类目名称
+     */
+    private String goodsTypeName;
+
+
+    /**
+     * 公司得到拥金的比例
+     */
+    @Value("${sub_commission.base}")
+    private double subCommissionBase = 0.08;
+
+    @Autowired
+    ITransactionInfoManager transactionInfoManager;
+
+    private List<TransactionInfo> queryTransaction() {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        String orderBy = "END_TIME";
+        int userType = CurrentUserContext.getUserType();
+        if (UserType.SystemManager.getCode() != userType) {
+            if (UserType.MakeOrder.getCode() == userType || UserType.RecruitBusiness.getCode() == userType) {
+                UserInfoEO user = (UserInfoEO) CurrentUserContext.getUser();
+                paramMap.put("servicerId", user.getMainAccountId());
+            } else {
+                paramMap.put("servicerId", CurrentUserContext.getUid());
+            }
+        } else {
+            paramMap.put("servicerId", servicerId);
+        }
+        paramMap.put("loginAccount", loginAccount);
+        if (orderState != null && orderState == OrderState.Delivery.getCode()) {
+            paramMap.put("createStartTime", statementStartTime);
+            paramMap.put("createEndTime",
+                    WebServerUtil.oneDateLastTime(statementEndTime));
+            orderBy = "CREATE_TIME";
+        } else {
+            paramMap.put("statementStartTime", statementStartTime);
+            paramMap.put("statementEndTime",
+                    WebServerUtil.oneDateLastTime(statementEndTime));
+        }
+        paramMap.put("orderState", orderState);
+        if (refererType != null) {
+            if (refererType == 3) {
+                paramMap.put("refererTypeBygoldOrder", "'1','2','3'");
+            } else {
+                paramMap.put("refererType", refererType);
+            }
+        }
+
+        paramMap.put("goodsTypeId", goodsTypeId);//ZW_C_JB_00008 add
+        paramMap.put("goodsTypeName", goodsTypeName);//ZW_C_JB_00008 add
+
+        List<TransactionInfo> list = transactionInfoManager
+                .queryTransactionList(paramMap, orderBy, false);
+        return list;
+    }
+
+    public String exportTransactionFlow() {
+
+        List<TransactionInfo> transactionList = queryTransaction();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        HSSFWorkbook wb = new HSSFWorkbook();
+
+        HSSFSheet sheet = wb.createSheet();
+
+        ExportExcel exportExcel = new ExportExcel(wb, sheet);
+
+        // 创建单元格样式
+        HSSFCellStyle cellStyle = wb.createCellStyle();
+
+        // 指定单元格居中对齐
+        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+        // 指定单元格垂直居中对齐
+        cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+
+        // 指定当单元格内容显示不下时自动换行
+        cellStyle.setWrapText(true);
+
+        // 设置单元格字体
+        HSSFFont font = wb.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        font.setFontName("宋体");
+        font.setFontHeight((short) 200);
+        cellStyle.setFont(font);
+
+        // 创建报表头部
+        String headString = "交易流水列表";
+        int columnSize = 24;
+        exportExcel.createNormalHead(0, headString, columnSize - 1);
+
+        // 创建报表列
+        String[] columHeader = new String[]{"客服账号", "配单帐号", "卖家账号", "卖家角色", "买家5173账号", "订单号", "订单状态", "成交游戏账号",
+                "商品名称", "游戏名称", "所在区", "所在服","发货区服", "所在阵营","商品类目", "出库单价(1金币对应多少人民币)",
+                "入库单价(1金币对应多少人民币)", "购买总数(购买金币数)", "订单总金额", "卖家收益", "差额收入", "佣金", "红包", "店铺券", "创建时间", "完成时间", "订单来源"};
+        exportExcel.createColumHeader(1, columHeader);
+
+
+        HSSFCellStyle cellstyle = wb.createCellStyle();
+        cellstyle.setAlignment(HSSFCellStyle.ALIGN_CENTER_SELECTION);
+
+        // 循环创建中间的单元格的各项的值
+        if (transactionList != null) {
+            int i = 2;
+            for (TransactionInfo transactionInfo : transactionList) {
+                subCommissionBase = 0.06;
+                HSSFRow row = null;//sheet.createRow(i++);
+                if (i % 65536 == 0) {
+                    sheet = wb.createSheet();
+                    exportExcel = new ExportExcel(wb, sheet);
+                    // 创建报表头部
+                    exportExcel.createNormalHead(0, headString, columnSize - 1);
+                    // 创建报表列
+                    exportExcel.createColumHeader(1, columHeader);
+                    i = 2;
+                }
+                row = sheet.createRow(i++);
+
+                exportExcel.cteateCell(wb, row, (short) 0, cellstyle, transactionInfo.getServiceAccount());
+                exportExcel.cteateCell(wb, row, (short) 1, cellstyle, transactionInfo.getOptionerAccount());
+                exportExcel.cteateCell(wb, row, (short) 2, cellstyle, transactionInfo.getLoginAccount());
+                exportExcel.cteateCell(wb, row, (short) 3, cellstyle, transactionInfo.getSellerGameRole());
+                exportExcel.cteateCell(wb, row, (short) 4, cellstyle, transactionInfo.getBuyerAccount());
+                exportExcel.cteateCell(wb, row, (short) 5, cellstyle, transactionInfo.getOrderId());
+                exportExcel.cteateCell(wb, row, (short) 6, cellstyle, OrderState.getTypeByCode(transactionInfo.getOrderState()).getName());
+                exportExcel.cteateCell(wb, row, (short) 7, cellstyle, transactionInfo.getGameAccount());
+                exportExcel.cteateCell(wb, row, (short) 8, cellstyle, transactionInfo.getTitle());
+                exportExcel.cteateCell(wb, row, (short) 9, cellstyle, transactionInfo.getGameName());
+                exportExcel.cteateCell(wb, row, (short) 10, cellstyle, transactionInfo.getRegion());
+                exportExcel.cteateCell(wb, row, (short) 11, cellstyle, transactionInfo.getServer());
+                exportExcel.cteateCell(wb, row, (short) 12, cellstyle, transactionInfo.getServiceGameProp());
+                exportExcel.cteateCell(wb, row, (short) 13, cellstyle, transactionInfo.getGameRace());
+                exportExcel.cteateCell(wb, row, (short) 14, cellstyle, transactionInfo.getGoodsTypeName());//ZW_C_JB_00008 ADD
+                String orderUnitPrice = "";
+                if (transactionInfo.getOrderUnitPrice() != null) {
+                    orderUnitPrice = "￥" + transactionInfo.getOrderUnitPrice().toString();
+                }
+                exportExcel.cteateCell(wb, row, (short) 15, cellstyle, orderUnitPrice);
+                String repositoryUnitPrice = "";
+                if (transactionInfo.getRepositoryUnitPrice() != null) {
+                    repositoryUnitPrice = "￥" + transactionInfo.getRepositoryUnitPrice().toString();
+                }
+                exportExcel.cteateCell(wb, row, (short) 16, cellstyle, repositoryUnitPrice);
+                exportExcel.cteateCell(wb, row, (short) 17, cellstyle, transactionInfo.getGoldCount().toString());
+                String subTotalPrice = "";
+                if (transactionInfo.getOrderUnitPrice() != null && transactionInfo.getGoldCount() > 0) {
+                    BigDecimal subTotal = new BigDecimal(transactionInfo.getGoldCount());
+                    subTotal = subTotal.multiply(transactionInfo.getOrderUnitPrice());
+                    subTotalPrice = "￥" + subTotal.toString();
+                }
+                exportExcel.cteateCell(wb, row, (short) 18, cellstyle, subTotalPrice);
+                // 卖家收益
+                String incomeTotalPrice = "";
+                if (transactionInfo.getIncomeTotalPrice() != null) {
+                    BigDecimal income = transactionInfo.getIncomeTotalPrice().setScale(2, BigDecimal.ROUND_HALF_UP);
+                    incomeTotalPrice = "￥" + income.toString();
+                }
+                exportExcel.cteateCell(wb, row, (short) 19, cellstyle, incomeTotalPrice);
+                // 差价
+                String differentIncome = "";
+                if (transactionInfo.getBalance() != null) {
+                    BigDecimal balance = transactionInfo.getBalance().setScale(2, BigDecimal.ROUND_HALF_UP);
+                    differentIncome = "￥" + balance.toString();
+                }
+                exportExcel.cteateCell(wb, row, (short) 20, cellstyle, differentIncome);
+
+                String commission = "￥0.00";
+                if (transactionInfo.getCommission() != null) {
+                    commission = "￥" + transactionInfo.getCommission().setScale(2, BigDecimal.ROUND_HALF_UP);
+                }
+                exportExcel.cteateCell(wb, row, (short) 21, cellstyle, commission);
+
+                String redEnvelope = "￥0.00";
+                if (transactionInfo.getRedEnvelope() != null) {
+                    redEnvelope = "￥" + transactionInfo.getRedEnvelope().setScale(2, BigDecimal.ROUND_HALF_UP);
+                }
+                exportExcel.cteateCell(wb, row,(short) 22, cellstyle, redEnvelope);
+
+                String shopCoupon = "￥0.00";
+                if (transactionInfo.getShopCoupon() != null) {
+                    shopCoupon = "￥" + transactionInfo.getShopCoupon().setScale(2, BigDecimal.ROUND_HALF_UP);
+                }
+                exportExcel.cteateCell(wb, row,(short) 23, cellstyle,shopCoupon);
+                String createTime = "";
+                if (transactionInfo.getCreateTime() != null) {
+                    createTime = format.format(transactionInfo.getCreateTime());
+                }
+                exportExcel.cteateCell(wb, row, (short) 24, cellstyle, createTime);
+                String endTime = "";
+                if (transactionInfo.getEndTime() != null) {
+                    endTime = format.format(transactionInfo.getEndTime());
+                }
+                exportExcel.cteateCell(wb, row, (short) 25, cellstyle, endTime);
+
+                //start 交易流水统计 by汪俊杰 20170515
+                String refererTypeName = "";
+                Integer refererType = transactionInfo.getRefererType();
+                if (refererType != null) {
+                    if (refererType.intValue() == RefererType.CUSTOMERS_SERVICE_CENTER.getCode() || refererType.intValue() == RefererType.InternetBarAlliance.getCode() || refererType.intValue() == RefererType.goldOrder.getCode()) {
+                        refererType = RefererType.goldOrder.getCode();
+            }
+                }else{
+                    refererType = RefererType.goldOrder.getCode();
+        }
+                RefererType rt = RefererType.getTypeByCode(refererType);
+                if (rt != null) {
+                    refererTypeName = rt.getName();
+                }
+                exportExcel.cteateCell(wb, row, (short) 26, cellstyle, refererTypeName);
+                //end
+            }
+        }
+
+        String exportPath = WebServerContants.FILES_EXPORT_PATH;
+        String path = ServletActionContext.getServletContext().getRealPath(exportPath);
+        File file = new File(path);
+        file.mkdirs();
+        String filePath = path + "/" + UUID.randomUUID().toString() + ".xls";
+        exportExcel.outputExcel(filePath);
+        try {
+            inputStream = new FileInputStream(filePath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return returnSuccess();
+    }
+
+    public Integer getGoodsTypeId() {
+        return goodsTypeId;
+    }
+
+    public void setGoodsTypeId(Integer goodsTypeId) {
+        this.goodsTypeId = goodsTypeId;
+    }
+
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
+    }
+
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void setOrderState(Integer orderState) {
+        this.orderState = orderState;
+    }
+
+    public void setStatementStartTime(Date statementStartTime) {
+        this.statementStartTime = statementStartTime;
+    }
+
+    public void setStatementEndTime(Date statementEndTime) {
+        this.statementEndTime = statementEndTime;
+    }
+
+    public void setLoginAccount(String loginAccount) {
+        this.loginAccount = loginAccount;
+    }
+
+    public void setServicerId(Long servicerId) {
+        this.servicerId = servicerId;
+    }
+
+    public Integer getRefererType() {
+        return refererType;
+    }
+
+    public void setRefererType(Integer refererType) {
+        this.refererType = refererType;
+    }
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/gamegold.iml" filepath="$PROJECT_DIR$/gamegold.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gamegold-app/gamegold-app.iml" filepath="$PROJECT_DIR$/gamegold-app/gamegold-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/category-repository/gamegold-category-repository.iml" filepath="$PROJECT_DIR$/category-repository/gamegold-category-repository.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/gamegold-common.iml" filepath="$PROJECT_DIR$/common/gamegold-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/facade/gamegold-facade.iml" filepath="$PROJECT_DIR$/facade/gamegold-facade.iml" />
+      <module fileurl="file://$PROJECT_DIR$/facade-backend/gamegold-facade-backend.iml" filepath="$PROJECT_DIR$/facade-backend/gamegold-facade-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/facade-frontend/gamegold-facade-frontend.iml" filepath="$PROJECT_DIR$/facade-frontend/gamegold-facade-frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/filemgmt/gamegold-filemgmt.iml" filepath="$PROJECT_DIR$/filemgmt/gamegold-filemgmt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/funds/gamegold-funds.iml" filepath="$PROJECT_DIR$/funds/gamegold-funds.iml" />
+      <module fileurl="file://$PROJECT_DIR$/goods/gamegold-goods.iml" filepath="$PROJECT_DIR$/goods/gamegold-goods.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mymgmt/gamegold-mymgmt.iml" filepath="$PROJECT_DIR$/mymgmt/gamegold-mymgmt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/order/gamegold-order.iml" filepath="$PROJECT_DIR$/order/gamegold-order.iml" />
+      <module fileurl="file://$PROJECT_DIR$/repository/gamegold-repository.iml" filepath="$PROJECT_DIR$/repository/gamegold-repository.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shorder/gamegold-shorder.iml" filepath="$PROJECT_DIR$/shorder/gamegold-shorder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/store/gamegold-store.iml" filepath="$PROJECT_DIR$/store/gamegold-store.iml" />
+      <module fileurl="file://$PROJECT_DIR$/usermgmt/gamegold-usermgmt.iml" filepath="$PROJECT_DIR$/usermgmt/gamegold-usermgmt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gamegold-job-Center/job-center.iml" filepath="$PROJECT_DIR$/gamegold-job-Center/job-center.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jsrobot/jsrobot.iml" filepath="$PROJECT_DIR$/jsrobot/jsrobot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rc8/rc8.iml" filepath="$PROJECT_DIR$/rc8/rc8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shrobot/shrobot.iml" filepath="$PROJECT_DIR$/shrobot/shrobot.iml" />
+    </modules>
+  </component>
+</project>

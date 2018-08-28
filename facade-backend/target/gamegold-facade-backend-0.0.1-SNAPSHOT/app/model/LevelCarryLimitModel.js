@@ -1,0 +1,24 @@
+/*
+  等级携带上限配置
+ */
+Ext.define('MyApp.model.LevelCarryLimitModel',{
+    extend:'Ext.data.Model',
+    idProperty:'extId',
+    idgen:'uuid',
+    fields:[{
+        name:'id',
+        type:'int'
+    },{
+        name:'minLevel'
+    },{
+        name:'maxLevel'
+    },{
+        name:'carryUpperLimit'
+    },{
+        name:'gameName'
+    },{
+        name:'goodsTypeId'
+    },{
+        name:'goodsTypeName'
+    }]
+})

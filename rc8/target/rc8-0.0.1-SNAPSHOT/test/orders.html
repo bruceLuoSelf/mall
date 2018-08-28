@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>订单列表查询</title>
+    <script src="jquery.js"></script>
+    <script src="jquery.json-2.4.min.js"></script>
+</head>
+<body>
+<script>
+    var request = {
+        //name: "test111@5173.com",
+        name: "jbkf001@5173.com",
+        pwd: "yUDhvyEbj5U=",//123456
+        timetype: 0,
+        stime: "2015-09-10 00:00:00",
+        etime: "2015-09-25 23:59:59",
+        orderstatus: 0,
+        gameid: "",
+        buy: "",
+        buyqq: "136959813",
+        sell: '',
+        orderid: "",
+        manualOperation: "",
+        version: "8.0",
+        //sign: "c2d8fa1e3eb72d390ed79a9f4dd69ad6",
+        sign: "293418eb94b1e62b46c642feb301918d",
+        pageSize: 50,
+        page: 0,
+        _type: "xml"
+    };
+    $.ajax({
+        type: "GET",
+        url: "../services/order/list",
+        data: request,
+        contentType: "application/json;charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        },
+        error: function (resp) {
+            console.error("出错了");
+            console.log(resp);
+        }
+    });
+
+</script>
+</body>
+</html>

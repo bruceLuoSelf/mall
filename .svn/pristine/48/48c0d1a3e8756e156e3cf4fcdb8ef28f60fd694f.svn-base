@@ -1,0 +1,158 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>机器收货买家订单详情页</title>
+    <meta content="" name="description" />
+    <meta content="5173帐号、安全帐号、游戏帐号" name="keywords" />
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common1.6-950.css" />
+    <link rel="shortcut icon" href="http://img01.5173cdn.com/common/build/1.00/images/ico.ico" />
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link href="css/request-buy.css" rel="Stylesheet" type="text/css" />
+    <script src="./js/jquery.js" type="text/javascript"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/headGameMenu.js?v=3" type="text/javascript"></script>
+    <script src="./js/business/orderResult1.js?v=3" type="text/javascript"></script>
+	<script src="./js/business/sellerOrderCenter.js?v=1" type="text/javascript"></script>
+</head>
+<body>
+<style>
+
+</style>
+<div class="header">
+    <!-- 顶部登陆条+快捷菜单条 -->
+    <div style="display:none" id="divLoading">
+    </div>
+    <div id="J_GlobalTop">
+    </div>
+    <!--网站Logo+四级联动搜索条-->
+    <div class="header_box clearfix">
+        <h1 class="logo">
+            <a href="http://www.5173.com/" title="中国网络游戏服务网">5173</a></h1>
+        <!-- 四级联动游戏选择 -->
+        <div class="game_select game_select_main clearfix" id="gameSelectV2">
+            <form id="gsForm" method="get" class="clearfix">
+                <div class="game_select_box" id="gameSelectBox">
+                    <ul class="tab_menu">
+                        <li class="current"><a href="#">
+                            普通搜索</a></li>
+                    </ul>
+                    <div class="tab_box clearfix" id="multipleSearch" style="display: block;">
+                        <div class="left_bg">
+                        </div>
+                        <!-- 游戏选择菜单 -->
+                        <ul class="gs_menu" id="gsMenu">
+                            <li id="gs_game" class="gs_name arrow" title="选择游戏名称">游戏名称</li><li id="gs_plat" class="gs_plat arrow" title="选择游戏平台" style="display: none;">平台</li>
+                            <li id="gs_area" class="gs_area arrow" title="选择游戏区">游戏区</li>
+                            <li id="gs_server" class="gs_server arrow" title="选择游戏服务器">游戏服</li>
+                            <!--<li id="gs_type" class="gs_type arrow" title="选择分类">游戏币</li>-->
+                            <!--<li class="gs_search_item">-->
+                            <!--<input class="gs_search_box holderfont" id="gsSearchBox" type="text" placeholder="请输入任意关键字" autocomplete="off" style="width: 120px;">-->
+                            <!--</li>-->
+                        </ul>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                    <div class="tab_box clearfix tab_box_reset hide" id="simpleSearch" style="display: none;">
+                        <div class="left_bg">
+                        </div>
+                        <div class="simple_search_box">
+                            <input type="text" class="simple_search_input holderfont" id="simpleSearchInput"
+                                   placeholder="关键字找游戏、搜区服、寻商品" autocomplete="off"></div>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                </div>
+                <div class="btn_box">
+                    <input class="gs_search_btn" id="gsSearchBtn" value="搜索"></div>
+            </form>
+            <!-- 游戏选择列表 -->
+            <div class="gs_box" id="gsBox" style="display: block;">
+                <div class="gs_box_inner">
+                    <div class="gs_head clearfix">
+                        <dl class="gs_name" style="display: block;">
+                            <dt>
+                            <h1>
+                                请选择游戏：</h1>
+                            </dt>
+                            <dd><a id="all" flag="region" href="javascript:void(0);" style="display: none;">全部区</a></dd>
+                        </dl>
+                        <a target="_self" class="close_btn" title="关闭窗口" href="javascript:">关闭窗口</a></div>
+                    <ul id="gsList" class="gs_list gs_name">
+                    </ul>
+                </div>
+            </div>
+            <s id="searchbar_arrow" class="game_select_arrow" style="left: 50px; display: inline;
+                    top: 66px"></s>
+        </div>
+    </div>
+</div>
+<!-- head end -->
+<div class="wrap">
+    <div class="conNav"> 您的位置：<a href="http://www.5173.com/">首页</a> &gt; <a href="chOrderList.html">我的出货订单</a> &gt; 订单结果 </div>
+</div>
+<div class="wrap mt20">
+    <div class="order_top" style="">
+        <div class="clearfix"></div>
+		<div class="inforConts">
+				<div class="inforTitle">
+					订单信息
+				</div>
+				<div class="inforTable">
+					<div class="item_order_new">
+						<ul>
+							<li>
+								<div class="left_item"><em class="left_orderdetail">游戏区服：</em><em id="regionServer"></em></div>
+							</li>
+							<li>
+								<div class="left_item"><em class="left_orderdetail">采购单编号：</em><em id="chId"></em></div>
+								<div class="left_item"><em class="left_orderdetail">订单编号：</em><em id="orderId"></em></div>
+							</li>
+							<li>
+								<div class="left_item"><em class="left_orderdetail">采购单价：</em><em id="price"></em></div>
+								<div class="left_item"><em class="left_orderdetail">订单状态：</em><em id="orderState"></em></div>
+							</li>
+							<li>
+								<div class="left_item"><em class="left_orderdetail">订单数量：</em><em id="totalCount"></em></div>
+								<div class="left_item"><em class="left_orderdetail">订单总价：</em><em id="totalPrice"></em></div>
+							</li>
+							<li>
+								<div class="left_item"><em class="left_orderdetail">实际数量：</em><em id="realCount"></em></div>
+								<div id="createTimeView" class="left_item"><em class="left_orderdetail">创建时间：</em><em id="creatTime"></em></div>
+							</li>
+							<li>
+								<div id="startTimeView" style="min-width:400px;float:left;"><em class="left_orderdetail">开始交易时间：</em><em id="startTime"></em></div>
+								<div id="endTimeView" style="min-width:400px;float:left;"><em class="left_orderdetail">交易完成时间：</em><em id="endTime"></em></div>
+							</li>
+							<!--<li style="height:35px;line-height:35px;">
+								<div style="min-width:400px;float:left;"><em class="left_orderdetail">结单理由：</em><em>时代复分</em></div>
+							</li>-->
+						</ul>
+						<div class="search_list">
+							<table class="color-333">
+								<thead>
+								<tr>
+									<th>游戏帐号</th>
+									<th>游戏角色</th>
+									<th>计划采购数量</th>
+									<th>实际采购数量</th>
+									<th>交易状态</th>
+									<th>操作</th>
+								</tr>
+								</thead>
+								<tbody id="subOrderView">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!--inforTable-->
+			</div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<script type="text/javascript" src="./js/business/fed.js"></script>
+</body>
+</html>

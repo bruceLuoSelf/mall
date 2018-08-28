@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzitech.gamegold.shorder.entity.HxAccount">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.HxAccount">
+    <result column="purchase_id" property="purchaseId"/>
+    <result column="purchase_name" property="purchaseName"/>
+    <result column=" hx_account" property="hxAccounter"/>
+    <result column="hx_pwd" property="hxPwd"/>
+    <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectHxAccountByAccount" parameterType="String" resultMap="BaseResultMap">
+        select * from t_sh_hx_account
+        where
+        purchase_name=#{account}
+    </select>
+
+    <insert id="insertAccount" parameterType="com.wzitech.gamegold.shorder.entity.HxAccount">
+        insert into t_sh_hx_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="purchaseName != null and purchaseName!=''">
+                purchase_name,
+            </if>
+            <if test=" hxAccounter != null and  hxAccounter!=''">
+                hx_account,
+            </if>
+            <if test="hxPwd != null">
+                hx_pwd,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="purchaseId != null">
+                purchase_id ,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="purchaseName != null">
+                #{purchaseName},
+            </if>
+            <if test="hxAccounter != null">
+                #{hxAccounter},
+            </if>
+            <if test="hxPwd != null">
+                #{hxPwd},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="purchaseId != null">
+                #{purchaseId},
+            </if>
+        </trim>
+    </insert>
+    <update id="insertIntoById" parameterType="com.wzitech.gamegold.shorder.entity.HxAccount">
+       update t_sh_hx_account set hx_account =  #{hxAccounter} , hx_pwd = #{hxPwd} where id = #{id}
+    </update>
+</mapper>

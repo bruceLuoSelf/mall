@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	   xmlns:lang="http://www.springframework.org/schema/lang" xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+	   xmlns:jaxws="http://cxf.apache.org/jaxws"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+	  	http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<description>FACADE SERVICE公共配置文件 </description>
+
+	<jaxws:client id="insuranceService"
+				  address="http://admin.91baozhang.com/WebService/BQOrderService.asmx"
+				  serviceClass="com.wzitech.gamegold.common.insurance.dto.BQOrderServiceSoap">
+		<jaxws:features>
+			<cxf:logging />
+		</jaxws:features>
+		<jaxws:outInterceptors>
+			<ref bean="authOutInterceptor" />
+		</jaxws:outInterceptors>
+	</jaxws:client>
+
+	<!-- 导入cxf的配置文件 -->
+	<!--<import resource="classpath:/META-INF/cxf/cxf.xml" />-->
+
+	<!--<jaxrs:server id="RESTService" address="/">
+		&lt;!&ndash; 开启cxf日志 &ndash;&gt;
+		<jaxrs:features>
+			<cxf:logging />
+		</jaxrs:features>
+		&lt;!&ndash; 导入所有的Service Bean &ndash;&gt;
+		<jaxrs:serviceBeans>
+			&lt;!&ndash;<ref bean="SHOrderService" />&ndash;&gt;
+		</jaxrs:serviceBeans>
+		&lt;!&ndash; 配置控制过滤器 &ndash;&gt;
+		<jaxrs:inInterceptors>
+			&lt;!&ndash;<ref bean="authenticationInterceptor" />&ndash;&gt;
+		</jaxrs:inInterceptors>
+        <jaxrs:outInterceptors>
+            &lt;!&ndash;<ref bean="formattedJAXBInterceptor" />&ndash;&gt;
+        </jaxrs:outInterceptors>
+
+        <jaxrs:extensionMappings>
+            <entry key="json" value="application/json"/>
+            <entry key="xml" value="application/xml"/>
+            <entry key="text" value="text/plain" />
+        </jaxrs:extensionMappings>
+
+        &lt;!&ndash; 使用jackson作为序列化器,根据URL中是否具有callback参数支持动态JSONP &ndash;&gt;
+		<jaxrs:providers>
+			&lt;!&ndash;<bean class="com.wzitech.gamegold.shrobot.providers.JacksonJsonpProvider" />&ndash;&gt;
+		</jaxrs:providers>
+	</jaxrs:server>-->
+
+	<!-- 配置认证拦截器
+	<bean id="authenticationInterceptor"
+		class="com.wzitech.gamegold.shrobot.interceptor.AuthenticationInterceptor">
+		&lt;!&ndash; 配置不用做认证auth检查的url(注意全部小写) &ndash;&gt;
+		<property name="ignoreAuthUrlsList">
+			<list>
+				<value>/services/user/login</value>
+				<value>/services/order/list</value>
+				<value>/services/order/finish</value>
+				<value>/services/order/writelog</value>
+				<value>/services/repository/splitlist</value>
+				<value>/services/repository/update</value>
+				<value>/services/repository/writelog</value>
+				<value>/services/repository/changestate</value>
+				<value>/services/repository/gameaccountlist</value>
+				<value>/services/repository/updateaccount</value>
+			</list>
+		</property>
+	</bean>-->
+
+    <!-- 配置jaxb 输出拦截器
+    <bean id="formattedJAXBInterceptor"
+          class="com.wzitech.gamegold.shrobot.interceptor.FormattedJAXBInterceptor">
+    </bean>-->
+</beans>

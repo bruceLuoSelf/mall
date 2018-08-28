@@ -1,0 +1,274 @@
+.order {
+    background: #fff none repeat scroll 0 0;
+    /*border: 1px solid #ddd;*/
+    height: auto;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 5px;
+    width: 908px;
+}
+
+.order h3 {
+    font-family: "Microsoft YaHei";
+    font-size: 18px !important;
+    font-weight: normal !important;
+    border-bottom: 1px solid #e7e7e7;
+    clear: both;
+    height: 25px;
+    line-height: 25px;
+    margin: 10px auto;
+    padding-bottom: 5px;
+    width: 908px;
+}
+
+.order h3 div.fleft {
+    float: left;
+}
+
+.order h3 div.fmid {
+    float: left;
+    margin-left: 10px;
+}
+
+.order h3 div.fmid .c1 {
+    color: #dd6900;
+    font-size: 12px;
+    font-weight: bold;
+    height: 25px;
+    margin-top: -5px;
+}
+
+.order h3 div.fmid .c2 {
+    color: #dd6900;
+    font-size: 14px;
+    font-weight: bold;
+    height: 25px;
+    margin-top: -5px;
+}
+
+.order h3 div.fright {
+    float: right;
+}
+
+.order h3 div.fright .i1 {
+    border: 1px solid #c0c0c0;
+    height: 20px;
+}
+
+.order h3 div.fright .i2 {
+    border: 1px solid #c0c0c0;
+    height: 23px;
+    width: 45px;
+    cursor: pointer;
+}
+
+.order h3 div.fright_1 {
+    color: #666;
+    float: right;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.orange {
+    color: #f60;
+    font-family: simsun;
+    font-size: 12px !important;
+    font-weight: normal !important;
+}
+
+.service_list {
+}
+
+.service_list .current_page {
+    border: 1px solid #3e3e3e;
+    background-color: #3e3e3e;
+    color: white;
+}
+
+.chose_service_pages ul li {
+    border: 0px solid #aaa;
+    float: left;
+    font-size: 15px;
+    margin-right: 5px;
+    padding: 2.5px;
+}
+.chose_servie_ul{
+    float: right;margin-right: 10px;
+}
+
+.orderTable {
+    margin: 20px;
+    border: 0px;
+    width:860px;
+}
+
+.orderTable tr {
+    height: 37px;
+}
+
+.orderTable td {
+    padding-left: 10px;
+}
+.orderTable td.lab {
+    width:160px;
+}
+.orderTable label {
+    float: left;
+    width: 140px;
+    text-align: right;
+    font-family: Arial;
+    font-size: 14px;
+}
+
+.orderTable label.radioLabel {
+    margin: 0px 14px 0px 1px;
+    float: none;
+    width: 80px;
+    text-align: left;
+    display:inline-block;
+    cursor: pointer;
+}
+
+.orderTable label.radioLabel_1 {
+    margin: 0px 14px 0px 1px;
+    float: none;
+    width: 100px;
+    text-align: left;
+    display:inline-block;
+    cursor: pointer;
+}
+
+.orderTable input[type='text'] {
+    border: 1px solid #a0b4c5;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 2px;
+    width: 180px;
+    font-weight: bold;
+}
+.orderTable select.gameRoleList {
+    border: 1px solid #a0b4c5;
+    height: 25px;
+    line-height: 25px;
+    width: 185px;
+    font-size: 14px;
+}
+.orderTable select.gameRoleList option {
+    height: 25px;
+    line-height: 25px;
+    color: #3d3d3d;
+}
+.orderTable select.gameRoleList option.other {
+    height: 25px;
+    line-height: 25px;
+    color: #cd0a0a;
+    font-family: Arial;
+    font-weight: bold;
+}
+
+.goodsInfo span {
+    margin-right: 15px;
+}
+
+.goodsInfo span.c1 {
+    color: #FF6600;
+}
+
+.buyTips {
+    background: #ffffff none repeat scroll 0 0;
+    border: 1px solid #c0c0c0;
+    line-height: 22px;
+    margin: 0 12px 0 12px;
+    padding: 12px;
+    position: relative;
+    vertical-align: middle;
+    width: 850px;
+}
+
+.buyTips .ico_style {
+    margin-left: -2px;
+    position: absolute;
+    top: 16px;
+}
+
+.buyTips .title{
+    color:#d80000;
+    display:block;
+    margin-left: 12px;
+}
+
+.buyTips .buyTipDiv{
+    padding: 5px 12px;
+}
+
+.spbzx{
+    border-bottom: 1px solid #bbb;
+}
+.spbzx .title {
+    font-size:14px; font-weight:bold; font-family: Arial;
+}
+.spbzx .pic1{
+    background: url(../img/anxin.png) no-repeat;height:20px;width:20px;display: inline-block;
+}
+.spbzx_amount{
+    color:red; font-weight:bold;
+}
+.spbzx_tips {
+    background: #fffde6 none repeat scroll 0 0;
+    border: 1px solid #feb654;
+    line-height: 22px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 22px;
+    padding-right: 10px;
+    position: relative;
+    vertical-align: middle;
+    width: 650px;
+}
+.spbzx_tips .ico_style {
+    margin-left: -17px;
+    position: absolute;
+    top: 4px;
+}
+
+.red{color:#cd0a0a;}
+
+.discountCoupon{
+    padding:15px;
+    display:none;
+}
+.discountCoupon p{
+    height:30px;
+    line-height: 30px;
+}
+.discountCoupon p.btn_line{
+    height:30px;
+    line-height: 30px;
+    margin-top: 10px;
+}
+.discountCoupon input{
+    border: 1px solid #a0b4c5;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 2px;
+    width: 180px;
+    font-weight: bold;
+}
+.btn_1{
+    width:80px;
+}
+.hongbao{font-size: 12px;margin-right:20px;}
+.dianpuquan{font-size: 12px;margin-right:20px;}
+.gamegold_count{font-size: 14px;}
+i.need_star{
+    width: 16px;
+    height: 25px;
+    text-align: center;
+    color: #f60;
+    font-size: 14px;
+    line-height: 25px;
+}
+.hide{display:none;}
+.post_progress{display:none;border:0px;height:32px;line-height:32px;padding:5px;color:#575757;font-weight:bold;}
+.post_progress2{display:none;border:0px;height:32px;line-height:32px;padding:5px;color:#575757;font-weight:bold;}
+.countdown{color:#b51102;margin-right:5px;font-weight: bold;}

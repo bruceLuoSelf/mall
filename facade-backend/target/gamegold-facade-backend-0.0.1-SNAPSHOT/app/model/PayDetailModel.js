@@ -1,0 +1,23 @@
+/*
+ *  付款详细
+ */
+Ext.define('MyApp.model.PayDetailModel',{
+    extend:'Ext.data.Model',
+    fields:[{
+        name:'id',
+        type:'int'
+    },{
+        name:'orderId'
+    },{
+        name:'payOrderId'
+    },{
+        name:'chOrderId'
+    },{
+        name:'amount',
+        type:'float'
+    },{
+        name:'createTime',
+        type:'date',
+        dateReadFormat:'Y-m-dTH:i:s'
+    }]
+});

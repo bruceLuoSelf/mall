@@ -1,0 +1,423 @@
+<div id="popup_register" class="popup">
+    <div id="popup_layout" class="popup_layout_register popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left">注册新用户</span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="login_select">
+        	<a href="javascript:void(0)" class="now" rel="select_email">邮箱注册</a><a href="javascript:void(0)" rel="select_phone">手机注册</a>
+        </div>
+        <table summary="注册新用户" class="popup_table" id="register">
+            <thead>
+            </thead>
+            <tfoot>
+            </tfoot>
+            <tbody>
+                <tr rel="register_email">
+                    <th><label for="email" title="邮箱" accesskey="E">邮箱:</label></th>
+                    <td><input class="input_text" type="text" value="" id="email"> <br />
+                        <span class="explain">邮箱地址是您在本网站的登录帐号。<br />
+                        <span class="required">*</span>耍宝会严格保密您的邮箱地址，不会透露给第三方。</span></td>
+                </tr>
+                <tr  rel="register_phone">
+                    <th> <label for="pw" title="手机号码" accesskey="M">手机号码:</label></th>
+                    <td><input class="input_text" type="text" value="" id="mobile" /> <br />
+                    	<a href="javascript:void(0)" class="a_mobile_message">免费获取短信激活码</a>
+                         </td>
+                </tr>
+                <tr  rel="register_phone">
+                    <th> <label for="pw" title="短信激活码" accesskey="P">短信激活码:</label></th>
+                    <td><input class="input_text" type="password" value="" id="verifyCode" /></td>
+                </tr>
+                <tr>
+                    <th> <label for="pw" title="密码" accesskey="P">密码:</label></th>
+                    <td><input class="input_text" type="password" value="" id="password" /> <br />
+                  			密码强度校验符<br />
+                        <span class="explain">数字、字母与符号（不要加空格）。</span> </td>
+                </tr>
+                <tr>
+                    <th><input type="checkbox"  id="agree" onclick="closepopmsg()" checked="checked" /></th>
+                    <td><label for="agree" title="同意注册协议" accesskey="A">同意</label>
+                        <a href="javascript:void(0)">注册协议</a></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td><input type="submit" accesskey="R" value="提交"  class="submit"/> <a rel="close" href="javascript:directLogin()">直接登录</a>
+                    	<span id="wrongInfo_register" style="display:none;color:#964545;font-size:13px">错误信息</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="popup_bg_register" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_register" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<div id="popup_login" class="popup">
+    <div id="popup_layout" class="popup_layout_login popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left">登录</span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="login_select">
+        	<a href="javascript:void(0)" rel="select_login_email" class="now">邮箱登陆</a><a rel="select_login_phone" href="javascript:void(0)">手机登录</a>
+        </div>
+        <table summary="登录" class="popup_table" id="login">
+            <thead>
+            </thead>
+            <tfoot>
+            </tfoot>
+            <tbody>
+                <tr rel="login_email">
+                    <th><label for="email" title="邮箱" accesskey="E">邮箱:</label></th>
+                    <td><input class="input_text" type="text" value="" id="email"></td>
+                </tr>
+                 <tr rel="login_email">
+                    <th> <label for="pw" title="密码" accesskey="P">密码:</label></th>
+                    <td><input class="input_text" type="password" value="" id="pw" /> <br />
+                    <!-- 
+                        <span class="explain"><a href="javascript:void(0)" id="pw_find_email" rel="pw_find">忘记密码？</a></span>
+                     -->
+                    </td>
+                </tr>
+               	<tr rel="login_phone">
+                    <th> <label for="pw" title="手机号码" accesskey="M">手机号码:</label></th>
+                    <td><input class="input_text" type="text" value="" id="mobile" /></td>
+                </tr>
+                <tr rel="login_phone">
+                    <th> <label for="pw" title="密码" accesskey="P">密码:</label></th>
+                    <td><input class="input_text" type="password" value="" id="pw" /> <br />
+                   	<!-- 
+                        <span class="explain"><a href="javascript:void(0)" id="pw_find_phone" rel="pw_find">忘记密码？</a></span>
+                    -->
+                    </td>
+                </tr>
+                <tr>
+                    <th><input type="checkbox"  id="remember" onclick="closepopmsg()" checked="checked" /></th>
+                    <td><label for="remember" title="十天内自动登录" accesskey="R">十天内自动登录</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td><input type="submit" accesskey="L" value="登录" class="submit"/> <a rel="close" href="javascript:directRegis()">免费注册</a>
+                    	<span id="wrongInfo_login" style="display:none;color:#964545;font-size:13px">错误信息</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="popup_bg_login" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_login" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<div id="popup_pw_find" class="popup">
+    <div id="popup_layout" class="popup_layout_login popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left">找回密码</span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="login_select">
+        	<a href="javascript:void(0)" rel="select_find_email" class="now">邮箱找回</a><a rel="select_find_phone" href="javascript:void(0)">手机找回</a>
+        </div>
+        <table summary="找回密码" class="popup_table" id="pw_find_table">
+            <thead>
+            </thead>
+            <tfoot>
+            </tfoot>
+            <tbody>
+                <tr rel="find_email">
+                    <th><label for="email" title="注册邮箱" accesskey="E">注册邮箱:</label></th>
+                    <td><input class="input_text" type="text" value="" id="email"></td>
+                </tr>
+                 
+                <tr rel="find_email">
+                    <th></th>
+                    <td><input type="submit" accesskey="L" value="发送找回邮件" class="submit"/> <a rel="close" href="javascript:void(0)">取消</a></td>
+                </tr>
+                <tr rel="find_phone">
+                     <th> <label for="pw" title="手机号码" accesskey="M">手机号码:</label></th>
+                    <td><input class="input_text" type="text" value="" id="mobile" /> <br />
+                    	<a href="javascript:void(0)" class="a_mobile_message">免费获取短信验证码</a>
+                         </td>
+                </tr>
+                <tr rel="find_phone">
+                	<th> <label for="pw" title="短信验证码" accesskey="P">短信验证码:</label></th>
+                    <td><input class="input_text" type="password" value="" id="pw" /></td>
+                </tr>
+               	<tr rel="find_phone">
+                    <th></th>
+                    <td><input type="submit" accesskey="L" value="重置密码" class="submit"/> <a rel="close" href="javascript:void(0)">取消</a>
+                    	<span id="wrongInfo_find_pd" style="display:none;color:#964545;font-size:13px">错误信息</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="popup_bg_find" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_pw_find" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<div id="popup_sell" class="popup">
+    <div id="popup_layout" class="popup_layout_sell popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left popup_sell_title"></span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="popup_sell_content">
+        	
+        	<div class="popup_sell_left">
+            	<div class="popup_sell_block">
+                    <div class="popup_head"><img src="img/head.jpg" /></div>
+                    <div class="popup_infor">
+                        <ul>
+                            <li class="name">黄乐<span class="span_girl"></span></li>
+                            <li>手机：13812345678</li>
+                            <li>微信：<span class="color_red">T10232</span></li>
+                            <li>QQ：330232312</li>
+                        </ul>
+                    </div>
+                    <div class="popup_qrcode">
+                    	<img src="img/qrcode.jpg" />
+                        <div class="qr_tips">扫一扫上面的二维图案，加我微信</div>
+                    </div>
+                </div>
+               <div class="popup_sell_button1"><a href="javascript:void(0)"></a></div>
+               <div class="pupup_change"><a href="javascript:loadKefu('.popup_sell_left .popup_sell_block')">换一个</a></div>
+            </div>
+            <div class="popup_sell_right">
+            	<div class="popup_sell_block">
+                	<div class="popup_could"><a href="sell_upload.html" target="_blank"></a></div>
+                </div>
+                <div class="popup_sell_button2"><a href="sell_upload.html" target="_blank"></a></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="popup_footbar">
+            	<a href="sell_infor.html">还不是耍宝代购？立即申请！</a><span>0费用，即刻开通</span>
+            </div>
+    </div>
+    <div id="popup_bg_sell" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_sell" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<!-- 耍宝助理来下单 -->
+<div id="popup_order" class="popup">
+    <div id="popup_layout" class="popup_layout_buy popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left popup_help_title"></span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="popup_buy_content">
+        	<div class="popup_buy_block_layout">
+        		<div class="popup_buy_block">
+                    <div class="popup_head"><img src="img/head.jpg" /></div>
+                    <div class="popup_infor">
+                        <ul>
+                            <li class="name">黄乐<span class="span_girl"></span></li>
+                            <li>手机：13812345678</li>
+                            <li>微信：<span class="color_red">T10232</span></li>
+                            <li>QQ：330232312</li>
+                        </ul>
+                    </div>
+                    <div class="popup_qrcode">
+                    	<img src="img/qrcode.jpg" />
+                        <div class="qr_tips">扫一扫上面的二维图案，加我微信</div>
+                    </div>
+                </div>
+               <div class="popup_buy_button1"><a href="javascript:void(0)"></a></div>
+               <div class="pupup_change"><a href="javascript:loadKefu('#popup_order .popup_buy_block')">换一个</a></div>
+            </div>
+         </div>
+    </div>
+    <div id="popup_bg_order" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_order" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<div id="popup_buy" class="popup">
+    <div id="popup_layout" class="popup_layout_buy popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left popup_buy_title"></span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="popup_buy_content">
+        	<div class="popup_buy_block_layout">
+        		<div class="popup_buy_block">
+                    <div class="popup_head"><img src="img/head.jpg" /></div>
+                    <div class="popup_infor">
+                        <ul>
+                            <li class="name">黄乐<span class="span_girl"></span></li>
+                            <li>手机：13812345678</li>
+                            <li>微信：<span class="color_red">T10232</span></li>
+                            <li>QQ：330232312</li>
+                        </ul>
+                    </div>
+                    <div class="popup_qrcode">
+                    	<img src="img/qrcode.jpg" />
+                        <div class="qr_tips">扫一扫上面的二维图案，加我微信</div>
+                    </div>
+                </div>
+               <div class="popup_buy_button1"><a href="javascript:void(0)"></a></div>
+               <div class="pupup_change"><a href="javascript:loadKefu('#popup_buy .popup_buy_block')">换一个</a></div>
+            </div>
+         </div>
+        <div class="popup_footbar">
+            	<a href="javascript:closepop();emptyRegisInput();openpop('popup_register','popup_bg_register', 'popup_iframe_register');">还不是耍宝会员？立即申请！</a><span>0费用，即刻开通</span>
+            </div>
+    </div>
+    <div id="popup_bg_buy" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_buy" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<div id="popup_tousu" class="popup">
+    <div id="popup_layout" class="popup_layout_tousu popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left">投诉</span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="popup_tousu_content">
+        	<table cellpadding="0" cellspacing="0" class="table_tousu">
+            	
+            	<thead></thead>
+                <tfoot></tfoot>
+                <tbody>
+                	<tr>
+                    	<th><div class="tous_head">
+                    	<img src="img/ceo.jpg" /></div></th>
+                        <td>
+                        	<div class="r_txt"><b>◆</b>您好，我是耍宝网站负责人杨扬。请告诉我您遇到的问题，我来帮您解决！
+</div>
+                        </td>
+                        </tr>
+                    </tr>
+                	<tr>
+                    	<th>我要投诉：</th>
+                        <td><textarea id="tousu" class="color_gray" style="width:360px; height:60px;">请详细描述您的诉求内容</textarea></td>
+                    </tr>
+                    <tr>
+                    	<th>我的解决方案：</th>
+                        <td><textarea id="suggest" class="color_gray" style="width:360px; height:60px;">请告诉我们您的解决方案，以便我们参考，谢谢！</textarea></td>
+                    </tr>
+                	<tr>
+                    	<th>我的联系方式：</th>
+                        <td><textarea id="mobilePhone" class="color_gray" style="width:360px; height:60px;">采纳后发奖金联系号码</textarea></td>
+                    </tr>
+                    <tr>
+                    	<th>&nbsp;</th>
+                        <td><a href="javascript:void(0)" class="submit_button">提交</a><span style="color:#964545;" id="wrongInfo"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="popup_bg_tousu" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_tousu" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<div id="popup_zixun" class="popup">
+    <div id="popup_layout" class="popup_layout_zixun popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left">咨询</span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="popup_buy_content">
+        	<!--  
+        	<div class="popup_buy_block_layout">
+        		<div class="popup_buy_block">
+                    <div class="popup_head"><img src="img/head.jpg" /></div>
+                    <div class="popup_infor">
+                        <ul>
+                            <li class="name">黄乐<span class="span_girl"></span></li>
+                            <li>手机：13812345678</li>
+                            <li>微信：<span class="color_red">T10232</span></li>
+                            <li>QQ：330232312</li>
+                        </ul>
+                    </div>
+                    <div class="popup_qrcode">
+                    	<img src="img/qrcode.jpg" />
+                        <div class="qr_tips">扫一扫上面的二维图案，加我微信</div>
+                    </div>
+                </div>
+               <div class="popup_buy_button2"><a href="javascript:void(0)"></a></div>
+            </div>
+            <div class="more_zixun_button"><a href="#">如果客服解决不了您的问题，请点这里！</a></div>
+            -->
+            <div class="more_zixun">
+            <table cellpadding="0" cellspacing="0" class="table_tousu">
+            	
+            	<thead></thead>
+                <tfoot></tfoot>
+                <tbody>
+                	<tr>
+                    	<th><div class="tous_head">
+
+                    	<img src="img/ceo.jpg" /></div></th>
+                        <td>
+                        	<div class="r_txt"><b>◆</b>您好，我是耍宝网站负责人杨扬。请告诉我您的问题，我将亲自为您解决！
+</div>
+                        </td>
+                        </tr>
+                    </tr>
+                	<tr>
+                    	<th>我想了解：</th>
+                        <td><textarea id="liaojie" class="color_gray" style="width:360px; height:60px;"></textarea></td>
+                    </tr>
+                   	<tr>
+                    	<th>我的联系方式：</th>
+                        <td><textarea id="mobilePhone" class="color_gray" style="width:360px; height:60px;"></textarea></td>
+                    </tr>
+                    <tr>
+                    	<th>&nbsp;</th>
+                        <td><a href="javascript:void(0)" class="submit_button">提交</a><span style="color:#964545;" id="wrongInfo"></span></td>
+                    </tr>
+                    
+                </tbody>
+                
+            </table>
+            </div>
+         </div>
+        
+    </div>
+    <div id="popup_bg_zixun" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_zixun" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<div id="popup_jianyi" class="popup">
+    <div id="popup_layout" class="popup_layout_jianyi popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left">建议</span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="popup_tousu_content">
+        	<table cellpadding="0" cellspacing="0" class="table_tousu">
+            	
+            	<thead></thead>
+                <tfoot></tfoot>
+                <tbody>
+                	<tr>
+                    	<th><div class="tous_head">
+                    	<img src="img/ceo.jpg" /></div></th>
+                        <td>
+                        	<div class="r_txt"><b>◆</b>您好，我是耍宝网站负责人杨扬。您有什么好的建议可以告诉我们！
+</div>
+                        </td>
+                        </tr>
+                    </tr>
+                	<tr>
+                    	<th>我的建议：</th>
+                        <td><textarea id="jianyi" class="color_gray" style="width:360px; height:60px;">我们非常重视您的建议，请在这里告诉我们</textarea></td>
+                    </tr>
+                    <tr>
+                    	<th>我的联系方式：</th>
+                        <td><textarea id="mobilePhone" class="color_gray" style="width:360px; height:60px;">采纳后发奖金联系号码</textarea></td>
+                    </tr>
+                    <tr>
+                    	<th>&nbsp;</th>
+                        <td><a href="javascript:void(0)" class="submit_button">提交</a><span style="color:#964545;" id="wrongInfo"></span></td>
+                    </tr>
+                    
+                </tbody>
+                
+            </table>
+            
+        </div>
+       
+    </div>
+    <div id="popup_bg_jianyi" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_jianyi" frameborder="0" class="popup_iframe"></iframe>
+</div>
+<div id="popup_tiwen" class="popup">
+    <div id="popup_layout" class="popup_layout_tiwen popup_layout_content">
+        <div class="popup_table_caption">
+            <span class="cap_left">我要提问</span> <span class="cap_right"><a href="javascript:void(0)" rel="close" title="关闭">X</a></span>
+        </div>
+        <div class="popup_tousu_content">
+        	<a href="javascript:openComplaint('zixun');" class="a_zixun">咨询</a><a href="javascript:openComplaint('tousu');" class="a_tousu">投诉</a><a href="javascript:openComplaint('jianyi');" class="a_jianyi">建议</a>
+        </div>
+       
+    </div>
+    <div id="popup_bg_tiwen" frameborder="0" class="popup_bg"></div>
+    <iframe id="popup_iframe_tiwen" frameborder="0" class="popup_iframe"></iframe>
+</div>

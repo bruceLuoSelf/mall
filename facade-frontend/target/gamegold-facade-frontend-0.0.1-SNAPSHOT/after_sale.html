@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>申请售后选择原因页</title>
+    <meta content="" name="description" />
+    <meta content="5173帐号、安全帐号、游戏帐号" name="keywords" />
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common1.6-950.css" />
+    <link rel="shortcut icon" href="http://img01.5173cdn.com/common/build/1.00/images/ico.ico" />
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link href="./css/request-buy.css" rel="Stylesheet" type="text/css" />
+	<link href="./css/newrecord.css" rel="Stylesheet" type="text/css"/>
+    <script src="./js/jquery.js" type="text/javascript"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/headGameMenu.js" type="text/javascript"></script>
+    <script src="./js/business/afterSale.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="header">
+    <!-- 顶部登陆条+快捷菜单条 -->
+    <div style="display:none" id="divLoading">
+    </div>
+    <div id="J_GlobalTop">
+    </div>
+    <!--网站Logo+四级联动搜索条-->
+    <div class="header_box clearfix">
+        <h1 class="logo">
+            <a href="http://www.5173.com/" title="中国网络游戏服务网">5173</a></h1>
+        <!-- 四级联动游戏选择 -->
+        <div class="game_select game_select_main clearfix" id="gameSelectV2" style="z-index:9">
+            <form id="gsForm" method="get" class="clearfix">
+                <div class="game_select_box" id="gameSelectBox">
+                    <ul class="tab_menu">
+                        <li class="current"><a href="#">
+                            普通搜索</a></li>
+                    </ul>
+                    <div class="tab_box clearfix" id="multipleSearch" style="display: block;">
+                        <div class="left_bg">
+                        </div>
+                        <!-- 游戏选择菜单 -->
+                        <ul class="gs_menu" id="gsMenu">
+                            <li id="gs_game" class="gs_name arrow" title="选择游戏名称">游戏名称</li><li id="gs_plat" class="gs_plat arrow" title="选择游戏平台" style="display: none;">平台</li>
+                            <li id="gs_area" class="gs_area arrow" title="选择游戏区">游戏区</li>
+                            <li id="gs_server" class="gs_server arrow" title="选择游戏服务器">游戏服</li>
+                            <!--<li id="gs_type" class="gs_type arrow" title="选择分类">游戏币</li>-->
+                            <!--<li class="gs_search_item">-->
+                            <!--<input class="gs_search_box holderfont" id="gsSearchBox" type="text" placeholder="请输入任意关键字" autocomplete="off" style="width: 120px;">-->
+                            <!--</li>-->
+                        </ul>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                    <div class="tab_box clearfix tab_box_reset hide" id="simpleSearch" style="display: none;">
+                        <div class="left_bg">
+                        </div>
+                        <div class="simple_search_box">
+                            <input type="text" class="simple_search_input holderfont" id="simpleSearchInput"
+                                   placeholder="关键字找游戏、搜区服、寻商品" autocomplete="off"></div>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                </div>
+                <div class="btn_box">
+                    <input class="gs_search_btn" id="gsSearchBtn" value="搜索"></div>
+            </form>
+            <!-- 游戏选择列表 -->
+            <div class="gs_box" id="gsBox" style="display: block;">
+                <div class="gs_box_inner">
+                    <div class="gs_head clearfix">
+                        <dl class="gs_name" style="display: block;">
+                            <dt>
+                            <h1>
+                                请选择游戏：</h1>
+                            </dt>
+                            <dd><a id="all" flag="region" href="javascript:void(0);" style="display: none;">全部区</a></dd>
+                        </dl>
+                        <a target="_self" class="close_btn" title="关闭窗口" href="javascript:">关闭窗口</a></div>
+                    <ul id="gsList" class="gs_list gs_name">
+                    </ul>
+                </div>
+            </div>
+            <s id="searchbar_arrow" class="game_select_arrow" style="left: 50px; display: inline;
+                    top: 66px"></s>
+        </div>
+    </div>
+</div>
+<!-- head end -->
+<div class="wrap">
+    <div class="conNav"> 您的位置：<a href="http://www.5173.com/">首页</a> &gt; <a href="chOrderList.html">我的出货订单</a> &gt; 申请售后 </div>
+</div>
+<div class="underdefid"></div>
+<div class="slet_out">
+	<!-- 修改进度的状态直接加active -->
+	<div class="succ_neworder cle_th">
+		<div class="bord_new">
+			<div class="new_orderservice">
+				<div class="common"><span class="one_order"></span>选择申请售后的订单 ></div>
+				<div class="common active"><span class="two_order"></span>填写售后原因、金额 ></div>
+				<div class="common"><span class="three_order"></span>售后结果</div>
+			</div>
+		</div>
+		<div class="fl menu_left order_detail">
+			<!-- <h2>订单摘要</h2>
+			<span><em class="left_code">游戏/区/服:</em><em class="right_code">地下城与勇士/浙江区/浙江三区</em></span>
+			<span><em class="left_code">订单单价:</em><em class="right_code color-fab">0.00122元/万金</em></span>
+			<span><em class="left_code">订单金额:</em><em class="right_code">185.76元</em></span>
+			<span><em class="left_code">交易模式:</em><em class="right_code">邮寄交易</em></span>
+			<span><em class="left_code">交易地点:</em><em class="right_code">无</em></span>
+			<span><em class="left_code">交易状态:</em><em class="right_code">交易完成</em></span>
+			<span><em class="left_code">交易类目:</em><em class="right_code">游戏币</em></span>
+			<span><em class="left_code">主订单:</em><em class="right_code">SG1712280000004</em></span>
+			<span><em class="left_code">下单时间:</em><em class="right_code">2017-10-25 14:24:10</em></span>
+			<span><em class="left_code">结单时间:</em><em class="right_code">2017-10-25 14:24:10</em></span> -->
+		</div>
+		<div class="detail_neworder fr after_subsale">
+			<div class="detail_row border-bottom">
+				<p class="title_list"><a href="javascript:void(0)" onclick="isReturnHtml()">< 返回订单结果页</a></p>
+			</div>
+			<div class="fl mt-10" id="subOrderList">
+				<dl>
+					<dt>子订单：</dt>
+					<dd>SH1214321324321322  </dd>
+					<dt>角色名：</dt>
+					<dd>甲甲甲</dd>
+					<dt>申请售后原因：</dt>
+					<dd>
+						<em class="res_star">*</em>
+						<select id="selectResult" onclick="isClickResult()">
+                <option value="请选择售后原因" style="display:none">请选择售后原因</option>
+							  <option value="多发货">多发货</option>
+							  <option value="发货后订单撤单">发货后订单撤单</option>
+						</select>
+						<span class="close_newde" style="display:none">请选择售后原因</span>
+					</dd>
+					<dt>售后游戏币数量：</dt>
+					<dd>
+						<em class="res_star">*</em>
+						<input  class="num_slect" id="SellOutNum" >
+						<span>万金</span>
+						<em class="bord_tisi">最少XXXX万金</em>
+					</dd>
+					<dt class="mt-20">退款金额：</dt>
+					<dd class="mt-20 refundAmount">元</dd>
+				</dl>
+				<div class="clearfix"></div>
+        <!-- href="single_result.html" -->
+				<p class="new_submit"><a class="receive_new"  onclick="single_sellBack()">申请售后</a><a onclick="isReturnHtml()" class="return_new">返回</a></p>
+				<p class="new_submit">注：<em>一笔子订单只有一次售后机会，并且提交之后不能修改。</em></p>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+</div>
+<!-- 申请售后弹窗 -->
+<!-- <div class="sure_after sure_after1" style="display:none;">
+	<div class="after_show">
+		<div class="title_show">友情提示<span class="close" onclick="isCloseResult()"></span></div>
+		<div class="mid_show">当前订单暂时无法申请售后，请联系客服</div>
+		<div class="show_know"><a href="javascript:void(0);" class="konw_sure" onclick="isCloseResult()">我知道了</a></div>
+	</div>
+	<div class="new_qpo" onclick="isCloseResult()"></div>
+</div> -->
+<!-- 申请售后提示弹窗 -->
+<div class="sure_after" style="display:none;">
+	<div class="after_show">
+		<div class="title_show">友情提示<span class="close" onclick="isClose()"></span></div>
+		<div class="treysc">
+			<div class="mid_show left_show">售后申请提交后无法修改</div>
+			<div class="season">
+				<span class="reasom01">售后原因：</span>
+				<span class="reasom02">多发货</span>
+			</div>
+			<div class="season">
+				<span class="reasom01">退款金额：</span>
+				<span class="reasom02 color-red">10元（500万金）</span>
+			</div>
+		</div>
+		<div class="show_know"><a href="javascript:void(0);" class="konw_result" onclick="isSrue()">确认</a><a href="javascript:void(0);" class="konw_sure" onclick="isClose()">关闭</a></div>
+	</div>
+	<div class="new_qpo"></div>
+</div>
+<!--JQ基础类库-->
+<script type="text/javascript" src="http://img01.5173cdn.com/fed/build/1.00/js/fed1.6-950.js"></script>
+<script>
+    function resetMessageArea() {
+        $('.tbody').animate({
+            'scrollTop': 9999
+        }, 1000);
+    }
+    $(function(){
+        resetMessageArea()
+    })
+</script>
+
+
+<script type="text/javascript" src="./js/business/fed.js"></script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.ShippingInfoEO">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.ShippingInfoEO">
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="BUYER" property="buyer" jdbcType="VARCHAR" />
+		<result column="BUYER_ROLE" property="buyerRole" jdbcType="VARCHAR" />
+		<result column="BUYER_ROLE_LEVEL" property="buyerRoleLevel" jdbcType="NUMERIC" javaType="int" />
+		<result column="GAME_PROP" property="gameProp" jdbcType="VARCHAR" />
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+		<result column="REGION" property="region" jdbcType="VARCHAR" />
+		<result column="SERVER" property="server" jdbcType="VARCHAR" />
+		<result column="GAME_RACE" property="gameRace" jdbcType="VARCHAR" />
+		<result column="BUYER_QQ" property="buyerQQ" jdbcType="VARCHAR" />
+		<result column="BUYER_PHONE_NUMBER" property="buyerPhoneNumber" jdbcType="VARCHAR" />
+		<!-- <result column="SELLER" property="seller" jdbcType="VARCHAR" />
+		<result column="SELLER_PHONE_NUMBER" property="sellerPhoneNumber" jdbcType="VARCHAR" /> -->
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="GOLD_COUNT" property="goldCount" jdbcType="NUMERIC" javaType="int" />
+		<result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+		<result column="MONEY_NAME" property="moneyName" jdbcType="VARCHAR" />
+		<result column="TOTAL_PRICE" property="totalPrice" jdbcType="DECIMAL" />
+		<result column="TRADE_TYPE" property="tradeType" jdbcType="NUMERIC" javaType="int" />
+		<result column="TRADE_PLACE" property="tradePlace" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="NOTES" property="notes" jdbcType="VARCHAR" />
+		<result column="STATE" property="state" jdbcType="NUMERIC" javaType="int" />
+		<result column="SERVICER_ID" property="servicerId" jdbcType="NUMERIC" javaType="long" />
+		<result column="IS_COPY" property="isCopy" jdbcType="BOOLEAN"/>
+		<!--ZW_C_JB_00008_20170515 START ADD-->
+		<result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="NUMERIC" javaType="long" />
+		<result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR"  />
+		<result column="GAME_NUMBER_ID" property="gameNumberId" jdbcType="VARCHAR"  />
+		<result column="FIELD" property="field" jdbcType="VARCHAR"  />
+		<!--ZW_C_JB_00008_20170515 END ADD-->
+		<association property="servicerInfo" select="selectServicer" column="SERVICER_ID" javaType="long"/>
+	</resultMap>
+	
+		<!-- 查询客服信息 -->
+	<select id="selectServicer" parameterType="long" resultMap="com.wzitech.gamegold.usermgmt.entity.UserInfoEO.BaseResultMap">  
+        SELECT * FROM "TBL_GAMEGOLD_USERS" WHERE "ID" = #{id}
+    </select>
+	<sql id="selectSql">
+		<if test="servicerId != null">
+			AND "ORDERS"."SERVICER_ID" = #{servicerId}
+		</if>
+        <if test="consignmentId != null">
+            AND EXISTS(
+                SELECT 1
+                FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+                WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "CR"."OPTION_ID"=#{consignmentId}  AND "IS_DELETED"=false
+            )
+        </if>
+        <if test="isConsignment != null">
+            AND EXISTS(
+            SELECT 1
+            FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+            WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "CR"."IS_CONSIGNMENT"=#{isConsignment} AND "IS_DELETED"=false
+            )
+        </if>
+		<!--订单类型-->
+		<if test="orderType != null">
+			<choose>
+				<!--担保-->
+				<when test="orderType == 1">
+					AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=false
+					)
+				</when>
+				<!--寄售物服-->
+				<when test="orderType == 2">
+					AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=true
+							AND "IS_JS_ROBOT"=false
+					)
+				</when>
+				<!--寄售机器人-->
+				<when test="orderType == 3">
+					AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=true
+						AND "IS_JS_ROBOT"=true
+					)
+				</when>
+			</choose>
+		</if>
+		<if test="orderState != null">
+			AND "ORDERS"."ORDER_STATE" = #{orderState}
+		</if>
+		<if test="gameName != null and gameName != ''" >
+			AND "ORDERS"."GAME_NAME" = #{gameName}
+		</if>
+		<!--ZW_C_JB_00008_20170515 START ADD-->
+		<if test="goodsTypeId != null and goodsTypeId != ''" >
+			AND "ORDERS"."GOODS_TYPE_ID" = #{goodsTypeId}
+		</if>
+		<if test="goodsTypeName == null or  goodsTypeName == '' or goodsTypeName=='游戏币'">
+			AND ("ORDERS"."GOODS_TYPE_NAME" is null or "ORDERS"."GOODS_TYPE_NAME" = '游戏币')
+		</if>
+		<if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName != '游戏币' and goodsTypeName!='全部'">
+			AND "ORDERS"."GOODS_TYPE_NAME" = #{goodsTypeName}
+		</if>
+		<!--ZW_C_JB_00008_20170515 END ADD-->
+		<if test="orderId != null and orderId != ''">
+			AND "ORDERS"."ORDER_ID" LIKE '%'||#{orderId}||'%'
+		</if>
+		<if test="buyerAccount != null and buyerAccount != ''" >
+			AND "ORDERS"."USER_ACCOUNT" = #{buyerAccount}
+		</if>
+		<if test="createStartTime != null">
+			<![CDATA[
+				AND "ORDERS"."CREATE_TIME" >= #{createStartTime}
+			]]>
+		</if>
+		<if test="createEndTime != null">
+			<![CDATA[
+				AND "ORDERS"."CREATE_TIME" <= #{createEndTime}
+			]]>
+		</if>
+        <if test="onlyDisplayCancelled != null and onlyDisplayCancelled==true">
+            <![CDATA[
+                AND "CONFIGRESULT"."COUNT">=1
+            ]]>
+        </if>
+	</sql>
+
+	<!-- "REPOSITORY"."LOGIN_ACCOUNT" "SELLER", "SELLER"."PHONE_NUMBER" "SELLER_PHONE_NUMBER", -->
+	<!-- 
+		 LEFT JOIN "TBL_GAMEGOLD_CONFIGRESULT" "CONFIGRESULT" ON "CONFIGRESULT"."ORDER_ID" = "ORDERS"."ORDER_ID" 
+		 LEFT JOIN "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY" ON "REPOSITORY"."ID" = "CONFIGRESULT"."REPOSITORY_ID" 
+		 LEFT JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON "SELLER"."LOGIN_ACCOUNT" = "REPOSITORY"."LOGIN_ACCOUNT" 
+	-->
+	<!-- AND "REPOSITORY"."IS_DELETED" = #{repositoryIsDel}
+		 AND "SELLER"."IS_DELETED" = #{sellerIsDel} 
+		 AND "CONFIGRESULT"."IS_DELETED" = #{configResultIsDel}
+	-->
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.ShippingInfoEO">
+		SELECT
+		"ORDERS"."ORDER_ID" "ORDER_ID",
+		"ORDERS"."USER_ACCOUNT" "BUYER",
+		"ORDERS"."RECEIVER" "BUYER_ROLE",
+		"ORDERS"."GAME_LEVEL" "BUYER_ROLE_LEVEL",
+		"ORDERS"."GAME_NAME"||'  —>  '||"ORDERS"."REGION"||'  —>  '||"ORDERS"."SERVER" "GAME_PROP",
+		"ORDERS"."GAME_NAME" "GAME_NAME",
+		"ORDERS"."REGION" "REGION",
+		"ORDERS"."SERVER" "SERVER",
+		"ORDERS"."GAME_RACE" "GAME_RACE",
+		"ORDERS"."QQ" "BUYER_QQ",
+			<!--ZW_C_JB_00008_20170515 START ADD-->
+			"ORDERS"."GOODS_TYPE_ID" "GOODS_TYPE_ID",
+			"ORDERS"."GOODS_TYPE_NAME" "GOODS_TYPE_NAME",
+		    "ORDERS"."MONEY_NAME" "MONEY_NAME",
+			"ORDERS"."GAME_NUMBER_ID" "GAME_NUMBER_ID",
+			<!--ZW_C_JB_00008_20170515 END ADD-->
+		"ORDERS"."MOBILE_NUMBER" "BUYER_PHONE_NUMBER",
+		"ORDERS"."TITLE" "TITLE",
+		"ORDERS"."GOLD_COUNT" "GOLD_COUNT",
+		"ORDERS"."UNIT_PRICE" "UNIT_PRICE",
+		"ORDERS"."TOTAL_PRICE" "TOTAL_PRICE",
+		"ORDERS"."TRADE_TYPE" "TRADE_TYPE",
+		"TRADE_PLACE"."PLACE_NAME" "TRADE_PLACE",
+		"ORDERS"."CREATE_TIME" "CREATE_TIME",
+		"ORDERS"."END_TIME" "END_TIME",
+		"ORDERS"."NOTES" "NOTES",
+		"ORDERS"."SERVICER_ID" "SERVICER_ID",
+		"ORDERS"."IS_COPY" "IS_COPY",
+		"CONFIGRESULT"."COUNT" "STATE",
+		"ORDERS"."FIELD" "FIELD"
+		FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+		<if test="sellerAccount != null and sellerAccount != ''" >
+			JOIN (
+			SELECT "ORDER_ID" FROM "TBL_GAMEGOLD_CONFIGRESULT"
+			WHERE "LOGIN_ACCOUNT" = #{sellerAccount} AND "IS_DELETED" = #{configResultIsDel}
+			GROUP BY "ORDER_ID"
+			) "GAMEGOLD_CONFIGRESULT" ON "GAMEGOLD_CONFIGRESULT"."ORDER_ID" = "ORDERS"."ORDER_ID"
+		</if>
+		LEFT JOIN (
+			SELECT "b"."ORDER_ID", COUNT("b"."ID") "COUNT"
+			FROM "TBL_GAMEGOLD_ORDERS" "a"  inner join  "TBL_GAMEGOLD_CONFIGRESULT" "b" on "a"."ORDER_ID"="b"."ORDER_ID"
+			WHERE
+			"b"."STATE" =  #{state} AND "b"."IS_DELETED" = #{configResultIsDel}
+			<if test="orderState != null">
+				AND "a"."ORDER_STATE" = #{orderState}
+			</if>
+			<if test="createStartTime != null">
+				<![CDATA[
+						AND "a"."CREATE_TIME" >= #{createStartTime}
+					]]>
+			</if>
+			<if test="createEndTime != null">
+				<![CDATA[
+						AND "a"."CREATE_TIME" <= #{createEndTime}
+					]]>
+			</if>
+			GROUP BY "b"."ORDER_ID"
+		) "CONFIGRESULT" ON "CONFIGRESULT"."ORDER_ID" = "ORDERS"."ORDER_ID"
+		LEFT JOIN "TBL_GAMEGOLD_TRADE_PLACE" "TRADE_PLACE" ON "TRADE_PLACE"."GAME_NAME" = "ORDERS"."GAME_NAME" AND "TRADE_PLACE"."GOODS_TYPE_NAME" = "ORDERS"."GOODS_TYPE_NAME"
+		<where>
+			"TRADE_PLACE"."IS_DELETED" = #{tradePalceIsDel}
+			<include refid="selectSql"/>
+		</where>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "ORDERS"."${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+	
+	<!-- AND "REPOSITORY"."IS_DELETED" = #{repositoryIsDel}
+		 AND "SELLER"."IS_DELETED" = #{sellerIsDel} -->
+	<!-- LEFT JOIN "TBL_GAMEGOLD_CONFIGRESULT" "CONFIGRESULT" ON "CONFIGRESULT"."ORDER_ID" = "ORDERS"."ORDER_ID"
+		 LEFT JOIN "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY" ON "REPOSITORY"."ID" = "CONFIGRESULT"."REPOSITORY_ID"
+		 LEFT JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON "SELLER"."LOGIN_ACCOUNT" = "REPOSITORY"."LOGIN_ACCOUNT" 
+	-->
+	<!-- "CONFIGRESULT"."IS_DELETED" = #{configResultIsDel} -->
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		 SELECT COUNT(1) 
+		 FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+		 <if test="sellerAccount != null and sellerAccount != ''" >
+	        JOIN (
+				SELECT "ORDER_ID" FROM "TBL_GAMEGOLD_CONFIGRESULT" 
+	        	WHERE "LOGIN_ACCOUNT" = #{sellerAccount} AND "IS_DELETED" = #{configResultIsDel}
+	        	GROUP BY "ORDER_ID"
+	        ) "GAMEGOLD_CONFIGRESULT" ON "GAMEGOLD_CONFIGRESULT"."ORDER_ID" = "ORDERS"."ORDER_ID"
+		</if>
+        LEFT JOIN (
+            SELECT "ORDER_ID", COUNT("ID") "COUNT" FROM "TBL_GAMEGOLD_CONFIGRESULT"
+            WHERE "STATE" = #{state} AND "IS_DELETED" = #{configResultIsDel}
+            GROUP BY "ORDER_ID"
+        ) "CONFIGRESULT" ON "CONFIGRESULT"."ORDER_ID" = "ORDERS"."ORDER_ID"
+		LEFT JOIN "TBL_GAMEGOLD_TRADE_PLACE" "TRADE_PLACE" ON "TRADE_PLACE"."GAME_NAME" = "ORDERS"."GAME_NAME" AND "TRADE_PLACE"."GOODS_TYPE_NAME" = "ORDERS"."GOODS_TYPE_NAME"
+		<where>
+			"TRADE_PLACE"."IS_DELETED" = #{tradePalceIsDel}
+			<include refid="selectSql"/>
+		</where>
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.ShippingInfoEO">
+		${value}
+	</select>
+</mapper>

@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>订单结果页</title>
+    <meta content="" name="description" />
+    <meta content="5173帐号、安全帐号、游戏帐号" name="keywords" />
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common1.6-950.css" />
+    <link rel="shortcut icon" href="http://img01.5173cdn.com/common/build/1.00/images/ico.ico" />
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link href="css/request-buy.css" rel="Stylesheet" type="text/css" />
+    <!-- 新加担保发布样式 -->
+    <link rel="stylesheet" type="text/css" href="css/new-guarantee.css">
+    <script src="./js/jquery.js" type="text/javascript"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/headGameMenu.js?v=3" type="text/javascript"></script>
+    <script src="./js/business/orderResult1.js?v=3" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="header">
+        <!-- 顶部登陆条+快捷菜单条 -->
+        <div style="display:none" id="divLoading">
+        </div>
+        <div id="J_GlobalTop">
+        </div>
+        <!--网站Logo+四级联动搜索条-->
+        <div class="header_box clearfix header-wp1200">
+            <h1 class="logo">
+                <a href="http://www.5173.com" title="中国网络游戏服务网">5173</a>
+            </h1>
+            <p class="slogan">金币交易</p>
+            <!-- 四级联动游戏选择 -->
+
+            <!-- 组件_商品发布进度条 开始 -->
+            <div class="wares-box clearfix">
+                <ul class="clearfix">
+                    <li class="over">
+                        <!-- 订单的 -->
+                        <i class="new-order-img ico-num">1</i>
+                        <span class="txt">选择商品，下单</span>
+                        <s class="new-order-arrow"></s>
+                    </li>
+                    <li class="over">
+                        <i class="new-order-img ico-num">2</i>
+                        <span class="txt">出货商登录游戏发货</span>
+                        <s class="new-order-arrow"></s>
+                    </li>
+                    <li class="over">
+                        <i class="new-order-img ico-num">3</i>
+                        <span class="txt">收货商确认收货</span>
+                        <s class="new-order-arrow"></s>
+                    </li>
+                    <li class="over">
+                        <i class="new-order-img ico-num">4</i>
+                        <span class="txt">交易完成</span>
+                    </li>
+                </ul>
+            </div>
+            <!-- 组件_商品发布进度条 结束 -->
+        </div>
+        <!--网站Logo+四级联动搜索条-->
+        <!-- <div class="header_box clearfix">
+        <h1 class="logo">
+            <a href="http://www.5173.com/" title="中国网络游戏服务网">5173</a></h1> -->
+        <!-- 四级联动游戏选择 -->
+        <!--  <div class="game_select game_select_main clearfix" id="gameSelectV2">
+            <form id="gsForm" method="get" class="clearfix">
+                <div class="game_select_box" id="gameSelectBox">
+                    <ul class="tab_menu">
+                        <li class="current"><a href="#">
+                            普通搜索</a></li>
+                    </ul>
+                    <div class="tab_box clearfix" id="multipleSearch" style="display: block;">
+                        <div class="left_bg">
+                        </div> -->
+        <!-- 游戏选择菜单 -->
+        <!-- <ul class="gs_menu" id="gsMenu">
+                            <li id="gs_game" class="gs_name arrow" title="选择游戏名称">游戏名称</li><li id="gs_plat" class="gs_plat arrow" title="选择游戏平台" style="display: none;">平台</li>
+                            <li id="gs_area" class="gs_area arrow" title="选择游戏区">游戏区</li>
+                            <li id="gs_server" class="gs_server arrow" title="选择游戏服务器">游戏服</li> -->
+        <!--<li id="gs_type" class="gs_type arrow" title="选择分类">游戏币</li>-->
+        <!--<li class="gs_search_item">-->
+        <!--<input class="gs_search_box holderfont" id="gsSearchBox" type="text" placeholder="请输入任意关键字" autocomplete="off" style="width: 120px;">-->
+        <!--</li>-->
+        <!-- </ul>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                    <div class="tab_box clearfix tab_box_reset hide" id="simpleSearch" style="display: none;">
+                        <div class="left_bg">
+                        </div>
+                        <div class="simple_search_box">
+                            <input type="text" class="simple_search_input holderfont" id="simpleSearchInput"
+                                   placeholder="关键字找游戏、搜区服、寻商品" autocomplete="off"></div>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                </div>
+                <div class="btn_box">
+                    <input class="gs_search_btn" id="gsSearchBtn" value="搜索"></div>
+            </form> -->
+        <!-- 游戏选择列表 -->
+        <!-- <div class="gs_box" id="gsBox" style="display: block;">
+                <div class="gs_box_inner">
+                    <div class="gs_head clearfix">
+                        <dl class="gs_name" style="display: block;">
+                            <dt>
+                            <h1>
+                                请选择游戏：</h1>
+                            </dt>
+                            <dd><a id="all" flag="region" href="javascript:void(0);" style="display: none;">全部区</a></dd>
+                        </dl>
+                        <a target="_self" class="close_btn" title="关闭窗口" href="javascript:">关闭窗口</a></div>
+                    <ul id="gsList" class="gs_list gs_name">
+                    </ul>
+                </div>
+            </div>
+            <s id="searchbar_arrow" class="game_select_arrow" style="left: 50px; display: inline;
+                    top: 66px"></s>
+        </div>
+    </div> -->
+    </div>
+    <div class="guarantee-container">
+        <div class="wrapper">
+            <div class="position">
+                <i class="icon-home"></i>
+                <a href="http://www.5173.com/">首页</a>
+                <em>></em>
+                <a href="chOrderList.html">我的出货订单</a>
+                <em>></em>
+                <span>订单结果</span>
+            </div>
+            <div class="publish-suc">
+                <!-- 商品发布详情 -->
+                <div class="publish-suc-box new-publish-suc-box">
+                    <div class="clearfix">
+                        <div class="icon-suc-box fl">
+                            <i class="icon-revoke" id="trIcon"></i>
+                        </div>
+                        <div class="publish-suc-detail fl">
+                            <div class="publish-suc-detail-box" id="divOrder">
+                                <p class="title" id="orderSt"></p>
+                            </div>
+                            <div class="ewm-box">
+                                <div class="ewm-detail">
+                                    <img src="http://images001.5173cdn.com/view/images/v0/coin/guarantee/ewm.jpg" alt="二维码">
+                                    <div class="ewm-word">
+                                        <span class="word1">扫我</span>
+                                        <span class="word2">+关注</span>
+                                    </div>
+                                </div>
+                                <div class="ewm-tip">5173快速交易微信公众号,时刻保障订单动态</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- 聊天 -->
+                    <div class="chat-box" id="divLog">
+                            <!-- <div class="chat-line clearfix">
+                                头像
+                                <div class="avatar avatar1 fl"></div>
+                                对话内容
+                                <div class="chat-content fl">
+                                    <i class="icon-arrow"></i>
+                                    <p>
+                                        <span class="time">2018-04-04 15:23:21</span>&nbsp收货商已经接到订单信息，正在为您分配收货角色，请等待</p>
+                                </div>
+                            </div>
+                            <div class="chat-line clearfix">
+                                头像
+                                <div class="avatar avatar1 fl"></div>
+                                对话内容
+                                <div class="chat-content fl">
+                                    <i class="icon-arrow"></i>
+                                    <p>
+                                        <span class="time">2018-04-04 15:23:21</span>&nbsp收货商已经分配游戏角色名：YTDNHSKZ,该角色收货数量6000万金，请您仔细核对角色名后 交易，务必由您邀请收货商交易并录制交易视频。</p>
+                                </div>
+                            </div>
+                            <div class="chat-line clearfix">
+                                头像
+                                <div class="avatar avatar2 fl"></div>
+                                对话内容
+                                变色加active
+                                <div class="chat-content active fl">
+                                    <i class="icon-arrow"></i>
+                                    <p>
+                                        <span class="time">2018-04-04 15:23:21</span>&nbsp老板邮寄后请小退角色 提交发货</p>
+                                </div>
+                            </div> -->
+                        </div>
+                </div>
+            </div>
+        </div>
+        <!-- head end -->
+        <!-- <div class="wrap">
+            <div class="conNav"> 您的位置：
+                <a href="http://www.5173.com/">首页</a> &gt;
+                <a href="chOrderList.html">我的出货订单</a> &gt; 订单结果 </div>
+        </div>
+        <div class="wrap mt20">
+            <div class="chddqx_top" id="divOrder">
+                <dl>
+                </dl>
+                <div class="clearfix"></div>
+                <div class="top_right1 mt20">
+                    <div class="tbody">
+                        <div class="inbox" id="divLog">
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div> -->
+        <div class="clearfix"></div>
+        <script type="text/javascript" src="./js/business/fed.js"></script>
+</body>
+
+</html>

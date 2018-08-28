@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.mymgmt.entity.CityEO">
+	<resultMap id="BaseResultMap" type="com.wzitech.gamegold.mymgmt.entity.CityEO">
+		<result column="CityID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="CityName" property="cityName" jdbcType="VARCHAR" />
+		<result column="ProID" property="proId" jdbcType="NUMERIC" javaType="int"/>
+		<result column="CitySort" property="citySort" jdbcType="NUMERIC" javaType="int"/>
+	</resultMap>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.mymgmt.entity.CityEO">
+		SELECT * FROM "TBL_CITY"
+		<where>
+			"ProID" = ${proId}
+		</where>
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.mymgmt.entity.CityEO">
+		 ${value}
+	</select>
+</mapper>

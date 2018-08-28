@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.repository.entity.SellerSetting">
+
+    <resultMap id="BaseResultMap"
+               type="com.wzitech.gamegold.repository.entity.SellerSetting">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+        <result column="REGION" property="region" jdbcType="VARCHAR" />
+        <result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR" />
+        <result column="COMMISION" property="commision" jdbcType="NUMERIC" />
+        <result column="PRAISE_COUNT" property="praiseCount" jdbcType="NUMERIC"
+                javaType="int" />
+        <result column="SUCCESS_PERCENT" property="successPercent" jdbcType="NUMERIC" />
+        <result column="DELIVER_SPEED" property="deliverSpeed" jdbcType="NUMERIC" />
+        <result column="MONTH_DEAL_COUNT" property="monthDealCount" jdbcType="NUMERIC"
+                javaType="int" />
+        <result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN" />
+        <result column="SHOP_NAME" property="shopName" jdbcType="VARCHAR" />
+        <result column="SORT" property="sort" jdbcType="INTEGER" />
+        <!--ZW_C_JB_00008_20170512 START ADD-->
+        <result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="NUMERIC" javaType="long" />
+        <result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR" />
+        <!--ZW_C_JB_00008_20170512 END ADD-->
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert" parameterType="com.wzitech.gamegold.repository.entity.SellerSetting"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO "TBL_GAMEGOLD_SELL_SETTING"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameName != null and gameName != ''">
+                "GAME_NAME",
+            </if>
+            <if test="region != null and region != ''">
+                "REGION",
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                "LOGIN_ACCOUNT",
+            </if>
+            <if test="commision != null">
+                "COMMISION",
+            </if>
+            <if test="praiseCount != null">
+                "PRAISE_COUNT",
+            </if>
+            <if test="successPercent != null">
+                "SUCCESS_PERCENT",
+            </if>
+            <if test="deliverSpeed != null">
+                "DELIVER_SPEED",
+            </if>
+            <if test="monthDealCount != null">
+                "MONTH_DEAL_COUNT",
+            </if>
+            <if test="isDeleted != null">
+                "IS_DELETED",
+            </if>
+            <!--ZW_C_JB_00008_20170512 START ADD-->
+            <if test="goodsTypeId != null and goodsTypeId != ''">
+                "GOODS_TYPE_ID",
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                "GOODS_TYPE_NAME"
+            </if>
+            <!--ZW_C_JB_00008_20170512 END ADD-->
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+            <if test="region != null and region != ''">
+                #{region},
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                #{loginAccount},
+            </if>
+            <if test="commision != null">
+                #{commision},
+            </if>
+            <if test="praiseCount != null">
+                #{praiseCount},
+            </if>
+            <if test="successPercent != null">
+                #{successPercent},
+            </if>
+            <if test="deliverSpeed != null">
+                #{deliverSpeed},
+            </if>
+            <if test="monthDealCount != null">
+                #{monthDealCount},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted},
+            </if>
+            <!--ZW_C_JB_00008_20170512 START ADD-->
+            <if test="goodsTypeId != null and goodsTypeId != ''">
+                #{goodsTypeId},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                #{goodsTypeName}
+            </if>
+            <!--ZW_C_JB_00008_20170512 END ADD-->
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate" parameterType="com.wzitech.gamegold.repository.entity.SellerSetting">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE "TBL_GAMEGOLD_SELL_SETTING"
+            <set>
+                <if test="item.gameName != null and item.gameName != ''">
+                    "GAME_NAME"= #{item.gameName},
+                </if>
+                <if test="item.region != null and item.region != ''">
+                    "REGION"= #{item.region},
+                </if>
+                <if test="item.loginAccount != null and item.loginAccount != ''">
+                    "LOGIN_ACCOUNT"= #{item.loginAccount},
+                </if>
+                <if test="item.commision != null">
+                    "COMMISION"= #{item.commision},
+                </if>
+                <if test="item.praiseCount != null">
+                    "PRAISE_COUNT"= #{item.praiseCount},
+                </if>
+                <if test="item.deliverSpeed != null">
+                    "DELIVER_SPEED"= #{item.deliverSpeed},
+                </if>
+                <if test="item.successPercent != null">
+                    "SUCCESS_PERCENT"= #{item.successPercent},
+                </if>
+                <if test="item.monthDealCount != null">
+                    "MONTH_DEAL_COUNT"= #{item.monthDealCount},
+                </if>
+                <if test="item.isDeleted != null">
+                    "IS_DELETED"= #{item.isDeleted},
+                </if>
+                <!--ZW_C_JB_00008_20170512 START ADD-->
+                <if test="item.goodsTypeId != null and item.goodsTypeId != ''">
+                    "GOODS_TYPE_ID"= #{item.goodsTypeId},
+                </if>
+                <if test="item.goodsTypeName != null and item.goodsTypeName != ''">
+                    "GOODS_TYPE_NAME"= #{item.goodsTypeName}
+                </if>
+                <!--ZW_C_JB_00008_20170512 END ADD-->
+            </set>
+            <where>
+                "ID" = #{item.id}
+            </where>
+        </foreach>
+    </update>
+
+    <select id="selectShopName" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.SellerSetting">
+        SELECT *,b."SHOP_NAME" "SHOP_NAME" FROM "TBL_GAMEGOLD_SELL_SETTING" a, "TBL_GAMEGOLD_SELLER" b
+        <where>
+            a."LOGIN_ACCOUNT"=b."LOGIN_ACCOUNT"
+            <if test="gameName != null and gameName != ''">
+                AND a."GAME_NAME"= #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND a."REGION"= #{region}
+            </if>
+            <if test="isDeleted != null">
+                AND a."IS_DELETED"= #{isDeleted}
+            </if>
+            <if test="loginAccount != null">
+                AND a."LOGIN_ACCOUNT"= #{loginAccount}
+            </if>
+            <!--ZW_C_JB_00008_20170512 START ADD-->
+            <if test="goodsTypeId != null and goodsTypeId != ''">
+                AND a."GOODS_TYPE_ID"= #{goodsTypeId}
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                AND a."GOODS_TYPE_NAME"= #{goodsTypeName}
+            </if>
+            <!--ZW_C_JB_00008_20170512 END ADD-->
+        </where>
+        limit 1
+    </select>
+
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.SellerSetting">
+        SELECT * FROM "TBL_GAMEGOLD_SELL_SETTING"
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="lockMode != null">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_SELL_SETTING"
+        <include refid="selectSql" />
+    </select>
+
+    <!-- 查询符合条件的唯一记录 -->
+    <select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+        SELECT * FROM "TBL_GAMEGOLD_SELL_SETTING"
+        <where>
+            <if test="id != null">
+                "ID" = #{id}
+            </if>
+        </where>
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM "TBL_GAMEGOLD_SELL_SETTING" WHERE "ID" IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <sql id="selectSql">
+        <where>
+            <if test="loginAccount != null and loginAccount != ''">
+                "LOGIN_ACCOUNT" LIKE '%'||#{loginAccount}||'%'
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND "GAME_NAME"= #{gameName}
+            </if>
+            <!--<if test="region != null and region != ''">-->
+                <!--AND "REGION"= #{region}-->
+            <!--</if>-->
+            <if test="isDeleted != null">
+                AND "IS_DELETED"= #{isDeleted}
+            </if>
+            <if test="id != null">
+                AND "ID"= #{id}
+            </if>
+            <!--ZW_C_JB_00008_20170512 START ADD-->
+            <if test="goodsTypeId != null and goodsTypeId != ''">
+                AND "GOODS_TYPE_ID"= #{goodsTypeId}
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                AND "GOODS_TYPE_NAME"= #{goodsTypeName}
+            </if>
+            <!--ZW_C_JB_00008_20170512 END ADD-->
+        </where>
+    </sql>
+
+    <!-- 查找所有符合条件的卖家信息 -->
+    <select id="selectByLoginAccountList" parameterType="map" resultMap="BaseResultMap">
+        SELECT *,b."SHOP_NAME" "SHOP_NAME" FROM "TBL_GAMEGOLD_SELL_SETTING" a, "TBL_GAMEGOLD_SELLER" b
+        <where>
+            a."LOGIN_ACCOUNT"=b."LOGIN_ACCOUNT" and a."IS_DELETED"=false
+            <if test="gameName != null">
+                and a."GAME_NAME" = #{gameName}
+            </if>
+            <if test="loginAccountList != null">
+                and a."LOGIN_ACCOUNT" in (${loginAccountList})
+            </if>
+            <!--ZW_C_JB_00008_20170512 START ADD-->
+            <if test="goodsTypeName != null">
+                and a."GOODS_TYPE_NAME" = #{goodsTypeName}
+            </if>
+            <!--ZW_C_JB_00008_20170512 END ADD-->
+        </where>
+    </select>
+
+    <!--更新排序字段-->
+    <update id="updateSort" parameterType="Map">
+        UPDATE "TBL_GAMEGOLD_SELL_SETTING"
+        SET "SORT"=#{sort}
+        WHERE "ID"=#{id}
+    </update>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzitech.gamegold.funds.entity.gameTradingEO">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.funds.entity.gameTradingEO" >
+		<result column="TRADING_NUM" property="tradingNum" jdbcType="VARCHAR" />
+		<result column="ORDER_TOTAL" property="total" jdbcType="NUMERIC" />
+		<result column="COMMISSION" property="commission" jdbcType="NUMERIC"/>
+		<result column="DIFFERENCE" property="difference" jdbcType="NUMERIC" />
+		<result column="GOLDCOUNT" property="goldCount" jdbcType="NUMERIC" javaType="int"/>
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+		<result column="REGION" property="region" jdbcType="VARCHAR" />
+		<result column="SERVER" property="server" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="selectSql">
+		<if test="orderState != null">
+			"ORDER_STATE" = #{orderState}
+		</if>
+		<if test="gameName != null and gameName!=''">
+			AND "GAME_NAME" = #{gameName}
+		</if>
+		<if test="region != null and region!=''">
+			AND "REGION" = #{region}
+		</if>
+		<if test="server != null and server!=''">
+			AND "SERVER" = #{server}
+		</if>
+		<if test="statementStartTime != null">
+			<![CDATA[
+				AND "END_TIME" >= #{statementStartTime}
+			]]>
+		</if>
+		<if test="statementEndTime != null">
+			<![CDATA[
+				AND "END_TIME" <= #{statementEndTime}
+			]]>
+		</if>
+	</sql>
+	
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByGameProp" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.funds.entity.gameTradingEO">
+		 SELECT SUM("TOTAL_PRICE")"ORDER_TOTAL", COUNT("ORDER_ID") "TRADING_NUM",
+		 		SUM("GOLD_COUNT") "GOLDCOUNT","GAME_NAME","REGION","SERVER"
+		  FROM "TBL_GAMEGOLD_ORDERS"	 
+		<where>
+			<include refid="selectSql"/>
+		</where>
+			GROUP BY "GAME_NAME","REGION", "SERVER"
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+	
+	<!-- 查询符合条件的实体对象 用于导出数据 -->
+	<select id="selectByGameProp1" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.funds.entity.gameTradingEO">
+		 SELECT SUM("TOTAL_PRICE")"ORDER_TOTAL", COUNT("ORDER_ID") "TRADING_NUM", 
+		 		SUM("GOLD_COUNT") "GOLDCOUNT","GAME_NAME","REGION","SERVER"
+		  FROM "TBL_GAMEGOLD_ORDERS"	 
+		<where>
+			<include refid="selectSql"/>
+		</where>
+			GROUP BY "GAME_NAME","REGION", "SERVER" ORDER BY "TRADING_NUM" DESC
+	</select>
+	
+	<select id="selectCountByMap" parameterType="map"  resultType="int">
+		 select  COUNT (distinct("REGION" ,"SERVER") )from "TBL_GAMEGOLD_ORDERS" 
+		<where>
+			<include refid="selectSql"/>
+		</where>
+	</select>
+	
+	<!-- 查询符合条件的区服差额-->
+	<select id="selectDifferenceByMap" parameterType="map" resultType="String">
+		 SELECT (SUM(b."ORDER_UNIT_PRICE"*b."CONFIG_GOLD_COUNT")-SUM(b."TOTAL_PRICE")) FROM "TBL_GAMEGOLD_ORDERS" a,"TBL_GAMEGOLD_CONFIGRESULT" b
+			where a."GAME_NAME"=#{gameName} and a."REGION"=#{region} and a."SERVER"=#{server} and a."ORDER_ID" = b."ORDER_ID"
+			and b."LAST_UPDATE_TIME" BETWEEN #{statementStartTime} and #{statementEndTime} and a."ORDER_STATE"=5 and b."IS_DELETED"=false
+			and b."STATE" = 4
+	</select>
+	
+	<!-- 查询约定时间到8月13的佣金-->
+	<select id="selectCommission" parameterType="map" resultType="double">
+		SELECT  SUM("CONFIG"."TOTAL_PRICE")*0.06 FROM "TBL_GAMEGOLD_ORDERS" "ORDERS" ,"TBL_GAMEGOLD_CONFIGRESULT" "CONFIG"	WHERE "ORDERS"."GAME_NAME"=#{gameName} AND
+			"ORDERS"."REGION"= #{region} AND "ORDERS"."SERVER"=#{server} AND "ORDERS"."ORDER_STATE"=5 AND "ORDERS"."END_TIME" BETWEEN #{statementStartTime} AND #{date} AND
+			"ORDERS"."ORDER_ID"="CONFIG"."ORDER_ID" 
+	</select>
+</mapper>

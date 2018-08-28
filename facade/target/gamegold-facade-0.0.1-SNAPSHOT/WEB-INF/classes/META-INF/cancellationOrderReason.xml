@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CancelOrderConfig>
+    <ReceivingMrchant>
+        <Reason>
+            收货商账号异常
+        </Reason>
+        <Reason>
+            收货商角色过低
+        </Reason>
+        <Reason>
+            收货商发错区服
+        </Reason>
+        <Reason>
+            收货商账号密码出错
+        </Reason>
+        <Reason>
+            收货商不是附魔师
+        </Reason>
+        <Reason>
+            游戏账号有动态令牌
+        </Reason>
+    </ReceivingMrchant>
+    <Vendor>
+        <Reason>
+            出货商下错区服
+        </Reason>
+    </Vendor>
+</CancelOrderConfig>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="gamegold-app:war">
+    <output-path>$PROJECT_DIR$/gamegold-app/target</output-path>
+    <root id="archive" name="gamegold-app.war">
+      <element id="artifact" artifact-name="gamegold-app:war exploded" />
+    </root>
+  </artifact>
+</component>

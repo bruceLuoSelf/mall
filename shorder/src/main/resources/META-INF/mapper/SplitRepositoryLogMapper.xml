@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.SplitRepositoryLog">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.SplitRepositoryLog">
+        <result column="id" property="id"/>
+        <result column="fc_id" property="fcId"/>
+        <result column="buyer_account" property="buyerAccount"/>
+        <result column="game_name" property="gameName"/>
+        <result column="region" property="region"/>
+        <result column="server" property="server"/>
+        <result column="game_race" property="gameRace"/>
+        <result column="game_account" property="gameAccount"/>
+        <result column="log" property="log"/>
+        <result column="img_path" property="imgPath"/>
+        <result column="create_time" property="createTime"/>
+        <result column="role_name" property="roleName"/>
+        <result column="log_type" property="logType"/>
+        <result column="fc_order_id" property="fcOrderId"/>
+        <result column="count" property="count"/>
+        <result column="income_type" property="incomeType"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.SplitRepositoryLog"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sh_split_repository_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fcId != null">
+                fc_id,
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account,
+            </if>
+            <if test="gameName != null and gameName != ''">
+                game_name,
+            </if>
+            <if test="region != null and region != ''">
+                region,
+            </if>
+            <if test="server != null and server != ''">
+                server,
+            </if>
+            <if test="gameRace != null and gameRace !='' ">
+                game_race,
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                game_account,
+            </if>
+            <if test="log != null and log != ''">
+                log,
+            </if>
+            <if test="imgPath != null and imgPath != ''">
+                img_path,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="roleName != null">
+                role_name,
+            </if>
+            <if test="logType != null">
+                log_type,
+            </if>
+            <if test="fcOrderId != null">
+                fc_order_id,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="incomeType != null">
+                income_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fcId != null">
+                #{fcId},
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                #{buyerAccount},
+            </if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+            <if test="region != null and region != ''">
+                #{region},
+            </if>
+            <if test="server != null and server != ''">
+                #{server},
+            </if>
+            <if test="gameRace != null and gameRace !='' ">
+                #{gameRace},
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                #{gameAccount},
+            </if>
+            <if test="log != null and log != ''">
+                #{log},
+            </if>
+            <if test="imgPath != null and imgPath != ''">
+                #{imgPath},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="roleName != null">
+                #{roleName},
+            </if>
+            <if test="logType != null">
+                #{logType},
+            </if>
+            <if test="fcOrderId != null">
+                #{fcOrderId},
+            </if>
+            <if test="count != null">
+                #{count},
+            </if>
+            <if test="incomeType != null">
+                #{incomeType}
+            </if>
+        </trim>
+    </insert>
+
+
+    <sql id="selectSql">
+        <where>
+            <if test="id != null">
+                id=#{id}
+            </if>
+            <if test="fcId != null">
+                and fc_id=#{fcId}
+            </if>
+            <if test=" gameName!= null and gameName != ''">
+                and game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                and region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                and server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                and game_race = #{gameRace}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and role_name = #{roleName}
+            </if>
+            <if test="fcOrderId != null and fcOrderId != ''">
+                and fc_order_id = #{fcOrderId}
+            </if>
+            <if test="incomeType != null ">
+                and income_type = #{incomeType}
+            </if>
+            <if test="logType != null ">
+                and log_type = #{logType}
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                and buyer_account=#{buyerAccount}
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                and game_account=#{gameAccount}
+            </if>
+            <if test="startCreateTime != null">
+                <![CDATA[
+                and create_time >= #{startCreateTime}
+                ]]>
+            </if>
+            <if test="endCreateTime != null">
+                <![CDATA[
+                and create_time <= #{endCreateTime}
+                ]]>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_split_repository_log
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_split_repository_log
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_split_repository_log WHERE id = #{id}
+    </select>
+
+    <insert id="batchInsert" parameterType="com.wzitech.gamegold.shorder.entity.SplitRepositorySubRequest">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO t_sh_split_repository_log
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.fcId!=null and item.fcId!=''">
+                    fc_id,
+                </if>
+                <if test="item.buyerAccount!=null and item.buyerAccount!=''">
+                    buyer_account,
+                </if>
+                <if test="item.gameName!=null and item.gameName!=''">
+                    game_name,
+                </if>
+                <if test="item.region!=null and item.region!=''">
+                    region,
+                </if>
+                <if test="item.server!=null and item.server!=''">
+                    server,
+                </if>
+                <if test="item.gameRace!=null and item.gameRace!=''">
+                    game_race,
+                </if>
+                <if test="item.gameAccount!=null and item.gameAccount!=''">
+                    game_account,
+                </if>
+                <if test="item.log!=null and item.log!=''">
+                    log,
+                </if>
+                <if test="item.imgPath!=null and item.imgPath!=''">
+                    img_path,
+                </if>
+                <if test="item.createTime!=null">
+                    create_time,
+                </if>
+                <if test="item.roleName!=null and item.roleName!=''">
+                    role_name,
+                </if>
+                <if test="item.logType!=null">
+                    log_type,
+                </if>
+                <if test="item.fcOrderId!=null">
+                    fc_order_id,
+                </if>
+                <if test="item.count!=null">
+                    count,
+                </if>
+                <if test="item.incomeType!=null">
+                    income_type
+                </if>
+            </trim>
+            <trim prefix="values(" suffix=")" suffixOverrides=",">
+                <if test="item.fcId!=null and item.fcId!=''">
+                    #{item.fcId},
+                </if>
+                <if test="item.buyerAccount!=null and item.buyerAccount!=''">
+                    #{item.buyerAccount},
+                </if>
+                <if test="item.gameName!=null and item.gameName!=''">
+                    #{item.gameName},
+                </if>
+                <if test="item.region!=null and item.region!=''">
+                    #{item.region},
+                </if>
+                <if test="item.server!=null and item.server!=''">
+                    #{item.server},
+                </if>
+                <if test="item.gameRace!=null and item.gameRace!=''">
+                    #{item.gameRace},
+                </if>
+                <if test="item.gameAccount!=null and item.gameAccount!=''">
+                    #{item.gameAccount},
+                </if>
+                <if test="item.log!=null and item.log!=''">
+                    #{item.log},
+                </if>
+                <if test="item.imgPath!=null and item.imgPath!=''">
+                    #{item.imgPath},
+                </if>
+                <if test="item.createTime!=null">
+                    #{item.createTime},
+                </if>
+                <if test="item.roleName!=null and item.roleName!=''">
+                    #{item.roleName},
+                </if>
+                <if test="item.logType!=null">
+                    #{item.logType},
+                </if>
+                <if test="item.fcOrderId!=null">
+                    #{item.fcOrderId},
+                </if>
+                <if test="item.count!=null">
+                    #{item.count},
+                </if>
+                <if test="item.incomeType!=null">
+                    #{item.incomeType}
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+</mapper>

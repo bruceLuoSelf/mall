@@ -1,0 +1,65 @@
+package com.wzitech.gamegold.common.redis.impl;
+
+import com.wzitech.chaos.framework.server.common.utils.BeanMapper;
+import com.wzitech.chaos.framework.server.common.utils.JsonMapper;
+import com.wzitech.chaos.framework.server.dataaccess.redis.AbstractRedisDAO;
+import com.wzitech.gamegold.common.main.MainStationKeyEO;
+import com.wzitech.gamegold.common.redis.IRedisCommon;
+import com.wzitech.gamegold.common.utils.RedisKeyHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @author 340096
+ * @date 2017/12/5.
+ */
+@Component
+public class RedisCommonImpl extends AbstractRedisDAO<MainStationKeyEO> implements IRedisCommon {
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHH");
+
+    @Autowired
+    @Qualifier("userRedisTemplate")
+    @Override
+    public void setTemplate(StringRedisTemplate template) {
+        super.template = template;
+    }
+
+    JsonMapper jsonMapper = JsonMapper.nonEmptyMapper();
+
+    @Override
+    public MainStationKeyEO queryUserThough() {
+        String account = valueOps.get(RedisKeyHelper.getMainAccessTokenKeyUserThough());
+        MainStationKeyEO mainStationKeyEO = jsonMapper.fromJson(account, MainStationKeyEO.class);
+        return mainStationKeyEO;
+    }
+
+    @Override
+    public void addUserThough(MainStationKeyEO mainStationKeyEO) {
+        String strMap = jsonMapper.toJson(BeanMapper.map(mainStationKeyEO, MainStationKeyEO.class));
+        valueOps.set(RedisKeyHelper.getMainAccessTokenKeyUserThough(), strMap);
+    }
+
+    @Override
+    public Long incr(String key, int time) {
+        Long count = valueOps.increment(key, 1);
+        if (count == 1) {
+            redisTemplate.expire(key, time, TimeUnit.SECONDS);
+        }
+
+        String staticKey = key + ":" + formatter.format(new Date());
+        valueOps.increment(staticKey, 1);
+        if (count == 1) {
+            redisTemplate.expire(staticKey, 60 * 60 * 24 * 3, TimeUnit.SECONDS);
+        }
+        return count;
+    }
+}

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.GameCategoryConfig">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.GameCategoryConfig">
+        <result column="id" property="id" javaType="long" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="is_enabled" property="isEnabled" jdbcType="BOOLEAN"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.GameCategoryConfig"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sh_goods_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null ">
+                name,
+            </if>
+            <if test="isEnabled != null ">
+                is_enabled,
+            </if>
+            <if test="createTime != null ">
+                create_time,
+            </if>
+            <if test="updateTime != null ">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null ">
+                #{name},
+            </if>
+            <if test="isEnabled != null ">
+                #{isEnabled},
+            </if>
+            <if test="createTime != null ">
+                #{createTime},
+            </if>
+            <if test="updateTime != null ">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.GameCategoryConfig">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_goods_type
+            <set>
+                <if test="item.name != null">
+                    name= #{item.name},
+                </if>
+                <if test="item.isEnabled != null">
+                    is_enabled=#{item.isEnabled},
+                </if>
+                <if test="item.createTime != null">
+                    create_time= #{item.createTime},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time= #{item.updateTime},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="isEnabled != null">
+                AND is_enabled=#{isEnabled}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.GameCategoryConfig">
+        SELECT * FROM t_sh_goods_type
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+        <if test="isLocked">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_goods_type
+        <include refid="selectSql"/>
+    </select>
+
+    <!-- 根据id查询实体 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_goods_type WHERE id = #{id}
+    </select>
+
+    <!-- 根据id批量删除 -->
+    <delete id="batchDeleteByIds" parameterType="list">
+        DELETE FROM t_sh_goods_type WHERE id IN
+        <foreach collection="list" item="item" open="(" separator=","
+                 close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

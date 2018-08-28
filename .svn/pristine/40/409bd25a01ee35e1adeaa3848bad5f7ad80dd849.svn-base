@@ -1,0 +1,1098 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.OrderInfoEO">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="UID" property="uid" jdbcType="VARCHAR" />
+		<result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+		<result column="SERVICER_ID" property="servicerId" jdbcType="NUMERIC" javaType="long" />
+		<result column="TRADE_TYPE" property="tradeType" jdbcType="NUMERIC" javaType="int" />
+		<result column="MOBILE_NUMBER" property="mobileNumber" jdbcType="VARCHAR" />
+		<result column="QQ" property="qq" jdbcType="VARCHAR" />
+		<result column="RECEIVER" property="receiver" jdbcType="VARCHAR" />
+		<result column="GOODS_ID" property="goodsId" jdbcType="NUMERIC" javaType="long" />
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+		<result column="MONEY_NAME" property="moneyName" jdbcType="VARCHAR" />
+		<result column="REGION" property="region" jdbcType="VARCHAR" />
+		<result column="SERVER" property="server" jdbcType="VARCHAR" />
+		<result column="GAME_RACE" property="gameRace" jdbcType="VARCHAR" />
+		<result column="GAME_LEVEL" property="gameLevel" jdbcType="NUMERIC" javaType="int" />
+		<result column="DELIVERY_TIME" property="deliveryTime" jdbcType="NUMERIC" javaType="int" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="GOLD_COUNT" property="goldCount" jdbcType="NUMERIC" javaType="Long" />
+		<result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+		<result column="NOTES" property="notes" jdbcType="VARCHAR" />
+		<result column="TOTAL_PRICE" property="totalPrice" jdbcType="DECIMAL" />
+		<result column="ORDER_STATE" property="orderState" jdbcType="NUMERIC" javaType="int" />
+		<result column="MANUAL_OPERATION" property="manualOperation" jdbcType="BOOLEAN" />
+		<result column="IS_DELAY" property="isDelay" jdbcType="BOOLEAN" />
+		<result column="IS_HAVE_STORE" property="isHaveStore" jdbcType="BOOLEAN" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="PAY_TIME" property="payTime" jdbcType="TIMESTAMP" />
+		<result column="SEND_TIME" property="sendTime" jdbcType="TIMESTAMP" />
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="CANCEL_REASON" property="cancelReson" jdbcType="VARCHAR" />
+		<result column="IS_COPY" property="isCopy" jdbcType="BOOLEAN"/>
+		<result column="REFUND_REASON" property="refundReason" jdbcType="NUMERIC" javaType="int" />
+		<result column="GAME_ID" property="gameId" jdbcType="VARCHAR" />
+		<result column="REGION_ID" property="regionId" jdbcType="VARCHAR" />
+		<result column="SERVER_ID" property="serverId" jdbcType="VARCHAR" />
+		<result column="RACE_ID" property="raceId" jdbcType="VARCHAR" />
+		<result column="REFERER_TYPE" property="refererType" jdbcType="NUMERIC" javaType="Integer" />
+        <result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="NUMERIC" javaType="long" />
+        <result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR"  />
+        <result column="GOODS_CAT" property="goodsCat" jdbcType="NUMERIC" javaType="Integer" />
+		<result column="SELLER_LOGIN_ACCOUNT" property="sellerLoginAccount" jdbcType="VARCHAR" javaType="String" />
+		<result column="IS_BUY_INSURANCE" property="isBuyInsurance" javaType="Boolean" jdbcType="BOOLEAN" />
+        <result column="INSURANCE_RATE" property="insuranceRate" javaType="BigDecimal" jdbcType="DECIMAL"/>
+        <result column="INSURANCE_AMOUNT" property="insuranceAmount" javaType="BigDecimal" jdbcType="DECIMAL"/>
+        <result column="INSURANCE_EXPIRE_TIME" property="insuranceExpireTime" jdbcType="TIMESTAMP"/>
+       	<result column="SERVICE_CHARGE" property="serviceCharge" jdbcType="NUMERIC" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="INTERNET_BAR" property="internetBar" jdbcType="VARCHAR"/>
+		<result column="IS_EVALUATE" property="isEvaluate" jdbcType="BOOLEAN" />
+		<result column="IS_RE_EVALUATE" property="isReEvaluate" jdbcType="BOOLEAN" />
+		<result column="RED_ENVELOPE" property="redEnvelope" jdbcType="NUMERIC" />
+		<result column="SHOP_COUPON" property="shopCoupon" jdbcType="NUMERIC" />
+		<result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="NUMERIC" javaType="long" />
+		<result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR"  />
+		<result column="GAME_NUMBER_ID" property="gameNumberId" jdbcType="VARCHAR"  />
+		<result column="MOBILE_ID" property="mobileId" jdbcType="VARCHAR"  />
+		<result column="MOBILE_TYPE" property="mobileType" jdbcType="VARCHAR"  />
+		<result column="TERMINAL_IP" property="terminalIp" jdbcType="VARCHAR"  />
+		<result column="FIELD" property="field"/>
+        <association property="servicerInfo" select="selectServicer" column="SERVICER_ID" javaType="long"/>
+		<association property="tradePlaceEO" select="selectPlace" column="{gameName=GAME_NAME,goodsTypeName=GOODS_TYPE_NAME}" javaType="String"/>
+	</resultMap>
+
+	<resultMap id="ExportResultMap" type="com.wzitech.gamegold.order.dto.SimpleOrderDTO">
+		<result column="ORDER_ID" property="orderId" />
+		<result column="TITLE" property="title" />
+		<result column="GAME_NAME" property="gameName" />
+		<result column="REGION" property="region" />
+		<result column="SERVER" property="server" />
+		<result column="GAME_RACE" property="gameRace" />
+		<result column="RECEIVER" property="receiver" />
+		<result column="GOLD_COUNT" property="goldCount" />
+		<result column="MONEY_NAME" property="moneyName" />
+		<result column="UNIT_PRICE" property="unitPrice" />
+		<result column="TOTAL_PRICE" property="totalPrice" />
+		<result column="MOBILE_NUMBER" property="mobileNumber" />
+		<result column="QQ" property="qq" />
+		<result column="USER_ACCOUNT" property="buyerAccount" />
+		<result column="SELLER_LOGIN_ACCOUNT" property="sellerAccount" />
+		<result column="SERVICE_ACCOUNT" property="serviceAccount" />
+		<result column="SERVICE_NAME" property="serviceName" />
+		<result column="ORDER_STATE" property="orderState" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="PAY_TIME" property="payTime" />
+		<result column="END_TIME" property="endTime" />
+		<result column="REFUND_REASON" property="refundReason" />
+	</resultMap>
+
+	<!-- 查询客服信息 -->
+	<select id="selectServicer" parameterType="long" resultMap="com.wzitech.gamegold.usermgmt.entity.UserInfoEO.BaseResultMap">  
+        SELECT * FROM "TBL_GAMEGOLD_USERS" WHERE "ID" = #{id}
+    </select>
+    
+    <!-- 查询交易地点信息 -->
+	<select id="selectPlace" parameterType="java.util.Map" resultMap="com.wzitech.gamegold.order.entity.GameConfigEO.BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_TRADE_PLACE" WHERE "GAME_NAME" = #{gameName} AND "GOODS_TYPE_NAME"= #{goodsTypeName}
+    </select>
+
+    <select id="selectByOrderId" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_ORDERS" WHERE "ORDER_ID"=#{orderId}
+    </select>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.order.entity.OrderInfoEO"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_ORDERS"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mobileId != null and mobileId != ''">
+				"MOBILE_ID",
+			</if>
+			<if test="mobileType != null and mobileType != ''">
+				"MOBILE_TYPE",
+			</if>
+			<if test="terminalIp != null and terminalIp != ''">
+				"TERMINAL_IP",
+			</if>
+			<if test="orderId != null and orderId != ''">
+				"ORDER_ID",
+			</if>
+			<if test="uid != null and uid != ''">
+				"UID",
+			</if>
+			<if test="userAccount != null and userAccount != ''">
+				"USER_ACCOUNT",
+			</if>
+			<if test="servicerId != null">
+				"SERVICER_ID",
+			</if>
+			<if test="tradeType != null">
+				"TRADE_TYPE",
+			</if>
+			<if test="mobileNumber != null and mobileNumber != ''">
+				"MOBILE_NUMBER",
+			</if>
+			<if test="gameLevel != null and gameLevel != ''" >
+				"GAME_LEVEL",
+			</if>
+			<if test="qq != null and qq != ''">
+				"QQ",
+			</if>
+			<if test="receiver != null and receiver != ''">
+				"RECEIVER",
+			</if>
+			<if test="goodsId != null">
+				"GOODS_ID",
+			</if>
+			<if test="gameName != null and gameName != ''">
+				"GAME_NAME",
+			</if>
+			<if test="moneyName != null">
+				"MONEY_NAME",
+			</if>
+			<if test="region != null and region != ''">
+				"REGION",
+			</if>
+			<if test="server != null and server != ''">
+				"SERVER",
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				"GAME_RACE",
+			</if>
+			<if test="deliveryTime != null and deliveryTime != ''">
+				"DELIVERY_TIME",
+			</if>
+			<if test="title != null and title != ''">
+				"TITLE",
+			</if>
+			<if test="goldCount != null">
+				"GOLD_COUNT",
+			</if>
+			<if test="unitPrice != null">
+				"UNIT_PRICE",
+			</if>
+			<if test="notes != null and notes != ''">
+				"NOTES",
+			</if>
+			<if test="totalPrice != null">
+				"TOTAL_PRICE",
+			</if>
+			<if test="isDelay != null">
+				"IS_DELAY",
+			</if>
+			<if test="isHaveStore != null">
+				"IS_HAVE_STORE",
+			</if>
+			<!-- <if test="orderState != null">
+				"ORDER_STATE",
+			</if> -->
+			<!-- <if test="createTime != null">
+				"CREATE_TIME",
+			</if>
+			<if test="payTime != null">
+				"PAY_TIME",
+			</if>
+			<if test="sendTime != null">
+				"SEND_TIME",
+			</if>
+			<if test="endTime != null">
+				"END_TIME"
+			</if> -->
+			<if test="gameId != null and gameId !=''">
+				"GAME_ID",
+			</if>
+			<if test="regionId != null and regionId !=''">
+				"REGION_ID",
+			</if>
+			<if test="serverId != null and serverId !=''">
+				"SERVER_ID",
+			</if>
+			<if test="raceId != null and raceId !=''">
+				"RACE_ID",
+			</if>
+			<if test="refererType != null">
+				"REFERER_TYPE",
+			</if>
+            <if test="goodsCat != null">
+                "GOODS_CAT",
+            </if>
+            <if test="sellerLoginAccount != null">
+                "SELLER_LOGIN_ACCOUNT",
+            </if>
+            <if test="isBuyInsurance != null">
+                "IS_BUY_INSURANCE",
+            </if>
+            <if test="insuranceRate != null">
+                "INSURANCE_RATE",
+            </if>
+            <if test="insuranceAmount != null">
+                "INSURANCE_AMOUNT",
+            </if>
+            <if test="insuranceExpireTime != null">
+                "INSURANCE_EXPIRE_TIME",
+            </if>
+			<if test="serviceCharge != null">
+				"SERVICE_CHARGE",
+			</if>
+			<if test="internetBar != null and internetBar != ''">
+				"INTERNET_BAR",
+			</if>
+			<if test="redEnvelope != null">
+				"RED_ENVELOPE",
+			</if>
+			<if test="shopCoupon != null">
+				"SHOP_COUPON",
+			</if>
+			<!-- 新增通货'商品类目' add by wubiao on 2017/05/12 -->
+			<if test="goodsTypeId != null">
+				"GOODS_TYPE_ID",
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				"GOODS_TYPE_NAME",
+			</if>
+			<if test="gameNumberId != null and gameNumberId != ''">
+				"GAME_NUMBER_ID",
+			</if>
+			<if test="field != null and field != ''">
+				"FIELD",
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mobileId != null and mobileId != ''">
+				#{mobileId},
+			</if>
+			<if test="mobileType != null and mobileType != ''">
+				#{mobileType},
+			</if>
+			<if test="terminalIp != null and terminalIp != ''">
+				#{terminalIp},
+			</if>
+
+			<if test="orderId != null and orderId != ''">
+				#{orderId},
+			</if>
+			<if test="uid != null and uid != ''">
+				#{uid},
+			</if>
+			<if test="userAccount != null and userAccount != ''">
+				#{userAccount},
+			</if>
+			<if test="servicerId != null">
+				#{servicerId},
+			</if>
+			<if test="tradeType != null">
+				#{tradeType},
+			</if>
+			<if test="mobileNumber != null and mobileNumber != ''">
+				#{mobileNumber},
+			</if>
+			<if test="gameLevel != null and gameLevel != ''">
+				#{gameLevel},
+			</if>
+			<if test="qq != null and qq != ''">
+				#{qq},
+			</if>
+			<if test="receiver != null and receiver != ''">
+				#{receiver},
+			</if>
+			<if test="goodsId != null">
+				#{goodsId},
+			</if>
+			<if test="gameName != null and gameName != ''">
+				#{gameName},
+			</if>
+			<if test="moneyName != null">
+				#{moneyName},
+			</if>
+			<if test="region != null and region != ''">
+				#{region},
+			</if>
+			<if test="server != null and server != ''">
+				#{server},
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				#{gameRace},
+			</if>
+			<if test="deliveryTime != null and deliveryTime != ''">
+				#{deliveryTime},
+			</if>
+			<if test="title != null and title != ''">
+				#{title},
+			</if>
+			<if test="goldCount != null">
+				#{goldCount},
+			</if>
+			<if test="unitPrice != null">
+				#{unitPrice},
+			</if>
+			<if test="notes != null and notes != ''">
+				#{notes},
+			</if>
+			<if test="totalPrice != null">
+				#{totalPrice},
+			</if>
+			<if test="isDelay != null">
+				#{isDelay},
+			</if>
+			<if test="isHaveStore != null">
+				#{isHaveStore},
+			</if>
+			<!-- <if test="orderState != null">
+				#{orderState},
+			</if> -->
+			<!-- <if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="payTime != null">
+				#{payTime},
+			</if>
+			<if test="sendTime != null">
+				#{sendTime},
+			</if>
+			<if test="endTime != null">
+				#{endTime}
+			</if> -->
+			<if test="gameId != null and gameId !=''">
+				#{gameId},
+			</if>
+			<if test="regionId != null and regionId !=''">
+				#{regionId},
+			</if>
+			<if test="serverId != null and serverId !=''">
+				#{serverId},
+			</if>
+			<if test="raceId != null and raceId !=''">
+				#{raceId},
+			</if>
+			<if test="refererType != null">
+				#{refererType},
+			</if>
+            <if test="goodsCat != null">
+                #{goodsCat},
+            </if>
+            <if test="sellerLoginAccount != null">
+                #{sellerLoginAccount},
+            </if>
+            <if test="isBuyInsurance != null">
+                #{isBuyInsurance},
+            </if>
+            <if test="insuranceRate != null">
+                #{insuranceRate},
+            </if>
+            <if test="insuranceAmount != null">
+                #{insuranceAmount},
+            </if>
+            <if test="insuranceExpireTime != null">
+                #{insuranceExpireTime},
+            </if>
+			<if test="serviceCharge != null">
+				#{serviceCharge},
+			</if>
+			<if test="internetBar != null and internetBar != ''">
+				#{internetBar},
+			</if>
+			<if test="redEnvelope != null">
+				#{redEnvelope},
+			</if>
+			<if test="shopCoupon != null">
+				#{shopCoupon},
+			</if>
+			<!-- 新增通货'商品类目' add by wubiao on 2017/05/12 -->
+			<if test="goodsTypeId != null">
+				#{goodsTypeId},
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				#{goodsTypeName},
+			</if>
+			<if test="gameNumberId != null and gameNumberId != ''">
+				#{gameNumberId}
+			</if>
+			<if test="field != null and field != ''">
+				#{field}
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate"
+		parameterType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE "TBL_GAMEGOLD_ORDERS"
+			<set>
+				<if test="item.mobileNumber != null and item.mobileNumber != ''">
+					"MOBILE_NUMBER" = #{item.mobileNumber},
+				</if>
+				<if test="item.qq != null and item.qq != ''">
+					"QQ" = #{item.qq},
+				</if>
+				<if test="item.gameLevel != null and item.gameLevel != ''">
+					"GAME_LEVEL" = #{item.gameLevel},
+				</if>
+				<if test="item.tradeType != null and item.tradeType != ''">
+					"TRADE_TYPE" = #{item.tradeType},
+				</if>
+				<if test="item.receiver != null and item.receiver != ''">
+					"RECEIVER" = #{item.receiver},
+				</if>
+				<if test="item.moneyName != null">
+					"MONEY_NAME" = #{item.moneyName},
+				</if>
+				<if test="item.totalPrice != null">
+					"TOTAL_PRICE" = #{item.totalPrice},
+				</if>
+				<if test="item.isDelay != null">
+					"IS_DELAY" = #{item.isDelay},
+				</if>
+				<if test="item.manualOperation != null">
+					"MANUAL_OPERATION" = #{item.manualOperation},
+				</if>
+				<if test="item.isHaveStore != null">
+					"IS_HAVE_STORE" = #{item.isHaveStore},
+				</if>
+				<if test="item.isCopy != null">
+					"IS_COPY" = #{item.isCopy},
+				</if>
+				<if test="item.refundReason != null">
+					"REFUND_REASON" = #{item.refundReason},
+				</if>
+				<if test="item.gameId != null and item.gameId !=''">
+					"GAME_ID" = #{item.gameId},
+				</if>
+				<if test="item.regionId != null and item.regionId !=''">
+					"REGION_ID" = #{item.regionId},
+				</if>
+				<if test="item.serverId != null and item.serverId !=''">
+					"SERVER_ID" = #{item.serverId},
+				</if>
+				<if test="item.raceId != null and item.raceId !=''">
+					"RACE_ID" = #{item.raceId},
+				</if>
+				<if test="item.goodsCat != null">
+					"GOODS_CAT" = #{item.goodsCat},
+				</if>
+				<if test="item.remark != null and item.remark != ''">
+					"REMARK" = #{item.remark},
+				</if>
+				<if test="item.field != null">
+					"FIELD" = #{item.field}
+				</if>
+				<!-- <if test="item.payTime != null">
+					"PAY_TIME" = #{item.payTime},
+				</if>
+				<if test="item.sendTime != null">
+					"SEND_TIME" = #{item.sendTime},
+				</if>
+				<if test="item.endTime != null">
+					"END_TIME" = #{item.endTime}
+				</if> -->
+			</set>
+			<where>
+				<if test="item.orderId !=null and item.orderId !=''">
+					"ORDER_ID" = #{item.orderId}
+				</if>
+				<if test="item.id !=null">
+					AND "ID" = #{item.id}
+				</if>
+			</where>
+		</foreach>
+	</update>
+	
+	<!-- 取消指定时间之前的未支付的订单 -->
+	<!-- <update id="autoCancellTimeoutOrder"
+		parameterType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		UPDATE "TBL_GAMEGOLD_ORDERS"
+		<set>
+			<if test="cancelled != null">
+				"ORDER_STATE" = #{cancelled},
+			</if>
+			<if test="endTime != null">
+				"END_TIME" = #{endTime}
+			</if>
+		</set>
+		<where>
+			<if test="autoDeleteTime != null">
+				<![CDATA[
+					"CREATE_TIME" <= #{autoDeleteTime}
+				]]>
+			</if>
+			<if test="waitPayment != null">
+				AND "ORDER_STATE" = #{waitPayment}
+			</if>
+		</where>
+	</update> -->
+
+	<!-- 更新订单状态记录 -->
+	<update id="updateOrderState"
+		parameterType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		UPDATE "TBL_GAMEGOLD_ORDERS"
+		<set>
+			<if test="orderState != null">
+				"ORDER_STATE" = #{orderState},
+			</if>
+			<if test="createTime != null">
+				"CREATE_TIME" = #{createTime},
+			</if>
+			<if test="refundReason != null">
+				"REFUND_REASON" =#{refundReason},
+			</if>
+			<if test="payTime != null">
+				"PAY_TIME" = #{payTime},
+			</if>
+			<if test="sendTime != null">
+				"SEND_TIME" = #{sendTime},
+			</if>
+			<if test="endTime != null">
+				"END_TIME" = #{endTime},
+			</if>
+			<if test="cancelReson != null">
+				"CANCEL_REASON" = #{cancelReson},
+			</if>
+			<if test="field != null">
+				"FIELD" = #{field}
+			</if>
+		</set>
+		<where>
+			<if test="orderId !=null and orderId !=''">
+				"ORDER_ID" = #{orderId}
+			</if>
+			<if test="id !=null">
+				AND "ID" = #{id}
+			</if>
+		</where>
+	</update>
+	
+	<!-- 更新订单状态记录 -->
+	<update id="updateOrderCancelReson"
+		parameterType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		UPDATE "TBL_GAMEGOLD_ORDERS"
+		<set>
+			<if test="cancelReson != null">
+				"CANCEL_REASON" = #{cancelReson}
+			</if>
+		</set>
+		<where>
+				"ORDER_ID" = #{orderId}
+		</where>
+	</update>
+
+	<sql id="selectSql">
+		<where>
+			<if test="uid != null and uid != ''">
+				"UID" = #{uid}
+			</if>
+			<if test="servicerId != null">
+				AND "SERVICER_ID" = #{servicerId}
+			</if>
+            <if test="consignmentId != null">
+                AND EXISTS(
+                    SELECT 1
+                    FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+                    WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "CR"."OPTION_ID"=#{consignmentId}  AND "IS_DELETED"=false
+                )
+            </if>
+            <if test="isConsignment != null">
+                AND EXISTS(
+                    SELECT 1
+                    FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+                    WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "CR"."IS_CONSIGNMENT"=#{isConsignment}  AND "IS_DELETED"=false
+                )
+            </if>
+			<!--订单类型-->
+			<if test="orderType != null">
+				<choose>
+					<!--担保-->
+					<when test="orderType == 1">
+						AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=false
+						)
+					</when>
+					<!--寄售物服-->
+					<when test="orderType == 2">
+						AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=true
+						AND "IS_JS_ROBOT"=false
+						)
+					</when>
+					<!--寄售机器人-->
+					<when test="orderType == 3">
+						AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=true
+						AND "IS_JS_ROBOT"=true
+						)
+					</when>
+				</choose>
+			</if>
+			<if test="createStartTime != null">
+				<![CDATA[
+					AND "CREATE_TIME" >= #{createStartTime}
+				]]>
+			</if>
+			<if test="createEndTime != null">
+				<![CDATA[
+					AND "CREATE_TIME" <= #{createEndTime}
+				]]>
+			</if>
+			<if test="sendStartTime != null">
+				<![CDATA[
+					AND "SEND_TIME" >= #{sendStartTime}
+				]]>
+			</if>
+			<if test="sendEndTime != null">
+				<![CDATA[
+					AND "SEND_TIME" <= #{sendEndTime}
+				]]>
+			</if>
+            <if test="statementStartTime != null">
+                <![CDATA[
+					AND "END_TIME" >= #{statementStartTime}
+				]]>
+            </if>
+            <if test="statementEndTime != null">
+                <![CDATA[
+					AND "END_TIME" <= #{statementEndTime}
+				]]>
+            </if>
+			<if test="userAccount != null and userAccount != ''">
+				AND "USER_ACCOUNT" =  #{userAccount}
+			</if>
+			<if test="orderState != null">
+				AND "ORDER_STATE" = #{orderState}
+			</if>
+			<if test="orderStates != null">
+				AND "ORDER_STATE" in (${orderStates})
+			</if>
+			<if test="manualOperation != null">
+				AND "MANUAL_OPERATION" = #{manualOperation}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND "ORDERS"."ORDER_ID"  = #{orderId}
+			</if>
+			<if test="orderGameName != null and orderGameName != ''">
+				AND "GAME_NAME" = #{orderGameName}
+			</if>
+			<if test="buyerQq != null and buyerQq != ''">
+				AND "QQ" LIKE '%'||#{buyerQq}||'%'
+			</if>
+			<if test="receiver != null and receiver != ''">
+				AND "RECEIVER" LIKE '%'||#{receiver}||'%'
+			</if>
+			<if test="gameName != null and gameName != ''">
+				AND "GAME_NAME" LIKE '%'||#{gameName}||'%'
+			</if>
+			<if test="region != null and region != ''">
+				AND "REGION" LIKE '%'||#{region}||'%'
+			</if>
+			<if test="server != null and server != ''">
+				AND "SERVER" LIKE '%'||#{server}||'%'
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				AND "GAME_RACE" LIKE '%'||#{gameRace}||'%'
+			</if>
+			<if test="title != null and title != ''">
+				AND "TITLE" LIKE '%'||#{title}||'%'
+			</if>
+			<if test="gameId != null and gameId != ''">
+				AND "GAME_ID"= #{gameId}
+			</if>
+			<if test="regionId != null and regionId != ''">
+				AND "REGION_ID"= #{regionId}
+			</if>
+			<if test="serverId != null and serverId != ''">
+				AND	"SERVER_ID"= #{serverId}
+			</if>
+			<if test="raceId != null and raceId != ''">
+				AND	"RACE_ID"= #{raceId}
+			</if>
+            <if test="goodsTypeId != null">
+                AND "GOODS_TYPE_ID" = #{goodsTypeId}
+            </if>
+			<!-- M-ZW_C_JB_00008_START -->
+			<if test="orderId==null or orderId==''">
+				<if test="goodsTypeName == null or  goodsTypeName == '' or goodsTypeName=='游戏币'">
+					AND ("GOODS_TYPE_NAME" is null or "GOODS_TYPE_NAME" = '' or "GOODS_TYPE_NAME" = '游戏币')
+				</if>
+				<if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName != '游戏币' and goodsTypeName!='全部'">
+					AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+				</if>
+			</if>
+			 <!-- M-ZW_C_JB_00008_END -->
+
+			<if test="refererType != null and refererType == 3">
+				AND ("REFERER_TYPE" = #{refererType} OR "REFERER_TYPE" is NULL)
+			</if>
+			<if test="refererType != null and refererType != 3">
+				AND "REFERER_TYPE" = #{refererType}
+			</if>
+            <if test="isDelay != null">
+                AND "IS_DELAY" = #{isDelay}
+            </if>
+            <if test="isBuyInsurance != null">
+                AND "IS_BUY_INSURANCE" = #{isBuyInsurance}
+            </if>
+		</where>
+	</sql>
+
+	<sql id="selectSql2">
+		<where>
+			<if test="uid != null and uid != ''">
+				"UID" = #{uid}
+			</if>
+			<if test="servicerId != null">
+				AND "SERVICER_ID" = #{servicerId}
+			</if>
+			<if test="consignmentId != null">
+				AND EXISTS(
+				SELECT 1
+				FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+				WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "CR"."OPTION_ID"=#{consignmentId}  AND "IS_DELETED"=false
+				)
+			</if>
+			<if test="isConsignment != null">
+				AND EXISTS(
+				SELECT 1
+				FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+				WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "CR"."IS_CONSIGNMENT"=#{isConsignment}  AND "IS_DELETED"=false
+				)
+			</if>
+			<!--订单类型-->
+			<if test="orderType != null">
+				<choose>
+					<!--担保-->
+					<when test="orderType == 1">
+						AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=false
+						)
+					</when>
+					<!--寄售物服-->
+					<when test="orderType == 2">
+						AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=true
+						AND "IS_JS_ROBOT"=false
+						)
+					</when>
+					<!--寄售机器人-->
+					<when test="orderType == 3">
+						AND EXISTS(
+						SELECT 1
+						FROM "TBL_GAMEGOLD_CONFIGRESULT" "CR"
+						WHERE "CR"."ORDER_ID"="ORDERS"."ORDER_ID" AND "IS_DELETED"=false AND "CR"."IS_CONSIGNMENT"=true
+						AND "IS_JS_ROBOT"=true
+						)
+					</when>
+				</choose>
+			</if>
+			<if test="createStartTime != null">
+				<![CDATA[
+					AND "CREATE_TIME" >= #{createStartTime}
+				]]>
+			</if>
+			<if test="createEndTime != null">
+				<![CDATA[
+					AND "CREATE_TIME" <= #{createEndTime}
+				]]>
+			</if>
+			<if test="sendStartTime != null">
+				<![CDATA[
+					AND "SEND_TIME" >= #{sendStartTime}
+				]]>
+			</if>
+			<if test="sendEndTime != null">
+				<![CDATA[
+					AND "SEND_TIME" <= #{sendEndTime}
+				]]>
+			</if>
+			<if test="statementStartTime != null">
+				<![CDATA[
+					AND "END_TIME" >= #{statementStartTime}
+				]]>
+			</if>
+			<if test="statementEndTime != null">
+				<![CDATA[
+					AND "END_TIME" <= #{statementEndTime}
+				]]>
+			</if>
+			<if test="userAccount != null and userAccount != ''">
+				AND "USER_ACCOUNT" =  #{userAccount}
+			</if>
+			<if test="orderState != null">
+				AND "ORDER_STATE" = #{orderState}
+			</if>
+			<if test="orderStates != null">
+				AND "ORDER_STATE" in (${orderStates})
+			</if>
+			<if test="manualOperation != null">
+				AND "MANUAL_OPERATION" = #{manualOperation}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND "ORDERS"."ORDER_ID"  = #{orderId}
+			</if>
+			<if test="orderGameName != null and orderGameName != ''">
+				AND "GAME_NAME" = #{orderGameName}
+			</if>
+			<if test="buyerQq != null and buyerQq != ''">
+				AND "QQ" LIKE '%'||#{buyerQq}||'%'
+			</if>
+			<if test="receiver != null and receiver != ''">
+				AND "RECEIVER" LIKE '%'||#{receiver}||'%'
+			</if>
+			<if test="gameName != null and gameName != ''">
+				AND "GAME_NAME" LIKE '%'||#{gameName}||'%'
+			</if>
+			<if test="region != null and region != ''">
+				AND "REGION" LIKE '%'||#{region}||'%'
+			</if>
+			<if test="server != null and server != ''">
+				AND "SERVER" LIKE '%'||#{server}||'%'
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				AND "GAME_RACE" LIKE '%'||#{gameRace}||'%'
+			</if>
+			<if test="title != null and title != ''">
+				AND "TITLE" LIKE '%'||#{title}||'%'
+			</if>
+			<if test="gameId != null and gameId != ''">
+				AND "GAME_ID"= #{gameId}
+			</if>
+			<if test="regionId != null and regionId != ''">
+				AND "REGION_ID"= #{regionId}
+			</if>
+			<if test="serverId != null and serverId != ''">
+				AND	"SERVER_ID"= #{serverId}
+			</if>
+			<if test="raceId != null and raceId != ''">
+				AND	"RACE_ID"= #{raceId}
+			</if>
+			<if test="goodsTypeId != null">
+				AND "GOODS_TYPE_ID" = #{goodsTypeId}
+			</if>
+			<!-- M-ZW_C_JB_00008_START -->
+			<if test="orderId==null or orderId==''">
+				<if test="goodsTypeName == null or  goodsTypeName == '' or goodsTypeName=='游戏币'">
+					AND ("GOODS_TYPE_NAME" is null or "GOODS_TYPE_NAME" = '' or "GOODS_TYPE_NAME" = '游戏币')
+				</if>
+				<if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName != '游戏币' and goodsTypeName!='全部'">
+					AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+				</if>
+			</if>
+			<!-- M-ZW_C_JB_00008_END -->
+
+			<if test="refererType != null and refererType == 3">
+				AND ("REFERER_TYPE" = #{refererType} OR "REFERER_TYPE" is NULL)
+			</if>
+			<if test="refererType != null and refererType != 3">
+				AND "REFERER_TYPE" = #{refererType}
+			</if>
+			<if test="isDelay != null">
+				AND "IS_DELAY" = #{isDelay}
+			</if>
+			<if test="isBuyInsurance != null">
+				AND "IS_BUY_INSURANCE" = #{isBuyInsurance}
+			</if>
+			<if test="sellerAccount != null and sellerAccount != ''" >
+				and "ORDER_ID" in ( SELECT "ORDER_ID" FROM "TBL_GAMEGOLD_CONFIGRESULT"
+				WHERE  "IS_DELETED" = #{configResultIsDel} and "LOGIN_ACCOUNT"=#{sellerAccount})
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		SELECT * FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+		<include refid="selectSql2"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+	
+	<!-- 查询已付款的但是自动打款时间已经到的未结单的订单 -->
+	<select id="queryOrderForAutoPlay" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		SELECT 
+			"ORDER"."ID" "ID", 
+			"ORDER"."ORDER_ID" "ORDER_ID", 
+			"ORDER"."UID" "UID", 
+			"ORDER"."SERVICER_ID" "SERVICER_ID", 
+			"ORDER"."MOBILE_NUMBER" "MOBILE_NUMBER", 
+			"ORDER"."GAME_LEVEL" "GAME_LEVEL", 
+			"ORDER"."QQ" "QQ", 
+    		"ORDER"."RECEIVER" "RECEIVER", 
+    		"ORDER"."GOODS_ID" "GOODS_ID", 
+    		"ORDER"."GAME_NAME" "GAME_NAME", 
+    		"ORDER"."REGION" "REGION", 
+    		"ORDER"."SERVER" "SERVER", 
+    		"ORDER"."GAME_RACE" "GAME_RACE", 
+    		"ORDER"."TITLE" "TITLE", 
+    		"ORDER"."GOLD_COUNT" "GOLD_COUNT", 
+    		"ORDER"."UNIT_PRICE" "UNIT_PRICE", 
+    		"ORDER"."NOTES" "NOTES", 
+    		"ORDER"."TOTAL_PRICE" "TOTAL_PRICE", 
+    		"ORDER"."ORDER_STATE" "ORDER_STATE", 
+    		"ORDER"."CREATE_TIME" "CREATE_TIME", 
+    		"ORDER"."SEND_TIME" "SEND_TIME", 
+    		"ORDER"."END_TIME" "END_TIME", 
+    		"ORDER"."TRADE_TYPE" "TRADE_TYPE", 
+    		"ORDER"."DELIVERY_TIME" "DELIVERY_TIME", 
+    		"ORDER"."IS_DELAY" "IS_DELAY", 
+    		"ORDER"."USER_ACCOUNT" "USER_ACCOUNT", 
+    		"ORDER"."IS_HAVE_STORE" "IS_HAVE_STORE", 
+    		"ORDER"."PAY_TIME" "PAY_TIME",
+    		"ORDER"."GOODS_TYPE_NAME" "GOODS_TYPE_NAME",
+    		"ORDER"."FIELD" "FIELD"
+    	FROM "TBL_GAMEGOLD_ORDERS" "ORDER"
+			LEFT JOIN "TBL_GAMEGOLD_TRADE_PLACE" "TRADE_PLACE" 
+				ON "ORDER"."GAME_NAME" = "TRADE_PLACE"."GAME_NAME" AND "ORDER"."GOODS_TYPE_NAME" = "TRADE_PLACE"."GOODS_TYPE_NAME"
+		WHERE (extract(epoch from LOCALTIMESTAMP)-extract(epoch from "ORDER"."PAY_TIME")) > "TRADE_PLACE"."AUTO_PLAY_TIME"*60
+			AND "ORDER"."ORDER_STATE" = #{orderState}
+			AND "TRADE_PLACE"."IS_DELETED" = #{tradePlaceIsDel}
+	</select>
+
+    <select id="queryOrderForUpdate" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+        WHERE "ORDER_ID" = #{orderId}
+        FOR UPDATE
+    </select>
+
+    <select id="queryOrderForUpdateNowait" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+        WHERE "ORDER_ID" = #{orderId}
+        FOR UPDATE NOWAIT
+    </select>
+
+	<select id="queryOrderId" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+		WHERE "ORDER_ID" = #{orderId}
+	</select>
+
+    <!-- 统计保费 -->
+    <select id="statisticPremiums" parameterType="map" resultType="BigDecimal">
+      SELECT SUM("INSURANCE_AMOUNT")
+      FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+      <include refid="selectSql"/>
+    </select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="string" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+		<include refid="selectSql2"/>
+	</select>
+	
+	<!-- 查询符合条件的唯一记录 -->
+	<select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		SELECT * FROM "TBL_GAMEGOLD_ORDERS"
+		<where>
+			<if test="orderId != null and orderId != ''">
+				"ORDER_ID" = #{orderId}
+			</if>
+		</where>
+	</select>
+    
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		SELECT * FROM "TBL_GAMEGOLD_ORDERS" WHERE "ID" = #{id}
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.OrderInfoEO">
+		${value}
+	</select>
+
+	<!--更新订单为已评价-->
+	<update id="updateOrderAlreadyEvaluate" parameterType="map">
+		UPDATE "TBL_GAMEGOLD_ORDERS"
+		SET "IS_EVALUATE"=TRUE
+		WHERE "ORDER_ID"=#{orderId}
+	</update>
+
+	<!--更新订单为已追加评价-->
+	<update id="updateOrderAlreadyReEvaluate" parameterType="map">
+		UPDATE "TBL_GAMEGOLD_ORDERS"
+		SET "IS_RE_EVALUATE"=TRUE
+		WHERE "ORDER_ID"=#{orderId}
+	</update>
+
+	<!--查询指定订单状态下，超过4个小时未评价的订单号-->
+	<select id="queryAfter4HourNotEvaluateOrders" parameterType="Map" resultType="String">
+		<![CDATA[
+			 SELECT "ORDER_ID"
+			FROM "TBL_GAMEGOLD_ORDERS"
+			WHERE ("IS_EVALUATE" IS NULL )
+				AND "ORDER_STATE"=5 AND "CREATE_TIME">=#{beginTime}
+				AND  "SEND_TIME"<(now()-interval '4 hour')
+			union all
+ 			SELECT "ORDER_ID"
+			FROM "TBL_GAMEGOLD_ORDERS"
+			WHERE ( "IS_EVALUATE"=FALSE)
+				AND "ORDER_STATE"=5 AND "CREATE_TIME">=#{beginTime}
+				AND  "SEND_TIME"<(now()-interval '4 hour')
+		]]>
+	</select>
+
+	<select id="selectSimpleData" parameterType="Map" resultMap="ExportResultMap">
+		SELECT "ORDER_ID","TITLE","GAME_NAME","REGION","SERVER","GAME_RACE","RECEIVER","GOLD_COUNT","MONEY_NAME",
+			"UNIT_PRICE","TOTAL_PRICE","MOBILE_NUMBER","ORDERS"."QQ","USER_ACCOUNT","SELLER_LOGIN_ACCOUNT",
+			"USERS"."LOGIN_ACCOUNT" "SERVICE_ACCOUNT","USERS"."REAL_NAME" "SERVICE_NAME",
+			"ORDER_STATE","ORDERS"."CREATE_TIME","PAY_TIME","END_TIME", "REFUND_REASON"
+		FROM "TBL_GAMEGOLD_ORDERS" "ORDERS"
+			LEFT JOIN "TBL_GAMEGOLD_USERS" "USERS" ON "USERS"."ID"="ORDERS"."SERVICER_ID"
+		<where>
+			<if test="createStartTime != null">
+				AND "ORDERS"."CREATE_TIME">=#{createStartTime}
+			</if>
+			<if test="createEndTime != null">
+				<![CDATA[
+				AND "ORDERS"."CREATE_TIME"<=#{createEndTime}
+				]]>
+			</if>
+			<if test="orderState != null">
+				AND "ORDER_STATE"=#{orderState}
+			</if>
+			<if test="gameName != null and gameName != ''">
+				AND "ORDERS"."GAME_NAME"=#{gameName}
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询客服当前待处理订单数量和最后分配的时间 -->
+	<select id="selectCurrWaitDeliveryData" parameterType="Map" resultType="Map">
+		<![CDATA[
+		SELECT COUNT(1) "COUNT",
+		(
+			SELECT MAX("CREATE_TIME")
+			FROM "TBL_GAMEGOLD_ORDERS"
+			WHERE "ORDER_STATE"<>1 AND "SERVICER_ID"=#{serviceId}
+		) "LAST_UPDATE_TIME"
+		FROM "TBL_GAMEGOLD_ORDERS"
+		WHERE ("ORDER_STATE"=2 OR "ORDER_STATE"=3) AND "SERVICER_ID"=#{serviceId}
+		]]>
+	</select>
+</mapper>

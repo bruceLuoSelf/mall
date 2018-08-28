@@ -1,0 +1,972 @@
+.content {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.content .title {
+    float: left;
+    margin-top: 5px;
+}
+
+.content .sel {
+    float: left;
+    vertical-align: middle;
+}
+
+.content .sel li {
+    float: left;
+    width: 120px; /**ZW_C_JB_00008_20170513 MODIFY (old value=100px)**/
+    border: 1px solid #a4a4a4;
+    margin-right: 5px; /**ZW_C_JB_00008_20170513 MODIFY (old value=2px)**/
+    height: 23px;
+    cursor: pointer;
+    line-height: 23px;
+    vertical-align: middle;
+    padding-left: 4px;
+    background: url(../img/sel_op.jpg) 97% 43%;
+    background-repeat: no-repeat;
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.content .condition {
+    margin-top: 10px;
+    font-size: 14px;
+    border: 1px solid #e2e2e2;
+    padding: 20px;
+    color: #434345;
+    position: relative;
+}
+
+/************ ZW_C_JB_00008_20170513 ADD START*************/
+.content .condition .class_p1 #currencyType {
+    width: 200px;
+    height: 20px;
+    background: url(../img/sel_op.jpg) 97% 43%;
+    background-repeat: no-repeat;
+    color: #666;
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: 1px solid #a4a4a4;
+    line-height: 23px;
+    font-size: 12px;
+}
+
+.content .condition .sel #race {
+    width: 126px;
+    float: left;
+}
+
+.content .condition .class_div {
+    float: left;
+}
+
+.content .condition .class_div .class_p2 {
+    float: left;
+    margin-top: 15px;
+    margin-left: 1px;
+    vertical-align: middle;
+}
+
+.content .condition .class_div .class_p2 #gameLoginAccount {
+    width: 155px;
+    height: 20px;
+}
+
+.content .condition .class_div .class_p3 {
+    float: left;
+    margin-top: 15px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.content .condition .class_p3 #gameRole {
+    width: 150px;
+    height: 20px;
+}
+
+.content .condition .class_p1 {
+    float: left;
+    padding-left: 68px;
+    align: center;
+}
+
+.content .condition .sel li#currency {
+    float: right;
+    width: 185px;
+    margin-top: 0px;
+    padding-right: 3px;
+}
+
+.content .sel #currencyType {
+    float: left;
+    width: 165px;
+    border: 1px solid #a4a4a4;
+    margin-right: 5px;
+    height: 25px;
+    cursor: pointer;
+    line-height: 23px;
+    vertical-align: middle;
+    padding-left: 14px;
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.content .condition .sel #currencyTitle {
+    float: left;
+    margin-top: 5px;
+    margin-left: 40px;
+}
+
+/************* ZW_C_JB_00008_20170513 ADD END***********/
+
+.content .condition .op {
+    margin-top: 15px;
+    float: left;
+    position: relative;
+}
+
+.content .condition .state {
+    width: 110px;
+    text-align: right;
+    right: 0px;
+    margin-top: 20px;
+    float: left;
+}
+
+.content .condition .stateInfo {
+    float: left;
+    margin-top: 12px;
+    margin-left: 12px;
+    border: 1px solid #e2e2e2;
+    background: #f6f6f6;
+    padding: 8px;
+    font-size: 12px;
+    color: #82827f;
+}
+
+.content .condition select {
+    width: 100px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.content .condition input#gameLoginAccount, .content .condition input#gameRole {
+    width: 120px;
+    height: 22px;
+    padding: 0px 3px 0px 3px;
+}
+
+.content .condition .op input {
+    margin-right: 15px;
+    width: 88px;
+    height: 25px;
+    background: url(../img/btn.png);
+    border: 1px solid #3279f0;
+    color: #fff;
+    cursor: pointer;
+    text-align: right;
+    padding-right: 23px;
+}
+
+.content .condition .op input#search {
+    /*background: url(../img/search.png) #4b8af7 no-repeat;*/
+    background-position: 15% center;
+}
+
+.content .condition .op input#btnAdd {
+    background: url(../img/add.png) #4b8af7 no-repeat;
+    background-position: 15% center;
+}
+
+.content .condition .op input#btnSave {
+    background: url(../img/save.png) #4b8af7 no-repeat;
+    background-position: 15% center;
+}
+
+/*.content .division{*/
+/*width:1000px;*/
+/*margin: 20px auto;*/
+/*border-bottom: 1px solid #e2e2e2;*/
+/*}*/
+.clear {
+    clear: both;
+}
+
+.content .pdlist {
+    margin-bottom: 100px;
+}
+
+.content .money_list {
+    margin-right: 12px;
+    float: right;
+}
+
+.content .pdlist ul.pdlisthead li, .content .pdlistbox ul.pdlist_info li {
+    float: left;
+    width: 95px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.content .pdlist ul.pdlisthead, .content .pdlistbox ul.pdlist_info {
+    width: 1020px;
+}
+
+.content .pdlist ul.pdlisthead li {
+    font-size: 14px;
+    background-color: #f6f6f6;
+    font-weight: bold;
+    color: #434345;
+    font-size: 13px;
+}
+
+.content .pdlist ul.pdlisthead li.unitHead a {
+    height: 21px;
+    width: 53px;
+    margin-top: 5px;
+    display: inline-block;
+    text-decoration: none;
+    padding-left: 5px;
+    background-position: 0 0;
+    background: url(../img/sort_up_kc.png) no-repeat;
+}
+
+.content .pdlist ul.pdlisthead li.numHead a {
+    height: 21px;
+    width: 95px;
+    margin-top: 5px;
+    display: inline-block;
+    text-decoration: none;
+    padding-left: 5px;
+    background-position: 0 0;
+    background: url(../img/sort_down_kc.png) no-repeat;
+}
+
+.content .pdlist ul.pdlisthead li.unitHead a em, .content .pdlist ul.pdlisthead li.numHead a em {
+    height: 21px;
+    line-height: 21px;
+    display: inline-block;
+    padding-right: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.content .pdlistbox {
+    clear: both;
+}
+
+.content .pdlist ul.pdlisthead li.chk, .content .pdlistbox ul.pdlist_info li.chk {
+    width: 50px;
+}
+
+.content .pdlistbox ul.pdlist_info li input {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.content .pdlistbox ul.pdlist_info li.chk input {
+    margin-top: 4px;
+    *margin: 5px 0px 0px 0px;
+}
+
+.content .pdlist ul.pdlisthead li.gameName, .content .pdlistbox ul.pdlist_info li.gameName {
+    width: 95px;
+}
+
+.content .pdlist ul.pdlisthead li.region, .content .pdlistbox ul.pdlist_info li.region {
+    width: 95px;
+}
+
+/********************ZW_C_JB_00008_20170513 ADD START***************************/
+.content .pdlistbox ul.pdlist_info li.currency select {
+    width: 90px;
+    height: 26px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.content .pdlist ul.pdlisthead li.gameName {
+    width: 255px;
+}
+
+.content .pdlist ul.pdlisthead li#pdlisthead_password, .content .pdlist ul.pdlisthead li#pdlisthead_unit {
+    width: 60px;
+}
+
+.content .pdlist ul.pdlisthead li.numHead {
+    width: 100px;
+}
+
+.content .pdlistbox ul.pdlist_info li.gameName {
+    width: 255px;
+}
+
+/********************ZW_C_JB_00008_20170513 ADD START**************************/
+
+.tr1 li {
+    background-color: #f6f5f5;
+    color: #434345;
+    vertical-align: middle;
+    height: 30px;
+    line-height: 30px;
+}
+
+.tr0 li {
+    background-color: #ffffff;
+    color: #434345;
+    vertical-align: middle;
+    height: 30px;
+    line-height: 30px;
+}
+
+.tr0 li.selected, .tr1 li.selected {
+    background-color: #dbebfb;
+}
+
+.floatDiv {
+    width: 130px;
+    height: 185px;
+    position: absolute;
+    border: 3px solid red;
+    top: -1000px;
+    z-index: 8000;
+    background-color: white;
+    font-family: 微软雅黑;
+    color: #434345;
+}
+
+.floatDiv img {
+    text-align: center;
+    padding: 12px 5px 10px 20px;
+    margin-left: 13px;
+}
+
+.floatDiv div.head {
+    height: 30px;
+    background-color: red;
+    color: white;
+    font-size: 14px;
+    padding-left: 5px;
+    vertical-align: middle;
+    line-height: 30px;
+    font-weight: bold;
+}
+
+.floatDiv div.content {
+    margin-top: 2px;
+    margin-left: 9px;
+}
+
+.btnClose {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+}
+
+.btnClose a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.content .pdlist .pdlistbox .pdlist_info li.gameLoginAccount input, .content .pdlist .pdlistbox .pdlist_info li.gameRole input, .content .pdlist .pdlistbox .pdlist_info li.price input, .content .pdlist .pdlistbox .pdlist_info li.goldCount input, .content .pdlist .pdlistbox .pdlist_info li.sellableCount input, .content .pdlist .pdlistbox .pdlist_info li.unit input, .content .pdlist .pdlistbox .pdlist_info li.gamePwd input {
+    width: 60px;
+    height: 20px;
+    padding: 2px 2px 0 2px;
+}
+
+/***************ZW_C_JB_00008_20170513 ADD START*****************/
+.content .pdlistbox ul.pdlist_info li.gameName {
+    width: 253px;
+}
+
+.content .pdlistbox ul.pdlist_info li.gamePwd, .content .pdlistbox ul.pdlist_info li.unit {
+    width: 60px;
+}
+
+.content .pdlistbox ul.pdlist_info li.sellableCount {
+    width: 100px;
+}
+
+.content .pdlist .pdlistbox .pdlist_info li.gameLoginAccount input, .content .pdlist .pdlistbox .pdlist_info li.gameRole input, .content .pdlist .pdlistbox .pdlist_info li.price input, .content .pdlist .pdlistbox .pdlist_info li.goldCount input, .content .pdlist .pdlistbox .pdlist_info li.sellableCount input, .content .pdlist .pdlistbox .pdlist_info li.unit input, .content .pdlist .pdlistbox .pdlist_info li.gamePwd input {
+    width: 60px;
+    height: 20px;
+    padding: 2px 2px 0 2px;
+}
+
+.content .pdlist .pdlistbox .pdlist_info li.unit input {
+    width: 40px;
+    height: 20px;
+    padding: 2px 2px 0 2px;
+}
+
+.content .pdlist .pdlistbox .pdlist_info li.gameRole input {
+    width: 80px;
+    height: 20px;
+    padding: 2px 2px 0 2px;
+}
+
+.content .pdlist .pdlistbox .pdlist_info li.gamePwd input {
+    width: 50px;
+    height: 20px;
+    padding: 2px 2px 0 2px;
+}
+
+.content .pdlist .pdlistbox .pdlist_info li.sellableCount input {
+    width: 90px;
+    height: 20px;
+    padding: 2px 2px 0 2px;
+}
+.content .pdlist .pdlistbox .pdlist_info li.gameLoginAccount input {
+    width: 80px;
+    height: 20px;
+    padding: 2px 2px 0 2px;
+}
+
+/***************ZW_C_JB_00008_20170513 ADD END*****************/
+
+.gs_box {
+    left: 14px;
+    top: 56px;
+    width: 910px;
+    position: absolute;
+}
+
+.game_select_arrow {
+    left: 14px;
+    top: 50px;
+    position: absolute;
+}
+
+/*.game_select_arrow{*/
+/*left: 280px;*/
+/*display: inline;*/
+/*top: 304px;*/
+/*}*/
+.close_btn {
+    left: 865px;
+    top: 2px;
+}
+
+.gs_box_inner {
+    width: 910px;
+}
+
+/*.repository{*/
+/*padding:15px;*/
+/*}*/
+/*.repository p{*/
+/*height:30px;*/
+/*line-height: 30px;*/
+/*}*/
+/*.repository p.btn_line{*/
+/*height:30px;*/
+/*line-height: 30px;*/
+/*margin-top: 10px;*/
+/*}*/
+/*.repository input{*/
+/*border: 1px solid #a0b4c5;*/
+/*height: 25px;*/
+/*line-height: 25px;*/
+/*padding-left: 2px;*/
+/*width: 180px;*/
+/*font-weight: bold;*/
+/*}*/
+/*.repository ul .promise{*/
+/*color:#666;*/
+/*font-size:12px;*/
+/*padding:10px 0;*/
+/*}*/
+/*.repository ul li label,.repository ul li form{*/
+/*float:left;*/
+/*vertical-align: middle;*/
+/*}*/
+/*.repository ul li label{*/
+/*margin-top:4px;*/
+/*margin-right:4px;*/
+/*}*/
+
+.module {
+    padding: 15px;
+    display: none;
+}
+
+.repository #selGame {
+    width: 120px;
+    height: 23px;
+    margin-bottom: 10px;
+}
+
+.module #moduleGame {
+    width: 120px;
+    height: 23px;
+    margin: 10px 0px 10px 50px;
+}
+/******************ZW_C_JB_00008_20170513 ADD START*****************/
+.module #btnDownloadModule {
+    margin-right: 80px;
+    width: 80px;
+    height: 23px;
+}
+.content .uploadContent #btnDownloadModule{
+    float:left;
+    height: 40px;
+    padding-top: 10px;
+    margin-left: 5px;
+    font-size: small;
+}
+.uploadContent #form_div1{
+    width: 137px;
+    height: 44px;
+    background-color: rgb(240, 240, 240);
+    margin-left: 0px;
+    border:1px solid #a0a0a0;
+}
+.uploadContent #form_div2{
+    width: 137px;
+    height: 44px;
+    background-color: rgb(240, 240, 240);
+    margin-left: 30px;
+    border:1px solid #a0a0a0;
+}
+.uploadContent #btnDownloadCurrencyModule{
+    float:right;
+    height: 40px;
+    padding-top: 10px;
+    padding-right: 45px;
+    font-size: small;
+}
+.uploadContent #form_div2 #div_span2{
+    float: right;
+    text-align: center;
+    padding-right: 11px;
+    padding-top: 15px;
+    font-size: small;
+}
+.uploadContent #form_div1 #div_span1{
+    float: right;
+    text-align: center;
+    padding-right: 22px;
+    padding-top: 15px;
+    font-size: small;
+}
+/******************ZW_C_JB_00008_20170513 ADD END*****************/
+/*.content .serviceInfo{*/
+/*font-size: 14px;*/
+/*margin-top:20px;*/
+/*border:1px solid #FFC926;*/
+/*padding:15px 20px 15px 20px;*/
+/*background:#FFFEEF;*/
+/*font-family: 宋体;*/
+/*}*/
+/*.content .serviceInfo span{*/
+/*margin-right: 15px;*/
+/*color:#434345;*/
+/*vertical-align:middle;*/
+/*height: 24px;*/
+/*line-height:24px;*/
+/*}*/
+.chose_service_qq {
+    display: inline-block;
+    background: url(../img/s_qq.gif) no-repeat left center;
+    padding-left: 23px;
+    width: 65px;
+    cursor: pointer;
+    height: 25px;
+    vertical-align: middle;
+}
+
+/*.content .serviceInfo .service_qq{*/
+/*background: url(../img/s_qq.png) no-repeat 4px center;*/
+/*padding-left:23px;*/
+/*}*/
+/*.content .serviceInfo .chose_service_phone{*/
+/*background: url(../img/s_mobile.png) no-repeat 4px center;*/
+/*padding-left:20px;*/
+/*}*/
+/*.content .serviceInfo .chose_service_wechat{*/
+/*background: url(../img/s_wechat.png) no-repeat 4px center;*/
+/*padding-left:27px;*/
+/*}*/
+
+.content .uploadOp {
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 5px 20px 10px 20px;
+    font-family: 宋体;
+    border: 1px solid #FFC926;
+    background: #FFFEEF;
+}
+
+.content .uploadHead {
+    margin-top: 10px;
+}
+
+.content .uploadContent {
+    float: left;
+    margin-left: 5px;
+}
+
+.content .downloadContent {
+    float: left;
+    margin-left: 15px;
+
+}
+
+.uploadOp .repository {
+    float: left;
+    height: 109px;
+    border-left: 1px solid #FFC926;
+    padding-left: 30px;
+}
+
+.uploadOp .downloadContent {
+    float: left;
+    margin-top: 15px;
+}
+
+.content .serviceInfo {
+    font-size: 14px;
+    padding: 10px 20px 10px 20px;
+    font-family: 宋体;
+    width: 400px;
+    float: left;
+}
+
+.content .service_avatar {
+    float: left;
+}
+
+.content .serviceInfo div {
+    line-height: 20px;
+    padding-left: 75px;
+}
+
+.content .serviceInfo div span {
+    margin-right: 10px;
+}
+
+#lean_overlay {
+    position: fixed;
+    z-index: 10000;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background: #000;
+    display: none;
+}
+
+#OpenWindow {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+    display: none;
+    padding-bottom: 2px;
+    width: 474px;
+    z-index: 11000;
+    left: 50%;
+    margin-left: -202px;
+    opacity: 1;
+    position: fixed;
+    top: 200px;
+}
+
+#OpenWindow-header {
+    background: url("../img/hd-bg.png") repeat scroll 0 0 transparent;
+    border-bottom: 1px solid #CCCCCC;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 14px 18px 14px;
+}
+
+.modal_close {
+    background: url("../img/modal_close.png") repeat scroll 0 0 transparent;
+    display: block;
+    height: 14px;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 14px;
+    z-index: 2;
+}
+
+#OpenWindow .txt-fld {
+    /*border-bottom: 1px solid #EEEEEE;*/
+    padding: 10px 20px;
+    position: relative;
+    text-align: right;
+    width: 424px;
+}
+
+#OpenWindow .txt-fld1 {
+    /*border-bottom: 1px solid #EEEEEE;*/
+    padding: 10px 20px;
+    position: relative;
+    text-align: left;
+    width: 424px;
+}
+
+#OpenWindow .txt-fld span, #OpenWindow .txt-fld1 span {
+    width: 72px;
+}
+
+#OpenWindow .txt-fld input, #OpenWindow .txt-fld1 input {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border-color: #CCCCCC #E7E6E6 #E7E6E6 #CCCCCC;
+    /*border-radius: 4px 4px 4px 4px;*/
+    border-style: solid;
+    border-width: 1px;
+    color: #222222;
+    font-size: 1.2em;
+    outline: medium none;
+    padding: 5px;
+    width: 120px;
+}
+
+#OpenWindow .txt-fld select {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border-color: #CCCCCC #E7E6E6 #E7E6E6 #CCCCCC;
+    /*border-radius: 4px 4px 4px 4px;*/
+    border-style: solid;
+    border-width: 1px;
+    color: #222222;
+    font-size: 1.2em;
+    outline: medium none;
+    padding: 5px;
+    width: 158px;
+    margin-bottom: 10px;
+}
+
+/*************ZW_C_JB_00008_20170516 ADD START**********************/
+#OpenWindow .txt-fld1 label#password_label {
+    margin-left: 19px;
+}
+
+#OpenWindow .txt-fld1 label#currency_label {
+    margin-left: 18px;
+}
+
+#OpenWindow .txt-fld1 select {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border-color: #CCCCCC #E7E6E6 #E7E6E6 #CCCCCC;
+    /*border-radius: 4px 4px 4px 4px;*/
+    border-style: solid;
+    border-width: 1px;
+    color: #222222;
+    font-size: 1.2em;
+    outline: medium none;
+    padding: 5px;
+    width: 132px;
+    margin-bottom: 0px;
+}
+
+#OpenWindow .btn-fld {
+    overflow: hidden;
+    padding: 12px 20px 12px 190px;
+    width: 254px;
+}
+
+/*#OpenWindow .txt-fld label#unit_labels{*/
+/*float: left;*/
+/*!*padding-left: 18px;*!*/
+/*!*text-align: center;*!*/
+/*!*padding-top: 6px;*!*/
+
+/*}*/
+/*#OpenWindow .txt-fld #addUnitPrice{*/
+/*float: left;*/
+/*padding-left: 40px;*/
+/*width: 80px;*/
+/*}*/
+/*#OpenWindow .txt-fld #addUnitPrice_div{*/
+/*float: left;*/
+/*margin-left: 20px;*/
+/*}*/
+#OpenWindow .txt-fld1 input#addUnitPrice {
+    margin-left: 2px;
+}
+
+#OpenWindow .txt-fld1 #unit_labels {
+    margin-left: 42px;
+}
+
+#OpenWindow .txt-fld1 #addMoneyName_label {
+    /*width: 72px;*/
+    margin-left: 10px;
+}
+
+#OpenWindow .txt-fld1 input#addMoneyName {
+    margin-left: 1px;
+}
+
+/*************ZW_C_JB_00008_20170516 ADD END****************/
+
+button {
+    background: none repeat scroll 0 0 #F7F7F7;
+    /****border: medium none;****/
+    border: 1px solid silver;
+    /*border-radius: 4px 4px 4px 4px;*/
+    /**color: #FFFFFF;***/
+    color: #444444;
+    float: right;
+    font-size: 13px;
+    /*font-weight: bold;*/
+    /*overflow: visible;*/
+    padding: 5px 32px;
+    /*text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);*/
+    /*width: auto;*/
+    /*cursor: pointer;*/
+}
+
+.tipso_bubble {
+    background: #fbd04d;
+    top: 36px;
+    left: 140px;
+    opacity: 0.94;
+    position: absolute;
+    text-align: center;
+    border-radius: 6px;
+    z-index: 9999;
+    padding: 12px;
+    box-sizing: border-box;
+    color: #434345;
+    display: none;
+    width: 240px;
+}
+
+.tipso_bubble.bottom > .tipso_arrow {
+    border-color: transparent transparent #fbd04d;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -8px;
+}
+
+.tipso_bubble > .tipso_arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 8px solid;
+    pointer-events: none;
+}
+
+.tipso_bubble, .tipso_bubble > .tipso_arrow {
+    box-sizing: border-box;
+}
+
+#page .pagination {
+    height: 28px;
+    float: left;
+    overflow: hidden;
+    clear: both;
+}
+
+.totalPage {
+    float: left;
+    margin-top: 26px;
+    margin-left: 13px;
+    color: #999;
+}
+
+#page .pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+}
+
+#page ul {
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+
+#page li {
+    text-align: -webkit-match-parent;
+}
+
+#page .pagination > li {
+    display: inline;
+}
+
+#page .pagination > li:first-child > a, #page .pagination > li:first-child > span {
+    margin-left: 0;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+#page .pagination > li > a, #page .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    color: #428bca;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+}
+
+#page .pagination > .active > a, #page .pagination > .active > span, #page .pagination > .active > a:hover, #page .pagination > .active > span:hover, #page .pagination > .active > a:focus, #page .pagination > .active > span:focus {
+    z-index: 2;
+    color: #fff;
+    background-color: #428bca;
+    border-color: #428bca;
+    cursor: default;
+}
+
+#page .pagination > li > a, #page .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 3px 8px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    color: #428bca;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+}
+
+#page .pagination > .disabled > span, #page .pagination > .disabled > span:hover, #page .pagination > .disabled > span:focus, #page .pagination > .disabled > a, #page .pagination > .disabled > a:hover, #page .pagination > .disabled > a:focus {
+    color: #999;
+    background-color: #fff;
+    border-color: #ddd;
+    cursor: not-allowed;
+}
+
+#page .page {
+    float: left;
+}
+
+.u-fctip{
+    color: #f60;
+    font-size: 12px;
+    padding: 12px 0;
+}
+.sin_pdlbox .pdlistbox.active {
+    border: 1px solid #f70d0d;
+    background: #ffeded;
+    margin-top: -1px;
+}
+.sin_pdlbox .pdlistbox.active .pdlist_info li{
+    background: #ffeded;
+}

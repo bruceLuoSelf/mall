@@ -1,0 +1,102 @@
+/************************************************************************************
+ *  Copyright 2013 WZITech Corporation. All rights reserved.
+ *	
+ *	模	块：		IUserInfoDBDAO
+ *	包	名：		com.wzitech.gamegold.usermgmt.dao.rdb
+ *	项目名称：	gamegold-usermgmt
+ *	作	者：		SunChengfei
+ *	创建时间：	2014-2-15
+ *	描	述：		
+ *	更新纪录：	1. SunChengfei 创建于 2014-2-15 下午1:10:19
+ * 				
+ ************************************************************************************/
+package com.wzitech.gamegold.usermgmt.dao.rdb;
+
+import com.wzitech.chaos.framework.server.dataaccess.mybatis.IMyBatisBaseDAO;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author SunChengfei
+ *
+ */
+public interface IUserInfoDBDAO extends IMyBatisBaseDAO<UserInfoEO, Long>{
+	/**
+	 * 根据用户Id查找用户
+	 * @param uid
+	 * @return
+	 */
+	public UserInfoEO findUserById(Long  uid);
+	
+	/**
+	 * 通过帐号名查找用户
+	 * @param loginName
+	 */
+	public UserInfoEO findUserByLoginAccount(String loginAccount);
+	
+	/**
+	 * 通过名称查找用户
+	 * @param realName
+	 * @return
+	 */
+	public UserInfoEO findUserByNickName(String realName);
+
+	/**
+	 * 分页查询用户列表信息
+	 * @param queryMap (userForm,loginAccount,nickName,realName)
+	 * @param limit
+	 * @param start
+	 * @return
+	 */
+	public GenericPage<UserInfoEO> findUserList(Map<String, Object> queryMap, int limit, int start);
+	
+	/**
+	 * 解除绑定手机
+	 * @param userInfoEO
+	 */
+	public void modifyPhone(UserInfoEO userInfoEO);
+	/**
+	 * 根据客服Id查询客服当前处理的订单数
+	 * @return
+	 */
+	public UserInfoEO queryServiceOrederNum(Long Id);
+
+    /**
+     * 通过客服ID查询寄售客服当前处理订单数量
+     * @param id
+     * @return
+     */
+    public UserInfoEO queryConsignmentOrderNum(Long id);
+
+	/**
+	 * 查询客服当前还有多少卖家入驻需要审核
+	 * @param servicerId
+	 * @return
+	 */
+	public int querySellerEnterNum(Long servicerId);
+
+	/**
+	 * 查询指定游戏担保客服列表，待发货订单数量少的客服靠前排序
+	 * @param gameName
+	 * @return
+	 */
+	List<UserInfoEO> queryAssureServiceByGame(String gameName);
+	/**
+	 * 随机获取一个用户
+	 */
+	List<UserInfoEO> randomQuery();
+
+	int countByUserMap(Map<String, Object> queryParam);
+
+	public GenericPage<UserInfoEO> selectUserByMap(Map<String, Object> var1, int var2, int var3, String var4, boolean var5);
+
+	/**
+	 *  根据接单数量排序查询寄售客服
+	 *  ZW_C_JB_00004 mj
+	 * @return
+	 */
+	List<UserInfoEO> selectFreeConsignmentService();
+}

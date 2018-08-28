@@ -1,0 +1,7 @@
+@charset "utf-8";
+/* CSS Document */
+
+.ico_shang{background:url(../img/icon_shang.png) no-repeat 0 3px;}
+.a_qqtalk{ display:inline-block; width:74px; height:23px;background:url(../img/icon_qqtalk.png) no-repeat 0 0;}
+.p_color3{ color:#333;}
+.dermessages-main .send-content .btn{background: #fff;}

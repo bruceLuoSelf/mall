@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.goods.entity.GoodsInfo">
+
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.goods.entity.GoodsInfo">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+		<result column="MONEY_NAME" property="moneyName" jdbcType="VARCHAR" />
+		<result column="REGION" property="region" jdbcType="VARCHAR" />
+		<result column="SERVER" property="server" jdbcType="VARCHAR" />
+		<result column="GAME_RACE" property="gameRace" jdbcType="VARCHAR" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+		<result column="DELIVERY_TIME" property="deliveryTime" jdbcType="NUMERIC" javaType="int" />
+		<result column="GOODS_CAT" property="goodsCat" jdbcType="NUMERIC" javaType="int" />
+		<result column="SALES" property="sales" jdbcType="NUMERIC" javaType="int" />
+		<result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN" />
+		<result column="GAME_ID" property="gameId" jdbcType="VARCHAR" />
+		<result column="REGION_ID" property="regionId" jdbcType="VARCHAR" />
+		<result column="SERVER_ID" property="serverId" jdbcType="VARCHAR" />
+		<result column="RACE_ID" property="raceId" jdbcType="VARCHAR" />
+		<!--ZW_C_JB_00008_20170512 START ADD-->
+		<result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="NUMERIC" javaType="long" />
+		<result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR" />
+		<!--ZW_C_JB_00008_20170512 END ADD-->
+		<association property="imageUrls" select="selectImage" column="{GAME_NAME=GAME_NAME,GOODS_TYPE_NAME=GOODS_TYPE_NAME}"
+          javaType="com.wzitech.gamegold.order.entity.GameConfigEO" />
+		<collection property="discountList" column="ID"
+    			ofType="com.wzitech.gamegold.goods.entity.DiscountInfo"
+    		select="selectDiscount"/>
+	</resultMap>
+	
+	<!-- 根据游戏名称查询商品图片 -->
+	<select id="selectImage" parameterType ="map" resultType="String" >
+	   SELECT "GAME_IMAGE" FROM "TBL_GAMEGOLD_TRADE_PLACE" WHERE "GAME_NAME" = #{GAME_NAME} AND "GOODS_TYPE_NAME" = #{GOODS_TYPE_NAME}
+	</select>
+	
+	<select id="selectDiscount" parameterType="long" resultMap="com.wzitech.gamegold.goods.entity.DiscountInfo.BaseResultMap"> 
+     	SELECT * FROM "TBL_GAMEGOLD_DISCOUNT" WHERE "GOODS_ID" = #{id} AND "IS_DELETED" = FALSE ORDER BY "GOLD_COUNT" ASC
+	</select>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.goods.entity.GoodsInfo"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_GOODS"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gameName != null and gameName != ''">
+				"GAME_NAME",
+			</if>
+			<if test="moneyName != null">
+				"MONEY_NAME",
+			</if>
+			<if test="region != null and region != ''">
+				"REGION",
+			</if>
+			<if test="server != null and server != ''">
+				"SERVER",
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				"GAME_RACE",
+			</if>
+			<if test="title != null and title != ''">
+				"TITLE",
+			</if>
+			<if test="unitPrice != null">
+				"UNIT_PRICE",
+			</if>
+			<if test="deliveryTime != null">
+				"DELIVERY_TIME",
+			</if>
+			<if test="goodsCat != null">
+				"GOODS_CAT",
+			</if>
+			<if test="sales != null">
+				"SALES",
+			</if>
+			<if test="lastUpdateTime != null">
+				"LAST_UPDATE_TIME",
+			</if>
+			<if test="createTime != null">
+				"CREATE_TIME",
+			</if>
+			<if test="gameId != null and gameId !=''">
+				"GAME_ID",
+			</if>
+			<if test="regionId != null and regionId !=''">
+				"REGION_ID",
+			</if>
+			<if test="serverId != null and serverId !=''">
+				"SERVER_ID",
+			</if>
+			<if test="raceId != null and raceId !=''">
+				"RACE_ID",
+			</if>
+			<if test="isDeleted != null">
+				"IS_DELETED",
+			</if>
+			<if test="goodsTypeId != null and goodsTypeId !=''">
+				"GOODS_TYPE_ID",
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName !=''">
+				"GOODS_TYPE_NAME"
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gameName != null and gameName != ''">
+				#{gameName},
+			</if>
+			<if test="moneyName != null">
+				#{moneyName},
+			</if>
+			<if test="region != null and region != ''">
+				#{region},
+			</if>
+			<if test="server != null and server != ''">
+				#{server},
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				#{gameRace},
+			</if>
+			<if test="title != null and title != ''">
+				#{title},
+			</if>
+			<if test="unitPrice != null">
+				#{unitPrice},
+			</if>
+			<if test="deliveryTime != null">
+				#{deliveryTime},
+			</if>
+			<if test="goodsCat != null ">
+				#{goodsCat},
+			</if>
+			<if test="sales != null ">
+				#{sales},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="gameId != null and gameId !=''">
+				#{gameId},
+			</if>
+			<if test="regionId != null and regionId !=''">
+				#{regionId},
+			</if>
+			<if test="serverId != null and serverId !=''">
+				#{serverId},
+			</if>
+			<if test="raceId != null and raceId !=''">
+				#{raceId},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+			<if test="goodsTypeId != null and goodsTypeId !=''">
+				#{goodsTypeId},
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName !=''">
+				#{goodsTypeName}
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 批量更新价格 -->
+	<update id="updatePrice" parameterType="map">
+		UPDATE "TBL_GAMEGOLD_GOODS"
+		SET "UNIT_PRICE"="UNIT_PRICE"+(#{differPrice}), "LAST_UPDATE_TIME"= now()
+		<include refid="selectSql"/>
+	</update>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate"
+		parameterType="com.wzitech.gamegold.goods.entity.GoodsInfo">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE "TBL_GAMEGOLD_GOODS"
+			<set>
+				<if test="item.gameName != null and item.gameName != ''">
+					"GAME_NAME"= #{item.gameName},
+				</if>
+				<if test="item.moneyName != null">
+					"MONEY_NAME"= #{item.moneyName},
+				</if>
+				<if test="item.region != null and item.region != ''">
+					"REGION"= #{item.region},
+				</if>
+				<if test="item.server != null and item.server != ''">
+					"SERVER"= #{item.server},
+				</if>
+				<if test="item.gameRace != null and item.gameRace != ''">
+					"GAME_RACE"= #{item.gameRace},
+				</if>
+				<if test="item.gameId != null and item.gameId !=''">
+					"GAME_ID" = #{item.gameId},
+				</if>
+				<if test="item.regionId != null and item.regionId !=''">
+					"REGION_ID" = #{item.regionId},
+				</if>
+				<if test="item.serverId != null and item.serverId !=''">
+					"SERVER_ID" = #{item.serverId},
+				</if>
+				<if test="item.raceId != null and item.raceId !=''">
+					"RACE_ID" = #{item.raceId},
+				</if>
+				<if test="item.title != null and item.title != ''">
+					"TITLE"= #{item.title},
+				</if>
+				<if test="item.unitPrice != null">
+					"UNIT_PRICE"= #{item.unitPrice},
+				</if>
+				<if test="item.deliveryTime != null">
+					"DELIVERY_TIME"= #{item.deliveryTime},
+				</if>
+				<if test="item.goodsCat != null ">
+					"GOODS_CAT"= #{item.goodsCat},
+				</if>
+				<if test="item.sales != null ">
+					"SALES"= #{item.sales},
+				</if>
+				<if test="item.lastUpdateTime != null">
+					"LAST_UPDATE_TIME"= #{item.lastUpdateTime},
+				</if>
+				<if test="item.isDeleted != null">
+					"IS_DELETED"= #{item.isDeleted},
+				</if>
+				<if test="item.goodsTypeId != null and item.goodsTypeId !=''">
+					"GOODS_TYPE_ID"= #{item.goodsTypeId},
+				</if>
+				<if test="item.goodsTypeName != null and item.goodsTypeName != ''">
+					"GOODS_TYPE_NAME"= #{item.goodsTypeName}
+				</if>
+			</set>
+			<where>
+				"ID" = #{item.id}
+			</where>
+		</foreach>
+	</update>
+    
+    <sql id="selectSql">
+		<where>
+			1=1
+			<if test="isDeleted != null">
+				AND "IS_DELETED" = #{isDeleted}
+			</if>
+			<if test="id != null">
+				AND	"ID"= #{id}
+			</if>
+			<if test="goodsCat != null">
+				AND	"GOODS_CAT"= #{goodsCat}
+			</if>
+			<if test="gameName != null and gameName != ''">
+				AND "GAME_NAME" LIKE '%'||#{gameName}||'%'
+			</if>
+			<if test="region != null and region != ''">
+				AND "REGION" LIKE '%'||#{region}||'%'
+			</if>
+			<if test="server != null and server != ''">
+				AND	"SERVER" LIKE '%'||#{server}||'%'
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				AND	"GAME_RACE" LIKE '%'||#{gameRace}||'%'
+			</if>
+			<if test="backGameName != null and backGameName != ''">
+				AND "GAME_NAME" = #{backGameName}
+			</if>
+			<if test="backRegion != null and backRegion != ''">
+				AND "REGION" = #{backRegion}
+			</if>
+			<if test="backServer != null and backServer != ''">
+				AND	"SERVER" = #{backServer}
+			</if>
+			<if test="backGameRace != null and backGameRace != ''">
+				AND	"GAME_RACE" = #{backGameRace}
+			</if>
+			<if test="gameId != null and gameId != ''">
+				AND "GAME_ID"= #{gameId}
+			</if>
+			<if test="regionId != null and regionId != ''">
+				AND "REGION_ID"= #{regionId}
+			</if>
+			<if test="serverId != null and serverId != ''">
+				AND	"SERVER_ID"= #{serverId}
+			</if>
+			<if test="raceId != null and raceId != ''">
+				AND	"RACE_ID"= #{raceId}
+			</if>
+			<if test="moneyName != null">
+				AND "MONEY_NAME" = #{moneyName}
+			</if>
+			<if test="title != null and title != ''">
+				AND	"TITLE" LIKE '%'||#{title}||'%' 
+			</if>
+			<if test="goodsTypeId != null and goodsTypeId != ''">
+				AND "GOODS_TYPE_ID" = #{goodsTypeId}
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 判断商品的类目是否已经存在 -->
+	<select id="checkGoodsCatExist" parameterType="map" resultType="long">
+		SELECT COUNT("GOODS_CAT") FROM "TBL_GAMEGOLD_GOODS"
+		<where>
+			<if test="isDeleted != null">
+				"IS_DELETED" = #{isDeleted}
+			</if>
+			<if test="goodsCat != null">
+				AND	"GOODS_CAT"= #{goodsCat}
+			</if>
+			<if test="gameName != null and gameName != ''">
+				AND "GAME_NAME" = #{gameName}
+			</if>
+			<if test="moneyName != null">
+				AND "MONEY_NAME" = #{moneyName}
+			</if>
+			<if test="region != null and region != ''">
+				AND "REGION"= #{region}
+			</if>
+			<if test="server != null and server != ''">
+				AND	"SERVER" = #{server} 
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				AND	"GAME_RACE" = #{gameRace}
+			</if>
+			<if test="gameId != null and gameId != ''">
+				AND "GAME_ID"= #{gameId}
+			</if>
+			<if test="regionId != null and regionId != ''">
+				AND "REGION_ID"= #{regionId}
+			</if>
+			<if test="serverId != null and serverId != ''">
+				AND	"SERVER_ID"= #{serverId}
+			</if>
+			<if test="raceId != null and raceId != ''">
+				AND	"RACE_ID"= #{raceId}
+			</if>
+			<!--<if test="goodsTypeId != null and goodsTypeId != ''">-->
+				<!--AND	"GOODS_TYPE_ID"= #{goodsTypeId}-->
+			<!--</if>-->
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				AND	"GOODS_TYPE_NAME"= #{goodsTypeName}
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.goods.entity.GoodsInfo">
+		 SELECT * FROM "TBL_GAMEGOLD_GOODS"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		 SELECT COUNT(1) FROM "TBL_GAMEGOLD_GOODS"
+		<include refid="selectSql"/>
+	</select>
+	
+	<!-- 通过商品的ID，获得商品信息 -->
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.goods.entity.GoodsInfo">
+		 SELECT * FROM "TBL_GAMEGOLD_GOODS"
+		 <where>
+		 	"ID" = #{id}
+		 </where>
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.goods.entity.GoodsInfo">
+		${value}
+	</select>
+	<!-- 根据ID删除商品 -->
+	<delete id="batchDeleteByIds" parameterType="java.util.List">
+		<foreach collection="list" item="item" separator=";">
+            DELETE FROM "TBL_GAMEGOLD_GOODS" WHERE"ID" = #{item}
+		</foreach>
+	</delete>
+</mapper>

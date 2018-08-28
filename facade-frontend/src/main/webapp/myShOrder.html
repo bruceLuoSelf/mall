@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>出货商订单流程</title>
+    <meta content="" name="description" />
+    <meta content="5173帐号、安全帐号、游戏帐号" name="keywords" />
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common1.6-950.css" />
+    <link rel="shortcut icon" href="http://img01.5173cdn.com/common/build/1.00/images/ico.ico" />
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link href="./css/request-buy.css" rel="Stylesheet" type="text/css" />
+    <link href="./css/rest.css" rel="Stylesheet" type="text/css" />
+    <link href="./css/newrecord.css" rel="Stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/new-guarantee.css">
+    <script type="text/javascript" src="http://img01.5173cdn.com/common/build/1.00/js/lib/jquery-1.5.2.min.js"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/jquery.json-2.4.min.js" type="text/javascript"></script>
+    <script src="./js/jquery.leanModal.min.js" type="text/javascript"></script>
+    <script src="./js/business/myShOrder.js" type="text/javascript"></script>
+    <script src="./js/headGameMenu.js" type="text/javascript"></script>
+    <style>
+        .order-container .content .chat-detail .chat .title .btn {
+          width: 120px;
+          height: 36px;
+          text-align: center;
+            background: #f60;
+          }
+        .unenabled{
+          width: 100%;
+          height: 100%;
+          display: inline-block;
+          background: #aaa;
+          cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+        <div class="header">
+          <!-- 顶部登陆条+快捷菜单条 -->
+          <div id="J_GlobalTop" data-class="header-wp1180"></div>
+
+          <!--网站Logo+四级联动搜索条-->
+          <div class="header_box clearfix header-wp1200">
+              <h1 class="logo"><a href="http://www.5173.com" title="中国网络游戏服务网">5173</a></h1>
+              <p class="slogan">金币交易</p>
+              <!-- 四级联动游戏选择 -->
+
+              <!-- 组件_商品发布进度条 开始 -->
+              <div class="wares-box clearfix">
+                  <ul class="clearfix">
+                      <li class="over">
+                          <!-- 订单的 -->
+                          <i class="new-order-img ico-num">1</i>
+                          <span class="txt">选择商品，下单</span>
+                          <s class="new-order-arrow"></s>
+                      </li>
+                      <li class="on">
+                          <i class="new-order-img ico-num">2</i>
+                          <span class="txt">出货商登录游戏发货</span>
+                          <s class="new-order-arrow"></s>
+                      </li>
+                      <li class="off">
+                          <i class="new-order-img ico-num">3</i>
+                          <span class="txt">收货商确认收货</span>
+                          <s class="new-order-arrow"></s>
+                      </li>
+                      <li class="off">
+                          <i class="new-order-img ico-num">4</i>
+                          <span class="txt">交易完成</span>
+                      </li>
+                  </ul>
+              </div>
+              <!-- 组件_商品发布进度条 结束 -->
+          </div>
+      </div>
+
+      <div class="guarantee-container">
+          <div class="wrapper">
+              <div class="position">
+                  <i class="icon-home"></i>
+                  <span><a href="http://www.5173.com/">首页</a></span>
+                  <em>></em>
+                  <span><a href="chOrderList.html">我的出货订单</a></span>
+                  <em>></em>
+                  <span>订单结果</span>
+              </div>
+              <div class="order-container w1200">
+                  <div class="order-title clearfix">
+                      <span class="word fl">订单信息</span>
+                      <a target="_blank" href="tencent://message/?uin=554475156&amp;Site=5173&amp;Menu=yes" id="qq-link">
+                          <div class="btn fr">
+                              <span class="icon-qq">
+                                QQ交谈
+                              </span>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="content clearfix">
+                      <div class="order-info fl">
+                          <p class="title overflow" id="spGameInfo">地下城与勇士/湖北区/湖北1区</p>
+                          <div class="detail" id="spChInfo">
+                              <!-- <p><span class="word">出货角色：</span>11</p>
+                              <p><span class="word">订单单价：</span><em class="price">0.01796</em>元/万金</p>
+                              <p><span class="word">订单金额：</span><em class="price">98.28</em>元</p>
+                              <p><span class="word">交易模式：</span>机器收货</p>
+                              <p><span class="word">交易方式：</span>拍卖交易 <a class="link">出货教程</a></p>
+                              <p><span class="word">交易地点：</span>无</p>
+                              <p><span class="word">交易状态：</span>不分完单</p>
+                              <p><span class="word">交易类目：</span>游戏币</p>
+                              <p><span class="word">订单编号：</span>SG1803290000315</p> -->
+
+                          </div>
+
+                          <!-- 撤销按钮 -->
+                          <div class="btn-revoke" id="btnCancel">撤单</div>
+                           <input type="hidden" id="hdShow" href="#OpenWindow" rel="leanModal">
+
+                      </div>
+                      <div class="chat-detail new_rest fr">
+                          <div class="chat">
+                              <div class="title clearfix">
+                                  <div class="fl">
+                                      <span id="spanCount">订单数量: <em>5000</em>万金</span>
+                                      <span id="id="spanHaveCount"">已交易: <em>0</em>万金</span>
+                                  </div>
+                                  <div class="btn fr">
+                                      <span id="btnLoginGame">我已登录</span>
+                                  </div>
+                              </div>
+                              <div class="chat-box" id="divMsg">
+
+
+                              </div>
+                          </div>
+
+
+                          <div class="new-table" style="display:none">
+                              <table cellpadding="0" cellspacing="0" width="100%">
+                                  <thead>
+                                      <tr>
+                                          <td width="112">收货角色名</td>
+                                          <td width="112">预计收货数量</td>
+                                          <td width="112">出货商填写量</td>
+                                          <td width="85">实际查收数</td>
+                                          <td width="85">状态</td>
+                                          <td width="150">操作</td>
+                                      </tr>
+                                  </thead>
+                                  <tbody id="newrc-table">
+
+                                  </tbody>
+                              </table>
+                          </div>
+                          <!-- 表格 -->
+                          <div class="order-table" id="newrc-paimai">
+                              <table>
+                                  <thead>
+                                      <tr>
+                                          <td width="125px">收货角色信息</td>
+                                          <td width="120px">装备截图</td>
+                                          <td width="125px">拍卖价格（金）</td>
+                                          <td width="95px">状态</td>
+                                          <td width="195px">操作</td>
+                                      </tr>
+                                  </thead>
+
+                                  <tbody>
+
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- 注意事项 -->
+              <div class="rule-box">
+                  <div class="title">
+                      <span>为了进一步保障交易安全请注意一下事项:</span>
+                  </div>
+                  <div class="content">
+                      <p class="item">1. 不要接受任何角色名的邀请或交易;&nbsp&nbsp<a href="http://aid.5173.com/sc/shxt1/1830.html" target="_blank">如何复制角色名</a></p>
+                      <p class="item">2. 务必由你邀请收货商交易并录制交易视频;&nbsp&nbsp<a href="http://aid.5173.com//sc/shxt1/1831.html" target="_blank">如何录制视频</a></p>
+                      <p class="item">3. 如因接受邀请造成的损失由出货商自行承担;</p>
+                      <p class="item">4. <a href="http://aid.5173.com//sc/shxt1/1842.html" target="_blank">快速出货教程</a></p>
+                  </div>
+              </div>
+
+              <!-- 回到顶部 -->
+              <div class="to-top" id="isToTop">
+                  <i class="icon-toTop"></i>
+                  <span>返回顶部</span>
+              </div>
+          </div>
+      </div>
+
+
+
+      <!-- 发货数量 -->
+      <div class="bomb fh-bomb" style="display:none;">
+          <div class="title">
+              <span>输入发货数量</span>
+              <i class="icon-close"></i>
+          </div>
+          <div class="content clearfix">
+              <input class="fl" value="6000" type="number">
+              <span class="fl">万金</span>
+          </div>
+          <div class="bottom">
+              <span class="btn-sure">确定</span>
+          </div>
+      </div>
+      <!-- 遮罩 -->
+      <div class="mask" style="display:none;"></div>
+
+    <!--JQ基础类库-->
+
+    <script>
+        function resetMessageArea() {
+            $('.tbody').animate({
+                'scrollTop': 9999
+            }, 1000);
+        }
+        $(function() {
+            resetMessageArea()
+        })
+        // $(".slt_num").click(function(){
+        // 	$(".sure_after").show();
+        // })
+    </script>
+    <!-- 多角色初始弹窗 -->
+    <div class="sure_after" style="display:none">
+        <div class="after_show more_role">
+            <div class="title_show">填写已发货数量<span class="close" onclick="me.isClose()"></span></div>
+            <div class="s_yshow">
+                <div class="title_list">
+                    <span>角色名</span><span>预计收货数量</span><span>出货商填写数量</span>
+                </div>
+                <div class="list_det">
+                    <table cellpadding="0" cellspacing="0" width="100%">
+                        <tbody id="delog_button">
+                            <tr>
+                                <td>甲甲甲</td>
+                                <td><span>500</span>万</td>
+                                <td>
+                                    <em><input type="number" class="num_input" data-id='1'>万</em>
+                                    <em class="alert_jg">请输入已发货数量</em>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>甲甲甲</td>
+                                <td><span>1000</span>万</td>
+                                <td>
+                                    <em><input type="number" class="num_input" data-id='2'>万</em>
+                                    <em class="alert_jg">请输入已发货数量</em>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>甲甲甲</td>
+                                <td><span>1000</span></td>
+                                <td>
+                                    <em><input type="number" class="num_input" data-id='3'>万</em>
+                                    <em class="alert_jg">请输入已发货数量</em>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>甲甲甲</td>
+                                <td>3000万</td>
+                                <td>
+                                    <em><input type="number" class="num_input" data-id='4'>万</em>
+                                    <em class="alert_jg">请输入已发货数量</em>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="slet_title">
+                    <span>汇总</span><span>9000万</span><span>9000万</span>
+                </div>
+                <p>注：已发货数量不能大于预计收数量。确认后不能修改。</p>
+            </div>
+            <div class="show_know">
+                <a href="javascript:void(0);" class="konw_result" onclick="me.isTrueShorder()">确认</a>
+                <a href="javascript:void(0);" class="konw_sure" onclick="me.isClose()">关闭</a></div>
+        </div>
+        <div class="new_qpo" onclick="me.isClose()"></div>
+    </div>
+
+
+
+    <!--新增页面-->
+    <div id="OpenWindow">
+        <div id="signup-ct">
+            <div id="OpenWindow-header">
+                <h2>撤单原因</h2>
+                <a href="#" class="modal_close"></a>
+            </div>
+            <div class="txt-fld">
+                <label for="">
+                撤单原因：</label>
+                <select id="selCancleReason">
+                <option>请选择撤单原因</option>
+            </select>
+            </div>
+            <div class="txt-fld">
+                <label for="">
+                其他原因：</label>
+                <textarea id="otherCancleReason"></textarea>
+            </div>
+            <div class="btn-fld">
+                <button id="btnCancle">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="http://img01.5173cdn.com/fed/build/2.00/js/fed-min.js"></script>
+
+
+</body>
+
+</html>

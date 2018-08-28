@@ -1,0 +1,516 @@
+package com.wzitech.gamegold.facade.frontend.service.repository.impl;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.wzitech.chaos.framework.server.common.AbstractBaseService;
+import com.wzitech.chaos.framework.server.common.IServiceResponse;
+import com.wzitech.chaos.framework.server.common.ResponseStatus;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.common.utils.JsonMapper;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.entity.SortField;
+import com.wzitech.gamegold.common.enums.CheckState;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.common.utils.EncryptHelper;
+import com.wzitech.gamegold.facade.frontend.service.order.dto.OuterWebSiteLoginFreeRequest;
+import com.wzitech.gamegold.facade.frontend.service.order.dto.QuerySellerOrderRequest;
+import com.wzitech.gamegold.facade.frontend.service.order.dto.QuerySellerOrderResponse;
+import com.wzitech.gamegold.facade.frontend.service.order.dto.TransferOrderResponse;
+import com.wzitech.gamegold.facade.frontend.service.repository.INewCheckRepositoryService;
+import com.wzitech.gamegold.facade.frontend.service.repository.dto.CheckRepositoryManageResponse;
+import com.wzitech.gamegold.facade.frontend.service.repository.dto.OuterWebSiteReposityDTO;
+import com.wzitech.gamegold.facade.frontend.service.repository.dto.RepositoryDTO;
+import com.wzitech.gamegold.facade.frontend.service.repository.dto.RepositoryResponse;
+import com.wzitech.gamegold.goods.business.ICheckRepositoryManageRedisManager;
+import com.wzitech.gamegold.goods.business.IFirmsAccountManager;
+import com.wzitech.gamegold.goods.entity.FirmsAccount;
+import com.wzitech.gamegold.order.business.IOrderInfoManager;
+import com.wzitech.gamegold.order.business.ISubOrderDetailManager;
+import com.wzitech.gamegold.order.dto.SubOrderDetailDTO;
+import com.wzitech.gamegold.repository.business.IRepositoryManager;
+import com.wzitech.gamegold.repository.business.ISellerManager;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import com.wzitech.gamegold.repository.entity.SellerInfo;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * Date        Name                Reason for change
+ * ----------  ----------------    ----------------------
+ * 2017/07/05  wubiao              修改用户信息校验
+ */
+@Service("NewCheckRepositoryService")
+@Path("v1.0/mallOpen")
+@Produces("application/json;charset=UTF-8")
+@Consumes("application/json;charset=UTF-8")
+public class NewCheckRepositoryServiceImpl extends AbstractBaseService implements INewCheckRepositoryService {
+    private static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private JsonMapper jsonMapper = JsonMapper.nonDefaultMapper();
+    @Value("${firmsSecret.encryptKey}")
+    private String encryptKey = "";
+    @Autowired
+    private ICheckRepositoryManageRedisManager checkRepositoryManageRedisManager;
+    @Autowired
+    private IRepositoryManager repositoryManager;
+    @Autowired
+    private ISubOrderDetailManager subOrderDetailManager;
+    @Autowired
+    private ISellerManager sellerManager;
+    @Autowired
+    private IOrderInfoManager orderInfoManager;
+    @Autowired
+    private IFirmsAccountManager firmsAccountManager;
+
+    @Override
+    @Path("accessToken")
+    @POST
+    public CheckRepositoryManageResponse accessToken(OuterWebSiteLoginFreeRequest request, @Context HttpServletRequest httpServletRequest) {
+        CheckRepositoryManageResponse repositoryManageResponse = new CheckRepositoryManageResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        repositoryManageResponse.setResponseStatus(responseStatus);
+        try {
+            if(StringUtils.isBlank(request.getLoginAccount())){
+                throw new SystemException(ResponseCodes.NotEmptyLoginAccount.getCode(),ResponseCodes.NotEmptyLoginAccount.getMessage());
+            }
+            if(StringUtils.isBlank(request.getAppid())){
+                throw  new SystemException(ResponseCodes.EmptyAppid.getCode(),ResponseCodes.EmptyAppid.getMessage());
+            }
+            if(StringUtils.isBlank(request.getFirmSecret())){
+                throw new SystemException(ResponseCodes.EnpireduserSecretKey.getCode(),ResponseCodes.EnpireduserSecretKey.getMessage());
+            }
+            String toEntry = EncryptHelper.md5(String.format("%s_%s_%s_%s_%s", request.getFirmSecret(), request.getAppid(), request.getLoginAccount(), encryptKey, "5173"));
+            if (!StringUtils.equals(toEntry, request.getSign())) {
+                throw new SystemException(ResponseCodes.EntrycpyFail.getCode(), ResponseCodes.EntrycpyFail.getMessage());
+            }
+            String token = checkRepositoryManageRedisManager.checkIn(request.getFirmSecret(), request.getAppid(), request.getLoginAccount());
+            repositoryManageResponse.setToken(token);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException e) {
+            String msg;
+            if (e.getArgs() == null || e.getArgs().length == 0) {
+                msg = ResponseCodes.getResponseByCode(e.getErrorCode()).getMessage();
+            } else {
+                msg = e.getArgs()[0];
+            }
+            responseStatus.setStatus(e.getErrorCode(), msg);
+            e.printStackTrace();
+            if (logger.isErrorEnabled()) {
+                logger.error("验证发生异常:{}", e);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            if (logger.isErrorEnabled()) {
+                logger.error("验证发生未知异常:{}", e);
+            }
+        }
+        return repositoryManageResponse;
+    }
+
+    @Override
+    @Path("batchSave")
+    @POST
+    public RepositoryResponse uploadRepositoryWithJsonData(OuterWebSiteLoginFreeRequest request) {
+        RepositoryResponse repositoryResponse = new RepositoryResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        repositoryResponse.setResponseStatus(responseStatus);
+        try {
+            UserInfoEO userInfo=checkToken(request.getLoginAccount(),request.getToken());
+            List<RepositoryInfo> repositoryInfos=request.getRepositories();
+            repositoryManager.addRepository(repositoryInfos, userInfo);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException e) {
+            String msg;
+            if (e.getArgs() == null || e.getArgs().length == 0) {
+                msg = ResponseCodes.getResponseByCode(e.getErrorCode()).getMessage();
+            } else {
+                msg = e.getArgs()[0];
+            }
+            responseStatus.setStatus(e.getErrorCode(), msg);
+            e.printStackTrace();
+            if (logger.isErrorEnabled()) {
+                logger.error("上传库存发生异常:{}", e);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            if (logger.isErrorEnabled()) {
+                logger.error("上传库存发生未知异常:{}", e);
+            }
+        }
+
+        return repositoryResponse;
+    }
+
+
+    /**
+     * 分页查询库存
+     *
+     * @param repositoryDTO
+     * @param request
+     * @return Update History
+     */
+    @POST
+    @Path("page")
+    @Override
+    public RepositoryResponse queryRepository(OuterWebSiteReposityDTO repositoryDTO,
+                                              @Context HttpServletRequest request) {
+        RepositoryResponse response = new RepositoryResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            if(StringUtils.isBlank(repositoryDTO.getLoginAccount())){
+                throw new SystemException(ResponseCodes.NotEmptyLoginAccount.getCode(),ResponseCodes.NotEmptyLoginAccount.getMessage());
+            }
+            if(StringUtils.isBlank(repositoryDTO.getToken())){
+                throw  new SystemException(ResponseCodes.RedisTokenExpire.getCode(),ResponseCodes.RedisTokenExpire.getMessage());
+            }
+            UserInfoEO userInfoEO = checkToken(repositoryDTO.getLoginAccount(), repositoryDTO.getToken());
+            if (repositoryDTO.getPage() == null || repositoryDTO.getPage() <= 0) {
+                repositoryDTO.setPage(1);
+            }
+            if (repositoryDTO.getPageSize() == null || repositoryDTO.getPageSize() <= 0) {
+                repositoryDTO.setPageSize(25);
+            }
+            int start = (repositoryDTO.getPage() - 1) * repositoryDTO.getPageSize();
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("backGameName", repositoryDTO.getGameName());
+            paramMap.put("backRegion", repositoryDTO.getGameRegion());
+            paramMap.put("backServer", repositoryDTO.getGameServer());
+            paramMap.put("backGameRace", repositoryDTO.getGameRace());
+            paramMap.put("gameAccount", repositoryDTO.getGameAccount());
+            paramMap.put("sellerGameRole", repositoryDTO.getGameRole());
+            paramMap.put("orderUnitPrice", repositoryDTO.getUnitPrice());
+            paramMap.put("goodsTypeName", repositoryDTO.getGoodsTypeName());//ZW_C_JB_00008_20170514 ADD
+            paramMap.put("loginAccount", userInfoEO.getLoginAccount());
+            paramMap.put("accountUid", userInfoEO.getUid());
+            List<SortField> sortFields = Lists.newArrayList();
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(repositoryDTO.getSortByField())) {
+                String field = null;
+                if (org.apache.commons.lang3.StringUtils.equals(repositoryDTO.getSortByField(), "1")) { // 按单价排序
+                    field = "UNIT_PRICE";
+                } else if (org.apache.commons.lang3.StringUtils.equals(repositoryDTO.getSortByField(), "2")) { // 按可销售库存排序
+                    field = "SELLABLE_COUNT";
+                }
+                if (field != null) {
+                    String asc = SortField.ASC;
+                    if (repositoryDTO.getisAsc() != null) {
+                        if (repositoryDTO.getisAsc()) {
+                            asc = SortField.ASC;
+                        } else {
+                            asc = SortField.DESC;
+                        }
+
+                    }
+                    sortFields.add(new SortField(field, asc));
+                }
+            }
+            if (sortFields.size() == 0) {
+                sortFields.add(new SortField("GAME_NAME", SortField.ASC));
+                sortFields.add(new SortField("REGION", SortField.ASC));
+                sortFields.add(new SortField("SERVER", SortField.ASC));
+            }
+            GenericPage<RepositoryInfo> genericPage = repositoryManager.queryPageRepository(paramMap, sortFields, start, repositoryDTO.getPageSize());
+            List<RepositoryInfo> data = genericPage.getData();
+            Long totalCount = genericPage.getTotalCount();
+            List<RepositoryDTO> repositoryDTOList = new ArrayList<RepositoryDTO>();
+            if (!CollectionUtils.isEmpty(data)) {
+                for (RepositoryInfo repository : data) {
+                    repositoryDTOList.add(toDTO(repository));
+                    logger.info(repository.toString());
+                }
+            }
+            response.setRepositoryList(repositoryDTOList);
+            response.setTotalCount(totalCount);
+            response.setPageSize(repositoryDTO.getPageSize());
+            response.setCurrPage(repositoryDTO.getPage());
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException e) {
+            //捕获系统异常
+            String msg;
+            if (e.getArgs() == null || e.getArgs().length == 0) {
+                msg = ResponseCodes.getResponseByCode(e.getErrorCode()).getMessage();
+            } else {
+                msg = e.getArgs()[0];
+            }
+            responseStatus.setStatus(e.getErrorCode(), msg);
+            logger.error("获取库存发生异常:{}", e);
+        } catch (Exception e) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("获取库存发生未知异常:{}", e);
+        }
+        return response;
+    }
+
+    /**
+     * 分页查询卖家订单数据, 返回少量字段
+     *
+     * @param params
+     * @return
+     */
+    @POST
+    @Path("simpleOrderList")
+    @Override
+    public IServiceResponse queryOrderList(QuerySellerOrderRequest params, @Context HttpServletRequest request) {
+        QuerySellerOrderResponse response = new QuerySellerOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            if(StringUtils.isBlank(params.getLoginAccount())){
+                throw new SystemException(ResponseCodes.NotEmptyLoginAccount.getCode(),ResponseCodes.NotEmptyLoginAccount.getMessage());
+            }
+            if(StringUtils.isBlank(params.getToken())){
+                throw  new SystemException(ResponseCodes.RedisTokenExpire.getCode(),ResponseCodes.RedisTokenExpire.getMessage());
+            }
+            UserInfoEO userInfo = checkToken(params.getLoginAccount(), params.getToken());
+            Date startOrderCreate = null;
+            Date endOrderCreate = null;
+            String startOrder = params.getStartOrderCreate();
+            String endOrder = params.getEndOrderCreate();
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(startOrder)) {
+                startOrder += " 00:00:00";
+                startOrderCreate = sdf.parse(startOrder);
+            }
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(endOrder)) {
+                endOrder += " 23:59:59";
+                endOrderCreate = sdf.parse(endOrder);
+            }
+
+            if (params.getPageSize() == null) {
+                params.setPageSize(20);
+            }
+
+            if (params.getStart() == null) {
+                params.setStart(0);
+            }
+
+            Map<String, Object> queryMap = new HashMap<String, Object>();
+            queryMap.put("sellerAccount", userInfo.getLoginAccount());
+            queryMap.put("sellerUid", userInfo.getUid());
+            queryMap.put("orderId", params.getOrderId());
+            queryMap.put("gameName", params.getGameName());
+            queryMap.put("gameRegion", params.getRegion());
+            queryMap.put("gameServer", params.getServer());
+            queryMap.put("gameRace", params.getGameRace());
+            queryMap.put("startCreateTime", startOrderCreate);
+            queryMap.put("endCreateTime", endOrderCreate);
+            queryMap.put("isDeleted", false);
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(params.getSubOrderId())) {
+                queryMap.put("subOrderId", Long.parseLong(params.getSubOrderId()));
+            }
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(params.getOrderState())) {
+                queryMap.put("state", Integer.parseInt(params.getOrderState())); ///3
+            }
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(params.getIsConsignment())) {
+                queryMap.put("isConsignment", Boolean.parseBoolean(params.getIsConsignment()));
+            }
+            GenericPage<SubOrderDetailDTO> results = subOrderDetailManager.querySellerSimpleOrders(queryMap, "CREATE_TIME",
+                    true, params.getPageSize(), params.getStart());
+            // 没有小助手权限的卖家，不显示买家信息
+            SellerInfo sellerInfo = sellerManager.findByAccountAndUid(userInfo.getLoginAccount(), userInfo.getUid());
+            if (results.hasData()) {
+                List<SubOrderDetailDTO> resultSuborderDetail = results.getData();
+                for (SubOrderDetailDTO subOrderDetailDTO : resultSuborderDetail) {
+                    subOrderDetailDTO.getServiceInfo().setId(null);
+                    subOrderDetailDTO.getServiceInfo().setRealName(null);
+                    subOrderDetailDTO.getServiceInfo().setAccount(null);
+                    if (sellerInfo != null && (sellerInfo.getIsHelper() == null || !sellerInfo.getIsHelper())) {
+                        subOrderDetailDTO.setBuyerInfo(null);
+                    }
+                }
+            }
+            response.setResult(results);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            //捕获系统异常
+            String msg;
+            if (ex.getArgs() == null || ex.getArgs().length == 0) {
+                msg = ResponseCodes.getResponseByCode(ex.getErrorCode()).getMessage();
+            } else {
+                msg = ex.getArgs()[0];
+            }
+            responseStatus.setStatus(ex.getErrorCode(), msg);
+            logger.error("查询卖家订单列表发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("查询卖家订单列表发生未知异常:{}", ex);
+        }
+        return response;
+    }
+
+    /**
+     * 查询订单详情
+     *
+     * @return
+     */
+    @POST
+    @Path("orderDetail")
+    @Override
+    public IServiceResponse queryOrderDetail(OuterWebSiteLoginFreeRequest outerWebSiteLoginFreeRequest, @Context HttpServletRequest request) {
+        QuerySellerOrderResponse response = new QuerySellerOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            if(StringUtils.isBlank(outerWebSiteLoginFreeRequest.getLoginAccount())){
+                throw new SystemException(ResponseCodes.NotEmptyLoginAccount.getCode(),ResponseCodes.NotEmptyLoginAccount.getMessage());
+            }
+            if(StringUtils.isBlank(outerWebSiteLoginFreeRequest.getToken())){
+                throw  new SystemException(ResponseCodes.RedisTokenExpire.getCode(),ResponseCodes.RedisTokenExpire.getMessage());
+            }
+            UserInfoEO userInfo = checkToken(outerWebSiteLoginFreeRequest.getLoginAccount(), outerWebSiteLoginFreeRequest.getToken());
+            String orderId = outerWebSiteLoginFreeRequest.getOrderId();
+            String subOrderId = outerWebSiteLoginFreeRequest.getSubOrderId();
+            if (org.apache.commons.lang3.StringUtils.isBlank(orderId) || subOrderId == null) {
+                throw new SystemException(ResponseCodes.EmptyOrderId.getCode(), ResponseCodes.EmptyOrderId.getMessage());
+            } else {
+                orderId = org.apache.commons.lang3.StringUtils.trim(orderId);
+            }
+            Map<String, Object> queryParam = new HashMap<String, Object>();
+            queryParam.put("orderId", orderId);
+            if (subOrderId != null) {
+                queryParam.put("subOrderId", Long.parseLong(subOrderId));
+            }
+            queryParam.put("sellerUid", userInfo.getUid());
+            queryParam.put("sellerAccount", userInfo.getLoginAccount());
+            SubOrderDetailDTO subOrderDetail = subOrderDetailManager.querySellerOrderDetail(queryParam);
+            if (subOrderDetail != null) {
+                SellerInfo sellerInfo = sellerManager.findByAccountAndUid(userInfo.getLoginAccount(), userInfo.getUid());
+                if (sellerInfo != null && (sellerInfo.getIsHelper() == null || !sellerInfo.getIsHelper())) {
+                    // 没有小助手权限的卖家，不显示买家信息
+                    subOrderDetail.setBuyerInfo(null);
+                }
+                subOrderDetail.getServiceInfo().setId(null);
+                subOrderDetail.getServiceInfo().setAccount(null);
+                subOrderDetail.getServiceInfo().setRealName(null);
+            }
+            response.setSubOrderDetail(subOrderDetail);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            String msg;
+            if (ex.getArgs() == null || ex.getArgs().length == 0) {
+                msg = ResponseCodes.getResponseByCode(ex.getErrorCode()).getMessage();
+            } else {
+                msg = ex.getArgs()[0];
+            }
+            responseStatus.setStatus(ex.getErrorCode(), msg);
+            logger.error("查询卖家订单详情发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("查询卖家订单详情发生未知异常:{}", ex);
+        }
+        return response;
+    }
+
+    /**
+     * 移交订单
+     *
+     * @return
+     */
+    @POST
+    @Path("transferOrder")
+    @Override
+    public IServiceResponse transferOrderMethod(OuterWebSiteLoginFreeRequest outerWebSiteLoginFreeRequest, @Context HttpServletRequest request) {
+        TransferOrderResponse response = new TransferOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            if(StringUtils.isBlank(outerWebSiteLoginFreeRequest.getLoginAccount())){
+                throw new SystemException(ResponseCodes.NotEmptyLoginAccount.getCode(),ResponseCodes.NotEmptyLoginAccount.getMessage());
+            }
+            if(StringUtils.isBlank(outerWebSiteLoginFreeRequest.getToken())){
+                throw  new SystemException(ResponseCodes.RedisTokenExpire.getCode(),ResponseCodes.RedisTokenExpire.getMessage());
+            }
+            UserInfoEO userInfo = checkToken(outerWebSiteLoginFreeRequest.getLoginAccount(), outerWebSiteLoginFreeRequest.getToken());
+            orderInfoManager.transferOrderForHelper(outerWebSiteLoginFreeRequest.getOrderId(), Long.parseLong(outerWebSiteLoginFreeRequest.getSubOrderId()), userInfo);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            String msg;
+            if (ex.getArgs() == null || ex.getArgs().length == 0) {
+                msg = ResponseCodes.getResponseByCode(ex.getErrorCode()).getMessage();
+            } else {
+                msg = ex.getArgs()[0];
+            }
+            responseStatus.setStatus(ex.getErrorCode(), msg);
+            if (!"40014".equals(ex.getErrorCode())) {
+                logger.error("小助手订单移交发生异常:{}", ex);
+            }
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("小助手订单移交发生未知异常:{}", ex);
+        }
+        return response;
+    }
+
+
+    private UserInfoEO checkToken(String loginAccount, String token) {
+        if (StringUtils.isBlank(token)) {
+            throw new SystemException(ResponseCodes.RedisTokenExpire.getCode(), ResponseCodes.RedisTokenExpire.getMessage());
+        }
+        if (StringUtils.isBlank(loginAccount)) {
+            throw new SystemException(ResponseCodes.NotEmptyLoginAccount.getCode(), ResponseCodes.NotEmptyLoginAccount.getMessage());
+        }
+        boolean copyRightChecked = checkRepositoryManageRedisManager.checkOut(loginAccount, token);
+        if (!copyRightChecked) {
+            throw new SystemException(ResponseCodes.RedisTokenExpire.getCode(), ResponseCodes.RedisTokenExpire.getMessage());
+        }
+        SellerInfo sellerInfo = sellerManager.querySellerInfo(loginAccount);
+        if (sellerInfo.getCheckState() != CheckState.PassAudited.getCode()) {
+            throw new SystemException(ResponseCodes.SellerUnPassAudited.getCode(), ResponseCodes.SellerUnPassAudited.getMessage());
+        }
+        FirmsAccount firmsAccount = new FirmsAccount();
+        firmsAccount.setLoginAccount(loginAccount);
+        firmsAccount = firmsAccountManager.selectByMap(firmsAccount);
+        UserInfoEO userInfoEO = new UserInfoEO();
+        userInfoEO.setLoginAccount(firmsAccount.getLoginAccount());
+        userInfoEO.setUid(firmsAccount.getUid());
+        return userInfoEO;
+    }
+
+    protected RepositoryDTO toDTO(RepositoryInfo repository) {
+        RepositoryDTO dto = new RepositoryDTO();
+        dto.setId(repository.getId());
+        dto.setGameName(repository.getGameName());
+        dto.setGameId(repository.getGameId());
+        dto.setGameRegion(repository.getRegion());
+        dto.setGameRegionId(repository.getGameRegionId());
+        dto.setGameServer(repository.getServer());
+        dto.setGameServerId(repository.getGameServerId());
+        dto.setGameRace(repository.getGameRace());
+        dto.setGameRaceId(repository.getGameRaceId());
+        dto.setGameAccount(repository.getGameAccount());
+        dto.setGameRole(repository.getSellerGameRole());
+        dto.setGoldCount(repository.getGoldCount());
+        dto.setGoodsTypeName(repository.getGoodsTypeName());//ZW_C_JB_00008_20170516 ADD '响应参数'
+        if (repository.getSellableCount() != null) {
+            dto.setSellableGoldCount(repository.getSellableCount());
+        }
+        dto.setMoneyName(repository.getMoneyName());
+        dto.setUnitPrice(repository.getUnitPrice());
+        dto.setLastUpdateTime(repository.getLastUpdateTime());
+        dto.setCreateTime(repository.getCreateTime());
+        BigDecimal d = repository.getUnitPriceSeller() == null ? BigDecimal.ZERO : repository.getUnitPriceSeller();
+        dto.setUnitPriceSeller(d);
+        return dto;
+    }
+
+
+}

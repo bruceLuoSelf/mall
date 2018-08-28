@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.PurchaserData">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.PurchaserData">
+        <result column="id" property="id" javaType="long"/>
+        <result column="cjl" property="cjl" jdbcType="NUMERIC"/>
+        <result column="trading_volume" property="tradingVolume"/>
+        <result column="pjys" property="pjys" jdbcType="NUMERIC"/>
+        <result column="credit" property="credit" jdbcType="NUMERIC"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="total_amount" property="totalAmount" jdbcType="NUMERIC"/>
+        <result column="available_amount" property="availableAmount" jdbcType="NUMERIC"/>
+        <result column="freeze_amount" property="freezeAmount" jdbcType="NUMERIC"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR"/>
+        <result column="PHONE_NUMBER" property="phoneNumber" jdbcType="VARCHAR"/>
+        <result column="delivery_type" property="deliveryType" jdbcType="NUMERIC"/>
+        <result column="trade_type" property="tradeType" jdbcType="VARCHAR"/>
+
+        <result column="delivery_type_name" property="deliveryTypeName" jdbcType="VARCHAR"/>
+        <result column="trade_type_name" property="tradeTypeName" jdbcType="VARCHAR"/>
+
+        <result column="total_amount_7bao" property="totalAmountZBao" jdbcType="NUMERIC"/>
+        <result column="available_amount_7bao" property="availableAmountZBao" jdbcType="NUMERIC"/>
+        <result column="freeze_amount_7bao" property="freezeAmountZBao" jdbcType="NUMERIC"/>
+
+        <result column="is_split" property="isSplit" />
+        <result column="repository_count" property="repositoryCount" />
+        <result column="need_count" property="needCount" />
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.PurchaserData"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_purchaser_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cjl != null">
+                cjl,
+            </if>
+            <if test="tradingVolume != null">
+                trading_volume,
+            </if>
+            <if test="pjys != null">
+                pjys,
+            </if>
+            <if test="credit != null">
+                credit,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="totalAmount != null">
+                total_amount,
+            </if>
+            <if test="availableAmount != null">
+                available_amount,
+            </if>
+            <if test="freezeAmount != null">
+                freeze_amount,
+            </if>
+            <if test="deliveryType != null">
+                delivery_type,
+            </if>
+            <if test="deliveryTypeName != null">
+                delivery_type_name,
+            </if>
+            <if test="isSplit != null">
+                is_split,
+            </if>
+            <if test="repositoryCount != null">
+                repository_count,
+            </if>
+            <if test="needCount != null">
+                need_count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="cjl != null">
+                #{cjl},
+            </if>
+            <if test="tradingVolume != null">
+                #{tradingVolume},
+            </if>
+            <if test="pjys != null">
+                #{pjys},
+            </if>
+            <if test="credit != null">
+                #{credit},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="totalAmount != null">
+                #{totalAmount},
+            </if>
+            <if test="availableAmount != null">
+                #{availableAmount},
+            </if>
+            <if test="freezeAmount != null">
+                #{freezeAmount},
+            </if>
+            <if test="deliveryType != null">
+                #{deliveryType},
+            </if>
+            <if test="deliveryTypeName != null">
+                #{deliveryTypeName},
+            </if>
+            <if test="isSplit != null">
+                #{isSplit},
+            </if>
+            <if test="repositoryCount != null">
+                #{repositoryCount},
+            </if>
+            <if test="needCount != null">
+                #{needCount},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.PurchaserData">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_purchaser_data
+            <set>
+                <if test="item.cjl != null">
+                    cjl= #{item.cjl},
+                </if>
+                <if test="item.tradingVolume != null">
+                    trading_volume=#{item.tradingVolume},
+                </if>
+                <if test="item.pjys != null">
+                    pjys= #{item.pjys},
+                </if>
+                <if test="item.credit != null">
+                    credit= #{item.credit},
+                </if>
+                <if test="item.startTime != null">
+                    start_time= #{item.startTime},
+                </if>
+                <if test="item.endTime != null">
+                    end_time= #{item.endTime},
+                </if>
+                <if test="item.totalAmount != null">
+                    total_amount = #{item.totalAmount},
+                </if>
+                <if test="item.availableAmount != null">
+                    available_amount= #{item.availableAmount},
+                </if>
+                <if test="item.freezeAmount != null">
+                    freeze_amount= #{item.freezeAmount},
+                </if>
+                <if test="item.deliveryType != null">
+                    delivery_type= #{item.deliveryType},
+                </if>
+                <if test="item.tradeType != null">
+                    trade_type= #{item.tradeType},
+                </if>
+
+                <if test="item.deliveryTypeName != null">
+                    delivery_type_name= #{item.deliveryTypeName},
+                </if>
+                <if test="item.tradeTypeName != null">
+                    trade_type_name= #{item.tradeTypeName},
+                </if>
+                <if test="item.totalAmountZBao != null">
+                    total_amount_7bao = #{item.totalAmountZBao},
+                </if>
+                <if test="item.availableAmountZBao != null">
+                    available_amount_7bao= #{item.availableAmountZBao},
+                </if>
+                <if test="item.freezeAmountZBao != null">
+                    freeze_amount_7bao= #{item.freezeAmountZBao},
+                </if>
+                <if test="item.isSplit != null">
+                    is_split= #{item.isSplit},
+                </if>
+                <if test="item.repositoryCount != null">
+                    repository_count= #{item.repositoryCount},
+                </if>
+                <if test="item.needCount != null">
+                    need_count= #{item.needCount},
+                </if>
+
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="id != null">
+                a.id = #{id}
+            </if>
+            <if test="name != null and name!=''">
+                and b."NAME" = #{name}
+            </if>
+            <if test="loginAccount != null and loginAccount!=''">
+                and b."LOGIN_ACCOUNT" = #{loginAccount}
+            </if>
+            <if test="isNewFund != null">
+                and b."IS_NEW_FUND" = #{isNewFund}
+            </if>
+            <if test="availableAmountMax != null">
+                <![CDATA[ and a."available_amount" <= #{availableAmountMax}  ]]>
+            </if>
+            <if test="availableAmountMaxNewFund != null">
+                <![CDATA[ and a."available_amount_7bao" <= #{availableAmountMaxNewFund}  ]]>
+            </if>
+            <if test="purchaseOrderOnline != null and purchaseOrderOnline==true">
+                and EXISTS (select id from t_sh_purchase_order where buyer_account=b."LOGIN_ACCOUNT" and is_online=true)
+            </if>
+
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.PurchaserData">
+        select * from t_sh_purchaser_data a join "TBL_GAMEGOLD_SELLER" b on b."ID"=a.id
+        <include refid="selectSql"/>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_purchaser_data  a join "TBL_GAMEGOLD_SELLER" b on b."ID"=a.id
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchaser_data WHERE id = #{id}
+    </select>
+
+    <select id="selectByIdForUpdate" parameterType="Map" resultMap="BaseResultMap">
+        select * from t_sh_purchaser_data where id = #{id} for update
+    </select>
+
+
+    <select id="selectByAccount" parameterType="Map" resultMap="BaseResultMap">
+        select * from t_sh_purchaser_data a join "TBL_GAMEGOLD_SELLER" b on b."ID"=a.id
+        where b."LOGIN_ACCOUNT"=#{account}
+    </select>
+
+    <select id="selectByAccountForUpdate" parameterType="Map" resultMap="BaseResultMap">
+        select * from t_sh_purchaser_data a join "TBL_GAMEGOLD_SELLER" b on b."ID"=a.id
+        where b."LOGIN_ACCOUNT"=#{account}
+        for update
+    </select>
+
+    <!--根据trade在数据库查询-->
+    <select id="selectByLikeTrade" parameterType="Map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchaser_data WHERE trade_type LIKE '%${tradeTypeId}%';
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_purchaser_data WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.PurchaserData">
+        SELECT * FROM t_sh_purchaser_data a JOIN "TBL_GAMEGOLD_SELLER" b on b."ID"=a.id
+        <where>
+            <if test="loginAccount != null and loginAccount != ''">
+                 b."LOGIN_ACCOUNT"=#{loginAccount}
+            </if>
+        </where>
+        FOR UPDATE 
+    </select>
+</mapper>

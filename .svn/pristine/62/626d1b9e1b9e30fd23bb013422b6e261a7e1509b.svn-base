@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.usermgmt.entity.UsersGame">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.usermgmt.entity.UsersGame">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="USER_ID" property="userId" javaType="long"/>
+        <result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" javaType="String"/>
+    </resultMap>
+
+    <!-- 查询客服投票配置信息 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_USERS_GAME"
+        <where>
+            <if test="userId != null">
+                "USER_ID" = #{userId}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                "GAME_NAME" = #{gameName}
+            </if>
+        </where>
+    </select>
+
+    <!-- 新增记录 -->
+    <insert id="insert" parameterType="com.wzitech.gamegold.usermgmt.entity.UsersGame" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO "TBL_GAMEGOLD_USERS_GAME"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                "USER_ID",
+            </if>
+            <if test="gameName != null and gameName != ''">
+                "GAME_NAME",
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="deleteUsersGames"  parameterType="map">
+        DELETE FROM "TBL_GAMEGOLD_USERS_GAME"
+        <where>
+            <if test="userId != null">
+                 "USER_ID" =  #{userId}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND "GAME_NAME" =   #{gameName}
+            </if>
+        </where>
+        <!--WHERE "USER_ID" IN-->
+        <!--<foreach collection="list" item="item" open="(" separator="," close=")">-->
+            <!--#{item}-->
+        <!--</foreach>-->
+    </delete>
+</mapper>

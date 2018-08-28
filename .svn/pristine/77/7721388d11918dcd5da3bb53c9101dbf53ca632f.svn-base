@@ -1,0 +1,358 @@
+/************************************************************************************
+ *  Copyright 2014 WZITech Corporation. All rights reserved.
+ *	
+ *	模	块：		IRepositoryManager
+ *	包	名：		com.wzitech.gamegold.repository.business
+ *	项目名称：	gamegold-repository
+ *	作	者：		SunChengfei
+ *	创建时间：	2014-2-15
+ *	描	述：		
+ *	更新纪录：	1. SunChengfei 创建于 2014-2-15 上午11:48:26
+ * 				
+ ************************************************************************************/
+package com.wzitech.gamegold.repository.business;
+
+import com.wzitech.chaos.framework.server.common.exception.BusinessException;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.entity.IUser;
+import com.wzitech.gamegold.common.entity.SortField;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 库存管理接口
+ * @author SunChengfei
+ *
+ * Update History
+ * Date        Name                Reason for change
+ * ----------  ----------------    ----------------------
+ * 2017/05/12  wubiao              ZW_C_JB_00008 商城增加通货
+ */
+public interface IRepositoryManager {
+	@Transactional(rollbackFor = Exception.class)
+	void clearAddRepositoryData();
+
+	@Transactional(rollbackFor = Exception.class)
+	void commitAddRepositoryData();
+
+	@Transactional
+	RepositoryInfo addRepositorySingle(RepositoryInfo repositoryInfo);
+
+	@Transactional
+	void addRepositoryList(List<RepositoryInfo> repositoryInfos);
+
+	/**
+	 * 添加库存信息
+	 * @param repositoryInfo
+	 * @return
+	 * @throws SystemException
+	 */
+	RepositoryInfo addRepository(RepositoryInfo repositoryInfo) throws SystemException;
+
+	void addRepository(List<RepositoryInfo> repositoryInfo,IUser user);
+
+    /**
+     * 批量上传通货库存
+     * ZW_C_JB_00008_20170513 ADD '通货上传'
+     * @param file
+     * @return
+     * @throws SystemException
+     * @throws IOException
+     */
+    List<RepositoryInfo> batchAddRepository(byte[] file,String goodsTypeName) throws SystemException, IOException;
+	
+	/**
+	 * 更新密保卡信息
+	 * @param repositoryInfo
+	 */
+	void updatePasspod(RepositoryInfo repositoryInfo);
+	
+	/**
+	 * 修改库存
+	 * @param repositoryInfo
+	 * @return
+	 * @throws BusinessException
+	 */
+	RepositoryInfo modifyRepository(RepositoryInfo repositoryInfo) throws SystemException;
+
+	/**
+	 * 批量更新卖家库存，只修改指定字段的值
+	 * @param repositoryInfoList
+	 */
+	void batchUpdateSellerRepository(List<RepositoryInfo> repositoryInfoList,IUser seller);
+
+	/**
+	 * 修改卖家库存，只修改指定字段的值
+	 * @param repository
+	 * @return
+	 */
+	RepositoryInfo updateSellerRepository(RepositoryInfo repository,IUser seller);
+	
+	/**
+	 * 删除库存
+	 * @param ids
+	 * @return
+	 * @throws BusinessException
+	 */
+	void deleteRepositorys(List<Long> ids) throws SystemException;
+
+	/**
+	 * 删除库存
+	 * @param ids
+	 * @param seller
+	 * @throws SystemException
+	 */
+	void deleteSellerRepositorys(List<Long> ids, IUser seller) throws SystemException;
+
+	/**
+	 * 
+	 * <p>通过ID查询库存信息</p> 
+	 * @author Think
+	 * @date 2014-3-1 下午2:45:32
+	 * @param repositoryId
+	 * @return
+	 * @see
+	 */
+	RepositoryInfo queryById(Long repositoryId);
+
+	/**
+	 * 通过ID查询库存信息，不管有没有被删除
+	 * @param id
+	 * @return
+	 */
+	RepositoryInfo selectById(Long id);
+
+	/**
+	 * 查询卖家库存
+	 * @param seller
+	 * @param repositoryId
+	 * @return
+	 */
+	RepositoryInfo querySellerRepository(IUser seller, Long repositoryId);
+	
+	/**
+	 * 根据条件查询卖家游戏信息
+	 * @param gameUid
+	 * @param loginAccount
+	 * @return
+	 */
+	List<RepositoryInfo> queryRepositoryInfos(String gameUid, String loginAccount)throws SystemException;
+
+	GenericPage<RepositoryInfo> queryRepository(
+			Map<String, Object> queryMap, int limit, int start, String sortBy,
+			boolean isAsc);
+  //查询库存管理信息
+	GenericPage<RepositoryInfo> queryStockRepository(
+			Map<String, Object> queryMap, int limit, int start, String sortBy,
+			boolean isAsc);
+
+	/**
+	 * 
+	 * <p>根据查询条件，查询库存信息列表</p> 
+	 * @author ztjie
+	 * @date 2014-6-3 下午8:45:44
+	 * @param paramMap
+	 * @param sortBy
+	 * @param isAsc
+	 * @return
+	 * @see
+	 */
+	List<RepositoryInfo> queryRepository(Map<String, Object> paramMap,
+			String sortBy, boolean isAsc);
+
+    /**
+     * 根据查询条件，查询库存信息列表
+     * @param paramMap
+     * @param sortFields
+     * @return
+     */
+    List<RepositoryInfo> queryRepository(Map<String, Object> paramMap, List<SortField> sortFields);
+
+    /**
+     * 根据查询条件，查询库存信息列表
+     * @param paramMap
+     * @param sortFields
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    List<RepositoryInfo> queryRepository(Map<String, Object> paramMap, List<SortField> sortFields, int start, int pageSize);
+	/**
+	 * 查询最大库存量
+	 * @param gameName
+	 * @param region
+	 * @param server
+	 * @param gameRace
+	 * @param servicerId
+	 * @return
+	 */
+	long queryMaxCount(String gameName,String region,String server, String gameRace, Long servicerId);
+
+	/**
+	 * 根据游戏区服阵营单价卖家查询最大库存数量，卖家账号可以为空
+	 * @param gameName
+	 * @param region
+	 * @param server
+	 * @param gameRace
+	 * @param goodsTypeName
+	 * @param sellerLoginAccount 卖家5173账号
+	 * @param unitPrice 库存单价
+	 * @return
+	 */
+	long queryRepositoryMaxCount(String gameName, String goodsTypeName,String region, String server, String gameRace,
+								 String sellerLoginAccount, BigDecimal unitPrice);
+
+	/**
+     * 对合服服务器库存互通查询参数进行处理
+     *
+     * @param queryMap
+     * @return
+     */
+    Map<String, Object> processRepositoryTransfer(Map<String, Object> queryMap);
+
+	/**
+	 * 对合服服务器库存互通查询参数进行处理
+	 *
+	 * @param queryMap
+	 * @return
+	 */
+	 Map<String, Object> processRepositoryTransfer2(Map<String, Object> queryMap);
+
+	/**
+	 * 对合服服务器库存互通查询参数进行处理
+	 *
+	 * @param queryMap
+	 * @return
+	 */
+	Map<String, Object> processRepositoryTransfer(Map<String, Object> queryMap, String goodsTypeName);
+
+	/*
+	 查找合服的最低价库存信息
+	 */
+	List<RepositoryInfo> queryLowerPriceList(String gameName,String region,String gameRace);
+
+	/**
+	 * 增加库存数量
+	 * @param repository
+	 * @param count
+	 * @param orderId 订单号
+	 */
+	void incrRepositoryCount(RepositoryInfo repository, Long count, String orderId);
+
+	/**
+	 * 减少库存数量
+	 * @param repository
+	 * @param count
+	 * @param orderId 订单号
+	 */
+	void decrRepositoryCount(RepositoryInfo repository, Long count, String orderId);
+
+	/**
+	 *
+	 * @param gameName
+	 * @param region
+	 * @param serverName
+	 * @param gameRace
+	 * @return
+	 */
+	GenericPage<RepositoryInfo> querySellerRepositoryList(String goodsTypeName,String gameName,String region,String serverName,String
+			gameRace, int limit, int start, String orderBy,boolean isAsc);
+
+	/**
+	 *
+	 * @param gameName
+	 * @param region
+	 * @param serverName
+	 * @param gameRace
+	 * @return
+	 */
+	int countSellerGoodslist(String gameName,String region,String serverName,String gameRace,int pageSize,String goodsTypeName);
+
+	/**
+	 * 前台最低价格列表
+	 * @param gameName
+	 * @param region
+	 * @param server
+	 * @param race
+	 * @param start
+	 * @param pageSize
+	 * @return
+	 */
+	List<RepositoryInfo> queryPriceRepository(String gameName,String region,String server,String race, int start, int pageSize);
+
+	/**
+	 * 分页查询库存数据
+	 * @param paramMap
+	 * @param sortFields
+	 * @param start
+	 * @param pageSize
+	 * @return
+	 */
+	GenericPage<RepositoryInfo> queryPageRepository(Map<String, Object> paramMap, List<SortField> sortFields,
+														   int start, int pageSize);
+
+	/**
+	 * 分页获取所有区服的最低价
+	 * @param gameName
+	 * @param region
+	 * @param server
+	 * @param race
+	 * @param start
+	 * @param pageSize
+	 * @return
+	 */
+	GenericPage<RepositoryInfo> selectLowestList(String loginAccount,String gameName,String region,String server,String race,List<SortField> sortFields, int start, int
+			pageSize);
+
+	/**
+	 *店铺卖家平均价查询
+	 * @param gameName
+	 * @param region
+	 * @param serverName
+	 * @param gameRace
+	 * @return
+	 */
+	 List<RepositoryInfo> querySellerAvgPriceRepository(String gameName,String region,String serverName,String gameRace, String goodsTypeName);
+
+	/**
+	 * 更新库存
+	 *
+	 * @param loginAccount
+	 * @param gameAccount
+	 * @param gameRole
+	 * @param gameName
+	 * @param regionName
+	 * @param serverName
+	 * @param gameRace
+	 * @param count
+	 */
+	 void updateRepositoryCount(String loginAccount, String gameAccount, String gameRole, String gameName, String regionName, String serverName, String gameRace, Long count, String goodsTypeName);
+
+	/**
+	 * 更新库存
+	 *
+	 * @param loginAccount
+	 * @param gameAccount
+	 * @param gameRole
+	 * @param gameName
+	 * @param regionName
+	 * @param serverName
+	 * @param gameRace
+	 * @param count
+	 * @param isAdd
+	 */
+	 void updateRepositoryCount(String loginAccount, String gameAccount, String gameRole, String gameName, String regionName, String serverName, String gameRace, Long count, Boolean isAdd);
+
+	/**
+	 * map查询
+	 * @param queryMap
+	 * @return
+     */
+	List<RepositoryInfo> selectRepositoryByMap(Map queryMap);
+}

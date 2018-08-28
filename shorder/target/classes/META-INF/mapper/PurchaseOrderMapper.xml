@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.PurchaseOrder">
+    <resultMap id="BaseResultMap"
+               type="com.wzitech.gamegold.shorder.entity.PurchaseOrder">
+        <result column="id" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="buyer_account" property="buyerAccount" jdbcType="VARCHAR" />
+        <result column="buyer_uid" property="buyerUid" jdbcType="VARCHAR" />
+        <result column="game_name" property="gameName" jdbcType="VARCHAR" />
+        <result column="region" property="region" jdbcType="VARCHAR" />
+        <result column="server" property="server" jdbcType="VARCHAR" />
+        <result column="game_race" property="gameRace" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="NUMERIC" javaType="long" />
+        <result column="price" property="price" jdbcType="NUMERIC" />
+        <result column="min_count" property="minCount" jdbcType="NUMERIC" javaType="long" />
+        <result column="is_online" property="isOnline" jdbcType="BOOLEAN" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SHOP_NAME" property="shopName" jdbcType="VARCHAR" />
+        <result column="cjl" property="cjl" jdbcType="NUMERIC" />
+        <result column="pjys" property="pjys" jdbcType="NUMERIC" />
+        <result column="credit" property="credit" jdbcType="NUMERIC" javaType="int"/>
+        <result column="start_time" property="startTime" jdbcType="NUMERIC" javaType="int"/>
+        <result column="end_time" property="endTime" jdbcType="NUMERIC" javaType="int"/>
+        <result column="trading_volume" property="tradingVolume" jdbcType="NUMERIC" javaType="long"/>
+        <result column="trade_address" property="tradeAddress" jdbcType="VARCHAR" />
+        <result column="SELLER_TYPE" property="sellerType" jdbcType="NUMERIC" />
+        <result column="money_name" property="moneyName" jdbcType="VARCHAR" />
+        <result column="delivery_type" property="deliveryType" jdbcType="NUMERIC" />
+        <result column="trade_type_name" property="tradeTypeName" jdbcType="VARCHAR"/>
+        <result column="trade_type_id" property="tradeTypeId" jdbcType="VARCHAR"/>
+        <result column="goods_type_name" property="goodsTypeName" jdbcType="VARCHAR"/>
+        <result column="goods_type" property="goodsType"/>
+        <result column="money_name" property="moneyName" jdbcType="VARCHAR"/>
+        <result column="is_robot_down" property="isRobotDown" jdbcType="BOOLEAN"/>
+        <result column="trade_logo" property="tradeLogo" javaType="String"/>
+        <result column="purchaser_id" property="purchaserId" javaType="long"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.PurchaseOrder"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sh_purchase_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account,
+            </if>
+            <if test="buyerUid != null and buyerUid != ''">
+                buyer_uid,
+            </if>
+            <if test="gameName != null and gameName != ''">
+                game_name,
+            </if>
+            <if test="region != null and region != ''">
+                region,
+            </if>
+            <if test="server != null and server != ''">
+                server,
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                game_race,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="minCount != null">
+                min_count,
+            </if>
+            <if test="isOnline != null">
+                is_online,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="moneyName != null">
+                money_name,
+            </if>
+            <if test="deliveryType != null">
+                delivery_type,
+            </if>
+            <if test="goodsTypeName != null">
+                goods_type_name,
+            </if>
+            <if test="goodsType != null">
+                goods_type,
+            </if>
+            <if test="isRobotDown != null">
+                is_robot_down,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="buyerAccount != null and buyerAccount != ''">
+                #{buyerAccount},
+            </if>
+            <if test="buyerUid != null and buyerUid != ''">
+                #{buyerUid},
+            </if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+            <if test="region != null and region != ''">
+                #{region},
+            </if>
+            <if test="server != null and server != ''">
+                #{server},
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                #{gameRace},
+            </if>
+            <if test="count != null">
+                #{count},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="minCount != null">
+                #{minCount},
+            </if>
+            <if test="isOnline != null">
+                #{isOnline},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="moneyName != null">
+                #{moneyName},
+            </if>
+            <if test="deliveryType != null">
+                #{deliveryType},
+            </if>
+            <if test="goodsTypeName != null">
+                #{goodsTypeName},
+            </if>
+            <if test="goodsType != null">
+                #{goodsType},
+            </if>
+            <if test="isRobotDown != null">
+                #{isRobotDown},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.PurchaseOrder">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE t_sh_purchase_order
+            <set>
+                <if test="item.buyerAccount != null and item.buyerAccount != ''">
+                    buyer_account= #{item.buyerAccount},
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    game_name= #{item.gameName},
+                </if>
+                <if test="item.region != null and item.region != ''">
+                    region= #{item.region},
+                </if>
+                <if test="item.server != null and item.server != ''">
+                    server= #{item.server},
+                </if>
+                <if test="item.gameRace != null and item.gameRace != ''">
+                    game_race= #{item.gameRace},
+                </if>
+                <if test="item.count != null">
+                    count= #{item.count},
+                </if>
+                <if test="item.price != null">
+                    price= #{item.price},
+                </if>
+                <if test="item.minCount != null">
+                    min_count= #{item.minCount},
+                </if>
+                <if test="item.isOnline != null">
+                    is_online= #{item.isOnline},
+                </if>
+                <if test="item.isRobotDown != null">
+                    is_robot_down= #{item.isRobotDown},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time= #{item.updateTime},
+                </if>
+                <if test="item.moneyName != null">
+                    money_name= #{item.moneyName},
+                </if>
+                <if test="item.deliveryType != null">
+                    delivery_type= #{item.deliveryType},
+                </if>
+                <if test="item.goodsType != null">
+                    goods_type= #{item.goodsType},
+                </if>
+                <if test="item.goodsTypeName != null and item.goodsTypeName != ''">
+                    goods_type_name= #{item.goodsTypeName},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+                <if test="item.buyerAccount != null and item.buyerAccount != ''">
+                    AND buyer_account = #{item.buyerAccount}
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    AND game_name = #{item.gameName}
+                </if>
+                <if test="item.region != null and item.region != ''">
+                    AND region = #{item.region}
+                </if>
+                <if test="item.server != null and item.server != ''">
+                    AND server = #{item.server}
+                </if>
+                <if test="item.gameRace != null and item.gameRace != ''">
+                    AND game_race = #{item.gameRace}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <!-- 批量更新记录 -->
+    <update id="onlineAll" parameterType="com.wzitech.gamegold.shorder.entity.PurchaseOrder">
+            UPDATE t_sh_purchase_order set is_online= #{isOnline}
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="buyerAccount != null and buyerAccount != ''">
+                    AND buyer_account = #{buyerAccount}
+                </if>
+                <if test="gameName != null and gameName != ''">
+                    AND game_name = #{gameName}
+                </if>
+                <if test="region != null and region != ''">
+                    AND region = #{region}
+                </if>
+                <if test="server != null and server != ''">
+                    AND server = #{server}
+                </if>
+                <if test="gameRace != null and gameRace != ''">
+                    AND game_race = #{gameRace}
+                </if>
+                <if test="deliveryType != null">
+                    AND delivery_type = #{deliveryType}
+                </if>
+                <if test="goodsType != null">
+                    AND goods_type = #{goodsType}
+                </if>
+                <if test="isRobotDown != null">
+                    AND is_robot_down = #{isRobotDown}
+                </if>
+                <if test="deliveryType==2 and isOnline != null and isOnline==true">
+                    <![CDATA[ AND count>=min_count ]]>
+                </if>
+                <if test="isOnline != null">
+                    AND is_online != #{isOnline}
+                </if>
+            </trim>
+    </update>
+
+
+    <select id="selectByLoginAccount" parameterType="map" resultMap="BaseResultMap">
+     UPDATE t_sh_purchase_order SET is_online=true,is_robot_down=true WHERE buyer_account=#{buyerAccount} AND is_robot_down=false
+    </select>
+
+    <sql id="selectSql">
+        <where>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account = #{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            <if test="id != null">
+                AND id= #{id}
+            </if>
+            <if test="isOnline != null">
+                AND is_online =#{isOnline}
+            </if>
+            <if test="moneyName != null">
+                AND money_name =#{moneyName}
+            </if>
+            <if test="createStartTime != null">
+                <![CDATA[
+				AND update_time >= #{createStartTime}
+                ]]>
+            </if>
+            <if test="createEndTime != null">
+                <![CDATA[
+                AND update_time <= #{createEndTime}
+               ]]>
+            </if>
+            <if test="deliveryType != null">
+                AND delivery_type = #{deliveryType}
+            </if>
+            <if test="goodsType != null">
+                AND goods_type = #{goodsType}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.PurchaseOrder">
+        SELECT * FROM t_sh_purchase_order
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="lockMode != null">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM t_sh_purchase_order
+        <include refid="selectSql"/>
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="list">
+        DELETE FROM t_sh_purchase_order WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchase_order WHERE id = #{id}
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="queryPurchaseOrder" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchase_order
+        <where>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account = #{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            <if test="deliveryType != null">
+                AND delivery_type = #{deliveryType}
+            </if>
+        </where>
+    </select>
+
+    <!--更新采购单表中的采购数量，通过统计账号角色表-->
+    <update id="updatePurchaseOrderCount" parameterType="Map">
+         <![CDATA[
+        update t_sh_purchase_order set count=(select sum(count) from t_sh_game_account where buyer_account=
+        #{buyerAccount} and game_name=#{gameName} and region=#{region} and server=#{server} /*and is_sh_role=true*/),
+        is_online=(case when (select sum(count) from t_sh_game_account where buyer_account=#{buyerAccount} and
+        game_name=#{gameName} and region=#{region} and server=#{server} /*and is_sh_role=true*/)< min_count then false else true end) where buyer_account= #{buyerAccount} and game_name=#{gameName} and region=#{region} and server=#{server} and delivery_type=1
+        ]]>
+    </update>
+
+    <!--更新采购单表中的采购数量-->
+    <update id="updateManualPurchaseOrderCount" parameterType="Map">
+         <![CDATA[
+        update t_sh_purchase_order set count=COALESCE(count,0)+(#{count}), is_online=(case when (COALESCE(count,0)+(#{count}))<=0 then false when (COALESCE(count,0)+(#{count}))<min_count then false else true end) ,is_robot_down = is_online
+        where buyer_account= #{buyerAccount} and game_name=#{gameName} and region=#{region} and server=#{server} and delivery_type=2
+        ]]>
+    </update>
+
+    <!--更新采购单表中的采购数量-->
+    <update id="updatePurchaseOrderCountById" parameterType="Map">
+        <![CDATA[
+        update t_sh_purchase_order set count=COALESCE(count,0)+(#{count}), is_online=(case when (COALESCE(count,0)+(#{count}))<=0 then false when (COALESCE(count,0)+(#{count}))<min_count then false else true end) ,is_robot_down = is_online
+        where id= #{id}
+        ]]>
+    </update>
+
+    <!-- 通过ID，获得采购单信息 -->
+    <select id="selectByIdAndBuyerAccount" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchase_order
+        <where>
+            id = #{id}
+            <if test="buyerAccount != null and buyerAccount != ''">
+                AND buyer_account = #{buyerAccount}
+            </if>
+        </where>
+    </select>
+
+    <!-- 通过ID，获得采购单信息 -->
+    <select id="selectOrderList" parameterType="map" resultMap="BaseResultMap">
+        select distinct "order".*,"seller"."SHOP_NAME","data".cjl,"data".pjys,"data".credit,"data".start_time,"data".end_time,"data".trading_volume,"purchaseGame".id as purchaser_id from t_sh_purchase_order "order",t_sh_purchaser_data "data","TBL_GAMEGOLD_SELLER" "seller",t_sh_purchaser_game "purchaseGame"
+        <where>
+            "order".buyer_account="seller"."LOGIN_ACCOUNT"
+            and "seller"."OPEN_SH_STATE"=1 and "seller"."IS_DELETED"=false and "seller"."CHECK_STATE"=1 and "order"
+            .is_online=true and "data".id="seller"."ID" and "order".count>0
+            and "purchaseGame".purchase_account="seller"."LOGIN_ACCOUNT"
+            and "purchaseGame".delivery_type_id="order"."delivery_type"  and "purchaseGame".game_name="order".game_name
+            <if test="gameName != null and gameName != ''">
+                AND "order".game_name = #{gameName} AND "purchaseGame".game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND "order".region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND "order".server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND "order".game_race = #{gameRace}
+            </if>
+            <if test="id != null">
+                AND "order".id = #{id}
+            </if>
+        </where>
+        <if test="orderBy != null and orderBy != ''">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+
+    <!-- 通过ID，获得采购单信息总笔数 -->
+    <select id="countOrderByMap"  parameterType="map"  resultType="int">
+        select count(*) from
+        (select distinct "order".*,"seller"."SHOP_NAME","data".cjl,"data".pjys,"data".credit,"data".start_time,"data".end_time,"data".trading_volume
+        from t_sh_purchase_order "order",t_sh_purchaser_data "data","TBL_GAMEGOLD_SELLER" "seller",t_sh_purchaser_game "purchaseGame"
+        <where>
+            "order".buyer_account="seller"."LOGIN_ACCOUNT"
+            and "seller"."OPEN_SH_STATE"=1 and "seller"."IS_DELETED"=false and "seller"."CHECK_STATE"=1 and "order"
+            .is_online=true and "data".id="seller"."ID" and "order".count>0
+            and "purchaseGame".purchase_account="seller"."LOGIN_ACCOUNT"
+            and "purchaseGame".delivery_type_id="order"."delivery_type"  and "purchaseGame".game_name="order".game_name
+            <if test="gameName != null and gameName != ''">
+                AND "order".game_name = #{gameName} AND "purchaseGame".game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND "order".region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND "order".server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND "order".game_race = #{gameRace}
+            </if>
+            <if test="id != null">
+                AND "order".id = #{id}
+            </if>) t
+        </where>
+    </select>
+
+    <select id="selectByIdForUpdate" parameterType="Long" resultMap="BaseResultMap">
+        select * from t_sh_purchase_order where id=#{orderId} for update
+    </select>
+
+    <update id="updateGrounding" parameterType="map">
+        UPDATE t_sh_purchase_order SET is_robot_down=true,is_online=true
+        WHERE buyer_account =#{buyerAccount}
+    </update>
+
+
+
+
+</mapper>

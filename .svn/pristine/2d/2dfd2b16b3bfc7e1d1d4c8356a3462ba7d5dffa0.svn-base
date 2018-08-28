@@ -1,0 +1,402 @@
+/************************************************************************************
+ *  Copyright 2014 WZITech Corporation. All rights reserved.
+ *	
+ *	模	块：		IOrderInfoManager
+ *	包	名：		com.wzitech.gamegold.order.business
+ *	项目名称：	gamegold-order
+ *	作	者：		SunChengfei
+ *	创建时间：	2014-2-17
+ *	描	述：		
+ *	更新纪录：	1. SunChengfei 创建于 2014-2-17 下午3:32:36
+ * 				
+ ************************************************************************************/
+package com.wzitech.gamegold.order.business;
+
+import com.wzitech.chaos.framework.server.common.exception.BusinessException;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.entity.IUser;
+import com.wzitech.gamegold.order.dto.SimpleOrderDTO;
+import com.wzitech.gamegold.order.entity.ConfigResultInfoEO;
+import com.wzitech.gamegold.order.entity.OrderInfoEO;
+import com.wzitech.gamegold.order.entity.ShippingInfoEO;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import com.wzitech.gamegold.shorder.entity.PurchaserData;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 订单管理接口
+ * @author SunChengfei
+ *
+ */
+public interface IOrderInfoManager {
+	
+	/**
+	 * 
+	 * <p>自动打款</p> 
+	 * @author Think
+	 * @date 2014-3-3 下午8:34:00
+	 * @param orderInfo
+	 * @return
+	 * @see
+	 */
+	public boolean autoPay(OrderInfoEO orderInfo);
+	
+	/**
+	 * 增加订单
+	 * @param orderInfo
+	 * @param discount
+	 * @return
+	 * @throws SystemException
+	 * @throws Exception 
+	 */
+	OrderInfoEO addOrderInfo(OrderInfoEO orderInfo, BigDecimal discount) throws SystemException, Exception;
+
+	/**
+	 * 增加订单
+	 */
+	OrderInfoEO addOrderInfoFromM(OrderInfoEO orderInfoEO) throws SystemException,Exception;
+	
+	/**
+	 * 修改订单
+	 * @param orderInfo
+	 * @throws BusinessException
+	 */
+	OrderInfoEO modifyOrderInfo(OrderInfoEO orderInfo) throws SystemException;
+	
+	/**
+	 * 客服登陆游戏时，发现库存不够，退回到已付款状态
+	 * @param orderId
+	 * @return
+	 */
+	void rebackOrder(String orderId);
+	
+	/**
+	 * 根据条件分页查询订单
+	 * @param queryMap
+	 * @param orderBy
+	 * @param isAsc
+	 * @param pageSize
+	 * @param start
+	 * @return
+	 * @throws SystemException
+	 */
+	GenericPage<OrderInfoEO> queryOrderInfo(Map<String, Object> queryMap, String orderBy, boolean isAsc, int pageSize, int start)throws SystemException;
+
+    /**
+     * 根据条件查询订单
+     * @param queryMap
+     * @param orderBy
+     * @param isAsc
+     * @return
+     * @throws SystemException
+     */
+    List<OrderInfoEO> queryOrderInfo(Map<String, Object> queryMap, String orderBy, boolean isAsc)throws SystemException;
+
+	/**
+	 * 根据条件分页查询卖家订单
+	 * @param queryMap
+	 * @param orderBy
+	 * @param isAsc
+	 * @param pageSize
+	 * @param start
+	 * @return
+	 * @throws SystemException
+	 */
+	GenericPage<ConfigResultInfoEO> querySellerOrder(Map<String, Object> queryParam,String orderBy, boolean isAsc, int pageSize, int start)throws SystemException;
+
+	/**
+	 * 根据条件分页查询卖家订单(优化)
+	 * @param queryMap
+	 * @param orderBy
+	 * @param isAsc
+	 * @param pageSize
+	 * @param start
+	 * @return
+	 * @throws SystemException
+	 */
+	 GenericPage<ConfigResultInfoEO> querySellerOrderForOptimization(
+			Map<String, Object> queryParam, String orderBy, boolean isAsc,
+			int pageSize, int start);
+
+	/**
+	 * 根据条件查询导出卖家订单
+	 * @param queryMap
+	 * @param orderBy
+	 * @param isAsc
+	 * @param pageSize
+	 * @param start
+	 * @return
+	 * @throws SystemException
+	 */
+	List<ConfigResultInfoEO> queryExportSellerOrder(Map<String, Object> queryParam,String orderBy, boolean isAsc)throws SystemException;
+	
+	/**
+	 * 根据订单id查询订单
+	 * @param orderId
+	 * @return
+	 * @throws SystemException
+	 */
+	OrderInfoEO selectById(String orderId) throws SystemException;
+	
+	/**
+	 * 获取每个用户的最新5笔订单
+	 * @param uid
+	 * @return
+	 */
+	List<OrderInfoEO> queryOrder(String uid) throws SystemException;
+
+	/**
+	 * 
+	 * <p>处理配置订单</p> 
+	 * @author ztjie
+	 * @date 2014-2-22 下午6:38:33
+	 * @param orderInfo
+	 * @param repositorys
+	 * @param configInfoList 
+	 * @see
+	 */
+	void configOrder(OrderInfoEO orderInfo, List<RepositoryInfo> repositorys, List<ConfigResultInfoEO> configInfoList);
+
+	/**
+	 * 
+	 * <p>设置订单信息状态并修改是否延迟状态</p> 
+	 * @author ztjie
+	 * @date 2014-2-23 下午1:08:02
+	 * @param orderId 订单号
+	 * @param OrderState 订单状态
+	 * @param isDelay 是否延迟
+	 * @see
+	 */
+	OrderInfoEO changeOrderState(String orderId, Integer OrderState, Boolean isDelay);
+
+	/**
+	 * 
+	 * <p>设置订单信息状态为已取消并修改是否有货状态</p> 
+	 * @author ztjie
+	 * @date 2014-2-23 下午1:36:02
+	 * @param orderId 订单号
+	 * @param isHaveStore 是否有货
+	 * @see
+	 */
+	void notStoreOrder(String orderId, Boolean isHaveStore);
+	
+	/**
+	 * 设置订单信息为超时
+	 * @param orderId
+	 */
+	void isDelay(String orderId);
+
+    /**
+     * 分页查询配单记录
+     * @param queryMap
+     * @param orderBy
+     * @param isAsc
+     * @param limit
+     * @param start
+     * @return
+     */
+    GenericPage<ConfigResultInfoEO> queryConfigResultInfoList(Map<String, Object> queryMap, String orderBy,
+                                                                     boolean isAsc, int limit, int start);
+
+	/**
+	 * 
+	 * <p>分页查询出库订单信息列表</p> 
+	 * @author ztjie
+	 * @date 2014-2-26 下午8:04:13
+	 * @param queryMap
+	 * @param orderBy
+	 * @param isAsc
+	 * @param limit
+	 * @param start
+	 * @return
+	 * @see
+	 */
+	GenericPage<ShippingInfoEO> queryShippingList(Map<String, Object> queryMap,
+			String orderBy, boolean isAsc, int limit, int start);
+
+	/**
+	 * 
+	 * <p>查询出库订单信息列表</p> 
+	 * @author Think
+	 * @date 2014-2-26 下午8:25:18
+	 * @param queryMap
+	 * @param orderBy
+	 * @param isAsc
+	 * @return
+	 * @see
+	 */
+	List<ShippingInfoEO> queryShippingList(Map<String, Object> queryMap,
+			String orderBy, boolean isAsc);
+
+	/**
+	 * 
+	 * <p>查询已付款的但是自动打款时间已经到的未结单的订单</p> 
+	 * @author ztjie
+	 * @date 2014-2-28 上午8:27:41
+	 * @return
+	 * @see
+	 */
+	List<OrderInfoEO> queryOrderForAutoPlay();
+
+	/**
+	 * 
+	 * <p>重新配置订单库存</p> 
+	 * @author Think
+	 * @date 2014-3-16 下午8:49:29
+	 * @param orderInfo
+	 * @param repository
+	 * @param configResult
+	 * @see
+	 */
+	public void replaceConfigOrder(OrderInfoEO orderInfo,
+			RepositoryInfo repository, ConfigResultInfoEO configResult);
+
+	/**
+	 * 
+	 * <p>自动删除指定多长时间之前的订单，指定的时间单位为秒</p> 
+	 * @author ztjie
+	 * @date 2014-3-27 下午10:53:20
+	 * @param autoDeleteTime
+	 * @see
+	 */
+	public void autoCancellTimeoutOrder(Integer autoDeleteTime);
+	/**
+	 * 
+	 * <p>自动删除指定多长时间之前的订单，指定的时间单位为秒</p> 
+	 * @author ztjie
+	 * @date 2014-3-27 下午10:53:20
+	 * @param autoDeleteTime
+	 * @see
+	 */
+	public void autoConfirmationPayTimeoutOrder(Integer autoDeleteTime);
+	/**
+	 * 
+	 * <p>保存订单取消返回信息</p> 
+	 * @author 
+	 * @date
+	 * @param saveOrederCancelReason
+	 * @see
+	 */
+	public void saveOrederCancelReason(String OrederId,String cancelremark);
+	/**
+	 * 
+	 * <p>保存订单退款原因信息</p> 
+	 * @author 
+	 * @date
+	 * @param saveOrderRefundReason
+	 * @see
+	 */
+	public void saveOrderRefundReason(String OrderId, Integer refundReason,String remark);
+
+	/**
+	 * 同步订单付款状态
+	 * @param orderId
+	 * @return true 表示同步成功
+	 */
+	public boolean syncOrderPaymentStatus(String orderId);
+
+	/**
+	 * 根据条件统计
+	 * @param queryMap
+	 * @return
+	 */
+	public int countByMap(Map<String, Object> queryMap);
+
+    /**
+     * 订单移交，只能移交担保的订单
+     * @param id 格式：订单号_配单号,例如：YX1503130000773_2014020，如果只有一笔配单，可以只传订单号(例如：YX1503130000773)
+     */
+    public void transferOrder(String id);
+
+    /**
+     * 结单
+     * @param orderId
+     * @return boolean
+     */
+    public boolean statement(String orderId);
+
+    /**
+     * 订单移交，供RC2使用
+     * @param id 格式：订单号_配单号,例如：YX1503130000773_2014020
+     */
+    public void transferOrderForRC2(String id);
+
+	/**
+	 * 订单移交，供寄售全自动机器人使用
+	 * @param orderId
+	 * @param subOrderId
+	 */
+	void transferOrderForJsRobot(String orderId, Long subOrderId);
+
+	/**
+	 * 订单移交，供小助手使用
+	 * @param orderId 主订单号
+	 * @param subOrderId 子订单号
+	 * @param seller 卖家账号ID信息
+	 */
+	void transferOrderForHelper(String orderId, Long subOrderId, IUser seller);
+
+    /**
+     * 取消订单
+     * @param id
+     * @param reconfig
+     * @param cancelRemark
+     */
+    void cancelOrder(String id, int reconfig, String cancelRemark);
+
+    /**
+     * 统计保费
+     * @param queryMap
+     * @return
+     */
+    BigDecimal statisticPremiums(Map<String, Object> queryMap);
+
+	/**
+	 * 退款
+	 * @param orderId 订单号
+	 * @param refundReason 退款原因
+	 * @param remark 备注
+	 * @return boolean
+	 */
+	boolean refund(String orderId, int refundReason, String remark);
+
+	/**
+	 * 订单从寄售全自动机器人退回
+	 * @param orderId
+	 * @param subOrderId
+	 * @param reason
+	 */
+	void sendbackFromJsRobot(String orderId, Long subOrderId, String reason);
+
+	/**
+	 * 更新订单为已评价
+	 * @param orderId
+	 */
+	void updateOrderAlreadyEvaluate(String orderId);
+
+	/**
+	 * 更新订单为已追加评价
+	 * @param orderId
+	 */
+	void updateOrderAlreadyReEvaluate(String orderId);
+
+	/**
+	 * 查询指定订单状态下，超过4个小时未评价的订单号
+	 */
+	List<String> queryAfter4HourNotEvaluateOrders();
+
+	/**
+	 * 返回订单信息
+	 * @param params
+	 * @return
+	 */
+	List<SimpleOrderDTO> selectOrderByMap(Map<String, Object> params);
+
+
+
+
+}

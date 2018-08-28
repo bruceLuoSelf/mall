@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.wzitech.gamegold.goods.entity.FirmsAccount">
+
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.goods.entity.FirmsAccount">
+		<result column="id" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="firms_name" property="firmsName" jdbcType="VARCHAR" />
+		<result column="firms_secret" property="firmsSecret" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="loginAccount" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="uid" property="uid" jdbcType="VARCHAR" /><!-- 新增uid字段 ADD BY WUBIAO 20170706-->
+		<result column="enabled" property="enabled" jdbcType="BOOLEAN" />
+		<result column="user_secret_key" property="userSecretKey" javaType="String"/>
+	</resultMap>
+
+
+	<sql id="selectSql">
+		<where>
+		<if test="createTime != null">
+			AND "create_time" = #{createTime}
+		</if>
+		<if test="firmsName != null and firmsName != ''">
+			AND "firms_name" = #{firmsName}
+		</if>
+		<if test="firmsSecret != null and firmsSecret != ''">
+			AND "firms_secret" = #{firmsSecret}
+		</if>
+		<if test="updateTime != null">
+			AND "update_time" = #{updateTime}
+		</if>
+	  	<if test="loginAccount != null and loginAccount != ''">
+			AND "loginAccount" = #{loginAccount}
+		</if>
+		<if test="enabled != null">
+			AND "enabled"= #{enabled}
+		</if>
+		<!-- 新增uid字段 ADD BY WUBIAO 20170706-->
+	  	<if test="uid != null and uid != ''">
+			AND "uid" = #{uid}
+		</if>
+		<if test="userSecretKey != null and userSecretKey != ''">
+			AND "user_secret_key" = #{userSecretKey}
+		</if>
+        </where>
+	</sql>
+
+
+	<!--  新增查詢_ADD_START -->
+	<sql id="selectSql2">
+		<where>
+			<if test="loginAccount != null and loginAccount != ''">
+				AND "ACCOUNT"."loginAccount" = #{loginAccount}
+			</if>
+			<if test="firmsSecret != null and firmsSecret != ''">
+				AND "ACCOUNT"."firms_secret" = #{firmsSecret}
+			</if>
+			<if test="uid != null and uid != ''">
+				AND "ACCOUNT"."uid" = #{uid}
+			</if>
+		</where>
+	</sql>
+	<!--  新增查詢_ADD_END -->
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.goods.entity.FirmsAccount"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_FIRMS_ACCOUNT"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="createTime != null">
+				"create_time",
+			</if>
+			<if test="firmsName != null and firmsName != ''">
+				"firms_name",
+			</if>
+			<if test="firmsSecret != null and firmsSecret != ''">
+				"firms_secret",
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				"loginAccount",
+			</if>
+			<if test="enabled != null">
+				"enabled",
+			</if>
+			<!-- 新增uid字段 ADD BY WUBIAO 20170706-->
+			<if test="uid != null and uid != ''">
+				"uid",
+			</if>
+			<if test="updateTime != null">
+				"update_time",
+			</if>
+			<if test="userSecretKey != null and userSecretKey != ''">
+				"user_secret_key"
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="firmsName != null and firmsName != ''">
+				#{firmsName},
+			</if>
+			<if test="firmsSecret != null and firmsSecret != ''">
+				#{firmsSecret},
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				#{loginAccount},
+			</if>
+			<if test="enabled != null">
+				 #{enabled},
+			</if>
+			<!-- 新增uid字段 ADD BY WUBIAO 20170706-->
+			<if test="uid != null and uid != ''">
+				#{uid},
+			</if>
+
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+			<if test="userSecretKey != null and userSecretKey != ''">
+				#{userSecretKey}
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据秘钥更新全部厂商名称 -->
+	<update id="batchUpdateName"
+					 parameterType="com.wzitech.gamegold.goods.entity.FirmInfo">
+	UPDATE "TBL_GAMEGOLD_FIRMS_ACCOUNT"
+	<set>
+		<if test="firmsName != null and firmsName != ''">
+			"firms_name"= #{firmsName}
+		</if>
+	</set>
+	<where>
+		"firms_secret" = #{firmsSecret}
+	</where>
+
+</update>
+
+	<delete id="delAccountByfirmsSecret"
+			parameterType="java.lang.String">
+		DELETE FROM  "TBL_GAMEGOLD_FIRMS_ACCOUNT"
+		<where>
+			"firms_secret" = #{firmsSecret}
+		</where>
+
+	</delete>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdateSecret" parameterType="com.wzitech.gamegold.goods.entity.FirmsAccount">
+		<foreach collection="list" item="item" index="index" separator=";">
+			UPDATE "TBL_GAMEGOLD_FIRMS_ACCOUNT"
+			<set>
+				<if test="item.createTime != null and item.createTime != ''">
+					"create_time"= #{item.createTime},
+				</if>
+				<if test="item.firmsName != null and item.firmsName != ''">
+					"firms_name"= #{item.firmsName},
+				</if>
+				<if test="item.firmsSecret != null and item.firmsSecret != ''">
+					"firms_secret"= #{item.firmsSecret},
+				</if>
+				<if test="item.updateTime != null and item.updateTime != ''">
+					"update_time"= #{item.updateTime},
+				</if>
+				<if test="item.loginAccount != null and item.loginAccount !=''">
+					"loginAccount" = #{item.loginAccount},
+				</if>
+				<if test="item.uid != null and item.uid !=''">
+					"uid" = #{item.uid},
+				</if>
+				<if test="item.enabled != null and item.enabled !=''">
+					"enabled" = #{item.enabled},
+				</if>
+				<if test="item.userSecretKey != null and item.userSecretKey !=''">
+					"user_secret_key" = #{item.userSecretKey},
+				</if>
+			</set>
+			<where>
+				"id" = #{item.id}
+			</where>
+		</foreach>
+	</update>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate" parameterType="com.wzitech.gamegold.goods.entity.FirmsAccount">
+		<foreach collection="list" item="item" index="index" separator=";">
+			UPDATE "TBL_GAMEGOLD_FIRMS_ACCOUNT"
+			<set>
+				<if test="item.createTime != null and item.createTime != ''">
+					"create_time"= #{item.createTime},
+				</if>
+				<if test="item.firmsName != null and item.firmsName != ''">
+					"firms_name"= #{item.firmsName},
+				</if>
+				<if test="item.firmsSecret != null and item.firmsSecret != ''">
+					"firms_secret"= #{item.firmsSecret},
+				</if>
+				<if test="item.updateTime != null and item.updateTime != ''">
+					"update_time"= #{item.updateTime},
+				</if>
+				<if test="item.loginAccount != null and item.loginAccount !=''">
+					"loginAccount" = #{item.loginAccount},
+				</if>
+				<if test="item.uid != null and item.uid !=''">
+					"uid" = #{item.uid},
+				</if>
+				<if test="item.enabled != null">
+					"enabled" = #{item.enabled},
+				</if>
+				<if test="item.userSecretKey != null and item.userSecretKey != ''">
+					"user_secret_key" = #{item.userSecretKey},
+				</if>
+			</set>
+			<where>
+				"id" = #{item.id}
+			</where>
+		</foreach>
+	</update>
+
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		 SELECT COUNT(1) FROM "TBL_GAMEGOLD_FIRMS_ACCOUNT"
+		<include refid="selectSql"/>
+	</select>
+	
+	<!-- 通过厂商的ID，获得厂商信息 -->
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.goods.entity.FirmsAccount">
+		 SELECT * FROM "TBL_GAMEGOLD_FIRMS_ACCOUNT"
+		 <where>
+		 	"id" = #{id}
+		 </where>
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.goods.entity.FirmsAccount">
+		${value}
+	</select>
+	<!-- 根据ID删除商品 -->
+	<delete id="batchDeleteByIds" parameterType="java.util.List">
+		<foreach collection="list" item="item" separator=";">
+			DELETE FROM "TBL_GAMEGOLD_FIRMS_ACCOUNT" WHERE"id" = #{item}
+		</foreach>
+	</delete>
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+			resultType="com.wzitech.gamegold.goods.entity.FirmsAccount">
+		SELECT * FROM "TBL_GAMEGOLD_FIRMS_ACCOUNT"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+
+	<!-- 新增用户信息校验关联查询_20170713_ADD -->
+	<select id="checkSelectByMap" parameterType="map" resultMap="BaseResultMap"
+			resultType="com.wzitech.gamegold.goods.entity.FirmsAccount">
+		SELECT "ACCOUNT"."loginAccount","ACCOUNT"."uid" FROM "TBL_GAMEGOLD_FIRMS_ACCOUNT" "ACCOUNT"
+		JOIN "TBL_GAMEGOLD_FIRMS" "FIRMS"
+		ON ("ACCOUNT"."firms_name"="FIRMS"."firms_name"
+		AND "ACCOUNT"."firms_secret"="FIRMS"."firms_secret"
+		AND "ACCOUNT"."enabled"=TRUE AND "FIRMS"."enabled"=TRUE)
+		<include refid="selectSql2"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+	<!-- 新增用户信息校验关联查询_20170713_ADD -->
+
+
+	<!--通过登录名获取对应firmsSecret-->
+	<select id="queryFirmsSecretByLoginAccount" parameterType="String" resultType="String">
+		select user_secret_key from "TBL_GAMEGOLD_FIRMS_ACCOUNT" where "loginAccount"=#{loginAccount} and "enabled"=TRUE ;
+	</select>
+</mapper>

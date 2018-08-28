@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.MainGameConfig">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.MainGameConfig">
+        <result column="id" property="id"/>
+        <result column="game_name" property="gameName"/>
+        <result column="game_id" property="gameId"/>
+        <result column="able_delivery" property="ableDelivery"/>
+        <result column="able_sell" property="ableSell"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.MainGameConfig"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sh_main_gameconfig
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameName != null and gameName !=''">
+                game_name,
+            </if>
+            <if test="gameId != null and gameId != ''">
+                game_id,
+            </if>
+            <if test="ableDelivery != null">
+                able_delivery,
+            </if>
+            <if test="ableSell != null">
+                able_sell,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameName != null and gameName !=''">
+                #{gameName},
+            </if>
+            <if test="gameId != null and gameId != ''">
+                #{gameId},
+            </if>
+            <if test="ableDelivery != null">
+                #{ableDelivery},
+            </if>
+            <if test="ableSell != null">
+                #{ableSell},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.MainGameConfig">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE t_sh_main_gameconfig
+            <set>
+                <if test="item.gameName != null and item.gameName!=''">
+                    game_name= #{item.gameName},
+                </if>
+                <if test="item.gameId != null and item.gameId!=''">
+                    game_id= #{item.gameId},
+                </if>
+                <if test="item.ableDelivery != null">
+                    able_delivery= #{item.ableDelivery},
+                </if>
+                <if test="item.ableSell != null">
+                    able_sell= #{item.ableSell},
+                </if>
+                <if test="item.createTime != null">
+                    create_time= #{item.createTime},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time = #{item.updateTime},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id= #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="gameName != null and gameName !=''">
+                game_name=#{gameName}
+            </if>
+            <if test="gameId != null and gameId != ''">
+                and game_id=#{gameId}
+            </if>
+            <if test="ableDelivery != null">
+                and able_delivery=#{ableDelivery}
+            </if>
+            <if test="ableSell != null">
+                and able_sell=#{ableSell}
+            </if>
+            <if test="createTime != null">
+                <![CDATA[
+				AND create_time >= #{createTime}
+                ]]>
+            </if>
+            <if test="updateTime != null">
+                <![CDATA[
+                AND update_time <= #{updateTime}
+               ]]>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_main_gameconfig
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="isLocked != null and isLocked==true">
+            FOR UPDATE
+        </if>
+    </select>
+    <!-- 查询符合条件的实体对象  不分页-->
+    <select id="selectAllOrder" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_main_gameconfig
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="isLocked != null and isLocked==true">
+            FOR UPDATE
+        </if>
+    </select>
+
+
+    <!-- 根据id查询实体 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_main_gameconfig WHERE id = #{id}
+    </select>
+
+    <!-- 根据id批量删除 -->
+    <delete id="batchDeleteByIds" parameterType="list">
+        DELETE FROM t_sh_main_gameconfig WHERE id IN
+        <foreach collection="list" item="item" open="(" separator=","
+                 close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM t_sh_main_gameconfig
+        <include refid="selectSql"/>
+    </select>
+</mapper>

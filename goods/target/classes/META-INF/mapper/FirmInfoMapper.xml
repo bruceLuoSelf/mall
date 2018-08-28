@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.goods.entity.FirmInfo">
+
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.goods.entity.FirmInfo">
+        <id column="id" property="id" jdbcType="NUMERIC"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="firms_name" property="firmsName" jdbcType="VARCHAR"/>
+        <result column="firms_secret" property="firmsSecret" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="enabled" property="enabled" jdbcType="BOOLEAN"/>
+    </resultMap>
+    <sql id="selectSql">
+
+        <where>
+            <if test="createTime != null">
+                AND "create_time" = #{createTime}
+            </if>
+            <if test="firmsName != null and firmsName != ''">
+                AND "firms_name" = #{firmsName}
+            </if>
+            <if test="firmsSecret != null and firmsSecret != ''">
+                AND "firms_secret" = #{firmsSecret}
+            </if>
+            <if test="updateTime != null">
+                AND "update_time" = #{updateTime}
+            </if>
+            <if test="enabled != null">
+                AND "enabled" = #{enabled}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.goods.entity.FirmInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO "TBL_GAMEGOLD_FIRMS"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">
+                "create_time",
+            </if>
+            <if test="firmsName != null and firmsName != ''">
+                "firms_name",
+            </if>
+            <if test="firmsSecret != null and firmsSecret != ''">
+                "firms_secret",
+            </if>
+            <if test="updateTime != null">
+                "update_time",
+            </if>
+            <if test="enabled != null">
+                "enabled"
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="firmsName != null and firmsName != ''">
+                #{firmsName},
+            </if>
+            <if test="firmsSecret != null and firmsSecret != ''">
+                #{firmsSecret},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="enabled != null">
+                #{enabled}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.goods.entity.FirmInfo">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE "TBL_GAMEGOLD_FIRMS"
+            <set>
+                <if test="item.firmsName != null and item.firmsName != ''">
+                    "firms_name"= #{item.firmsName},
+                </if>
+                <if test="item.createTime != null">
+                    "create_time"= #{item.createTime},
+                </if>
+                <if test="item.firmsSecret != null and item.firmsSecret != ''">
+                    "firms_secret"= #{item.firmsSecret},
+                </if>
+                <if test="item.updateTime != null">
+                    "update_time"= #{item.updateTime},
+                </if>
+                <if test="item.enabled != null">
+                    "enabled"= #{item.enabled}
+                </if>
+            </set>
+            <where>
+                "id" = #{item.id}
+            </where>
+        </foreach>
+    </update>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_FIRMS"
+        <include refid="selectSql"/>
+    </select>
+
+    <!-- 通过厂商的ID，获得厂商信息 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.goods.entity.FirmInfo">
+        SELECT * FROM "TBL_GAMEGOLD_FIRMS"
+        <where>
+            "id" = #{id}
+        </where>
+    </select>
+
+    <!-- 根据原生Sql查询记录 -->
+    <select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.goods.entity.FirmInfo">
+		${value}
+	</select>
+    <!-- 根据ID删除商品 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            DELETE FROM "TBL_GAMEGOLD_FIRMS" WHERE"id" = #{item}
+        </foreach>
+    </delete>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.goods.entity.FirmInfo">
+        SELECT * FROM "TBL_GAMEGOLD_FIRMS"
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+</mapper>

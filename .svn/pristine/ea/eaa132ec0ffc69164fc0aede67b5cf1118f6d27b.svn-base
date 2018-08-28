@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.SplitRepositorySubRequest">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.SplitRepositorySubRequest">
+        <result column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="game_role" property="gameRole"/>
+        <result column="count" property="count"/>
+        <result column="real_count" property="realCount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="use_repertory_count" property="useRepertoryCount"/>
+        <result column="status" property="status"/>
+        <result column="robot_other_reason" property="robotOtherReason"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.SplitRepositorySubRequest"
+            useGeneratedKeys="true" keyProperty="ID">
+        insert into t_sh_split_repository_sub_req
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null and orderId!=''">
+                order_id,
+            </if>
+            <if test="createTime != null ">
+                create_time,
+            </if>
+            <if test="gameRole != null and gameRole!=''">
+                game_role,
+            </if>
+            <if test="count != null and count=''">
+                count,
+            </if>
+            <if test="realCount != null and realCount=''">
+                real_count,
+            </if>
+            <if test="updateTime != null ">
+                update_time,
+            </if>
+            <if test="useRepertoryCount != null ">
+                use_repertory_count,
+            </if>
+            <if test="status != null ">
+                status,
+            </if>
+            <if test="robotOtherReason != null and robotOtherReason=''">
+                robot_other_reason
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="orderId != null and orderId!=''">
+                #{orderId},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="gameRole != null and gameRole!=''">
+                #{gameRole},
+            </if>
+            <if test="count != null ">
+                #{count},
+            </if>
+            <if test="realCount != null ">
+                #{realCount},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="useRepertoryCount != null">
+                #{useRepertoryCount},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="robotOtherReason != null and robotOtherReason !='' ">
+                #{robotOtherReason}
+            </if>
+        </trim>
+    </insert>
+
+    <sql id="selectSql">
+        <where>
+            <if test="id != null">
+                id=#{id}
+            </if>
+            <if test="orderId != null">
+                AND order_id=#{orderId}
+            </if>
+            <if test="gameRole != null">
+                AND gameRole = #{gameRole}
+            </if>
+            <if test="count != null">
+                AND count = #{count}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="realCount != null">
+                AND realCount = #{realCount}
+            </if>
+            <if test="startTime != null">
+                and create_time >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                <![CDATA[
+                and create_time <= #{endTime}
+                ]]>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_split_repository_sub_req
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+        <if test="isLocked">
+            FOR UPDATE
+        </if>
+    </select>
+
+
+    <insert id="batchInsert" parameterType="com.wzitech.gamegold.shorder.entity.SplitRepositorySubRequest">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO t_sh_split_repository_sub_req
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.orderId!=null and item.orderId!=''">
+                    order_id,
+                </if>
+                <if test="item.gameRole!=null and item.gameRole!=''">
+                    game_role,
+                </if>
+                <if test="item.count!=null">
+                    count,
+                </if>
+                <if test="item.realCount!=null">
+                    real_count,
+                </if>
+                <if test="item.createTime!=null">
+                    create_time,
+                </if>
+                <if test="item.updateTime!=null">
+                    update_time,
+                </if>
+                <if test="item.status!=null">
+                    status,
+                </if>
+                <if test="item.useRepertoryCount!=null">
+                    use_repertory_count,
+                </if>
+                <if test="item.robotOtherReason!=null and item.robotOtherReason !=''">
+                    robot_other_reason
+                </if>
+            </trim>
+            <trim prefix="values(" suffix=")" suffixOverrides=",">
+                <if test="item.orderId!=null and item.orderId!=''">
+                    #{item.orderId},
+                </if>
+                <if test="item.gameRole!=null and item.gameRole!=''">
+                    #{item.gameRole},
+                </if>
+                <if test="item.count!=null">
+                    #{item.count},
+                </if>
+                <if test="item.realCount!=null">
+                    #{item.realCount},
+                </if>
+                <if test="item.createTime!=null">
+                    #{item.createTime},
+                </if>
+                <if test="item.updateTime!=null">
+                    #{item.updateTime},
+                </if>
+                <if test="item.status!=null">
+                    #{item.status},
+                </if>
+                <if test="item.useRepertoryCount!=null">
+                    #{item.useRepertoryCount},
+                </if>
+                <if test="item.robotOtherReason!=null and item.robotOtherReason !=''">
+                    #{item.robotOtherReason}
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate" parameterType="com.wzitech.gamegold.shorder.entity.SplitRepositorySubRequest">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE t_sh_split_repository_sub_req
+            <set>
+                <if test="item.orderId !=null and item.orderId != ''">
+                    order_id = #{item.orderId},
+                </if>
+                <if test="item.gameRole!=null and item.gameRole!=''">
+                    game_role = #{item.gameRole},
+                </if>
+                <if test="item.count!=null">
+                    count= #{item.count},
+                </if>
+                <if test="item.realCount!=null">
+                    real_count= #{item.realCount},
+                </if>
+                <if test="item.createTime!=null">
+                    create_time= #{item.createTime},
+                </if>
+                <if test="item.updateTime!=null">
+                    update_time= #{item.updateTime},
+                </if>
+                <if test="item.status!=null">
+                    status= #{item.status},
+                </if>
+                <if test="item.useRepertoryCount!=null">
+                    use_repertory_count= #{item.useRepertoryCount},
+                </if>
+                <if test="item.robotOtherReason!=null and item.robotOtherReason !=''">
+                    robot_other_reason= #{item.robotOtherReason}
+                </if>
+            </set>
+            <where>
+                id = #{item.id}
+            </where>
+        </foreach>
+    </update>
+
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        select * from t_sh_split_repository_sub_req where id=#{id}
+    </select>
+
+    <select id="getSubOrderList" parameterType="string" resultMap="BaseResultMap">
+        select * from t_sh_split_repository_sub_req where order_id = #{orderId}
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_split_repository_sub_req
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectRealCountZeroWithId" parameterType="long" resultMap="BaseResultMap">
+       SELECT * FROM t_sh_split_repository_sub_req where order_id=(select order_id from t_sh_split_repository_sub_req where id=#{id})
+    </select>
+</mapper>

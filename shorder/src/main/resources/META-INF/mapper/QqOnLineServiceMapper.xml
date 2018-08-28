@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.QqOnLineEO">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.QqOnLineEO">
+        <result column="id" property="id"  />
+        <result column="qq_number" property="qqNumber" jdbcType="VARCHAR" />
+        <result column="is_online" property="online" jdbcType="BOOLEAN"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert" parameterType="com.wzitech.gamegold.shorder.entity.QqOnLineEO"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_qq_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="qqNumber != null and qqNumber!=''">
+                qq_number,
+            </if>
+            <if test="online != null and online!=''">
+                is_online,
+            </if>
+            <if test="nickname != null and nickname!=''">
+                nickname,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="lastUpdateTime != null">
+                last_update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="qqNumber != null">
+                #{qqNumber},
+            </if>
+            <if test="online != null">
+                #{online},
+            </if>
+            <if test="nickname != null">
+                #{nickname},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="lastUpdateTime != null">
+                #{lastUpdateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.QqOnLineEO">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_qq_service
+            <set>
+                <if test="item.qqNumber != null">
+                    qq_number= #{item.qqNumber},
+                </if>
+                <if test="item.online != null">
+                    is_online=#{item.online},
+                </if>
+                <if test="item.nickname != null">
+                    nickname= #{item.nickname},
+                </if>
+                <if test="item.createTime != null">
+                    create_time= #{item.createTime},
+                </if>
+                <if test="item.lastUpdateTime != null">
+                    last_update_time= #{item.lastUpdateTime},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql" >
+        <where>
+            <if test="qqNumber != null and qqNumber!=''">
+                qq_number LIKE '%${qqNumber}%'
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.QqOnLineEO">
+        SELECT * FROM t_sh_qq_service
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+        <if test="isLocked">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_qq_service WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_qq_service
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_qq_service WHERE id = #{id}
+    </select>
+
+</mapper>

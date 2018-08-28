@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>订单结果页</title>
+    <meta content="" name="description" />
+    <meta content="5173帐号、安全帐号、游戏帐号" name="keywords" />
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common1.6-950.css" />
+    <link rel="shortcut icon" href="http://img01.5173cdn.com/common/build/1.00/images/ico.ico" />
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link href="css/request-buy.css" rel="Stylesheet" type="text/css" />
+    <script src="./js/jquery.js" type="text/javascript"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/headGameMenu.js?v=3" type="text/javascript"></script>
+    <script src="./js/business/orderResult.js?v=3" type="text/javascript"></script>
+</head>
+<body>
+<div class="header">
+    <!-- 顶部登陆条+快捷菜单条 -->
+    <div style="display:none" id="divLoading">
+    </div>
+    <div id="J_GlobalTop">
+    </div>
+    <!--网站Logo+四级联动搜索条-->
+    <div class="header_box clearfix">
+        <h1 class="logo">
+            <a href="http://www.5173.com/" title="中国网络游戏服务网">5173</a></h1>
+        <!-- 四级联动游戏选择 -->
+        <div class="game_select game_select_main clearfix" id="gameSelectV2">
+            <form id="gsForm" method="get" class="clearfix">
+                <div class="game_select_box" id="gameSelectBox">
+                    <ul class="tab_menu">
+                        <li class="current"><a href="#">
+                            普通搜索</a></li>
+                    </ul>
+                    <div class="tab_box clearfix" id="multipleSearch" style="display: block;">
+                        <div class="left_bg">
+                        </div>
+                        <!-- 游戏选择菜单 -->
+                        <ul class="gs_menu" id="gsMenu">
+                            <li id="gs_game" class="gs_name arrow" title="选择游戏名称">游戏名称</li><li id="gs_plat" class="gs_plat arrow" title="选择游戏平台" style="display: none;">平台</li>
+                            <li id="gs_area" class="gs_area arrow" title="选择游戏区">游戏区</li>
+                            <li id="gs_server" class="gs_server arrow" title="选择游戏服务器">游戏服</li>
+                            <!--<li id="gs_type" class="gs_type arrow" title="选择分类">游戏币</li>-->
+                            <!--<li class="gs_search_item">-->
+                            <!--<input class="gs_search_box holderfont" id="gsSearchBox" type="text" placeholder="请输入任意关键字" autocomplete="off" style="width: 120px;">-->
+                            <!--</li>-->
+                        </ul>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                    <div class="tab_box clearfix tab_box_reset hide" id="simpleSearch" style="display: none;">
+                        <div class="left_bg">
+                        </div>
+                        <div class="simple_search_box">
+                            <input type="text" class="simple_search_input holderfont" id="simpleSearchInput"
+                                   placeholder="关键字找游戏、搜区服、寻商品" autocomplete="off"></div>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                </div>
+                <div class="btn_box">
+                    <input class="gs_search_btn" id="gsSearchBtn" value="搜索"></div>
+            </form>
+            <!-- 游戏选择列表 -->
+            <div class="gs_box" id="gsBox" style="display: block;">
+                <div class="gs_box_inner">
+                    <div class="gs_head clearfix">
+                        <dl class="gs_name" style="display: block;">
+                            <dt>
+                            <h1>
+                                请选择游戏：</h1>
+                            </dt>
+                            <dd><a id="all" flag="region" href="javascript:void(0);" style="display: none;">全部区</a></dd>
+                        </dl>
+                        <a target="_self" class="close_btn" title="关闭窗口" href="javascript:">关闭窗口</a></div>
+                    <ul id="gsList" class="gs_list gs_name">
+                    </ul>
+                </div>
+            </div>
+            <s id="searchbar_arrow" class="game_select_arrow" style="left: 50px; display: inline;
+                    top: 66px"></s>
+        </div>
+    </div>
+</div>
+<!-- head end -->
+<div class="wrap">
+    <div class="conNav"> 您的位置：<a href="http://www.5173.com/">首页</a> &gt; <a href="chOrderList.html">我的出货订单</a> &gt; 订单结果 </div>
+</div>
+<div class="wrap mt20">
+    <div class="chddqx_top" id="divOrder">
+        <dl>
+			<!-- 新增申请售后的按钮 -->
+			<dt>申请售后：</dt>
+			<dd>SH1709060000103   【甲甲甲】 <a href="after_sale.html"><span class="after_sale">申请售后</span></a></dd>
+        </dl>
+        <div class="clearfix"></div>
+        <div class="top_right1 mt20">
+            <div class="tbody">
+                <div class="inbox" id="divLog">
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <style>
+            #hxMsgcont{padding:12px 0 12px 12px;background:#f9f9f9;border: 1px solid #ddd;margin-top:10px;}
+            #hxMsg{height:300px;padding:0px;position:relative;}
+            .hxMsgC{padding:0 10px 0 0 !important;height:260px !important;overflow-y: scroll;}
+            .hxMsgL{padding:8px 10px;font-size:12px;background:#fff;margin-top:8px;line-height:20px;}
+            .hx_sh{background:#71ABF8;color:#fff}
+            .hx_sys{border:1px solid #FEB141}
+            .hx_my{}
+            .hxMsgT{position:absolute;bottom:0;width:100%;}
+            .hxMsgT input{width:81%;height:28px;line-height:28px;border:1px solid #ccc;padding-left:5px}
+            .hxMsgT .hx_send{float:right;width:15%;background:#ff9a00
+            ;height:30px;line-height:30px;color:#fff;text-align:center;border-radius:3px;cursor:pointer}
+            .hxifIE{display:none;position:absolute;bottom:0;z-index:99;background:#F8F8F8;width:100%;height:30px;line-height:30px}
+            .hxifIE img{float:left;padding-right:10px}
+        </style>
+    </div>
+</div>
+<div class="clearfix"></div>
+<!-- 申请售后弹窗 -->
+<div class="sure_after" style="display:none;">
+	<div class="after_show">
+		<div class="title_show">友情提示<span class="close"></span></div>
+		<div class="mid_show">当前订单暂时无法申请售后，请联系客服</div>
+		<div class="show_know"><a href="javascript:void(0);" class="konw_sure">我知道了</a></div>
+	</div>
+	<div class="new_qpo"></div>
+</div>
+
+<script type="text/javascript" src="./js/business/fed.js"></script>
+</body>
+</html>

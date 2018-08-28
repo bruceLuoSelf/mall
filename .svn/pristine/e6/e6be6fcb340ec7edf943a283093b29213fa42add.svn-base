@@ -1,0 +1,692 @@
+/************************************************************************************
+ * Copyright 2013 WZITech Corporation. All rights reserved.
+ * <p>
+ * 模	块：		OrderServiceImpl
+ * 包	名：		com.wzitech.gamegold.facade.frontend.service.order.impl
+ * 项目名称：	gamegold-facade-frontend
+ * 作	者：		LuChangkai
+ * 创建时间：	2014-1-14
+ * 描	述：
+ * 更新纪录：	1. LuChangkai 创建于 2014-1-14 下午5:32:28
+ ************************************************************************************/
+package com.wzitech.gamegold.facade.frontend.service.order.impl;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+
+import com.wzitech.gamegold.common.enums.OrderState;
+import com.wzitech.gamegold.common.utils.RequestRealIp;
+import com.wzitech.gamegold.order.business.*;
+import com.wzitech.gamegold.facade.frontend.service.goods.dto.GoodsDTO;
+import com.wzitech.gamegold.facade.frontend.service.goods.dto.QueryGoodsInfoResponse;
+import com.wzitech.gamegold.facade.frontend.service.order.dto.*;
+import com.wzitech.gamegold.order.entity.*;
+import com.wzitech.gamegold.shorder.business.IShGameConfigManager;
+import com.wzitech.gamegold.shorder.entity.ShGameConfig;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import com.wzitech.chaos.framework.server.common.AbstractBaseService;
+import com.wzitech.chaos.framework.server.common.IServiceResponse;
+import com.wzitech.chaos.framework.server.common.ResponseStatus;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.common.utils.BeanMapper;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.context.CurrentUserContext;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.facade.frontend.service.goods.IGoodsInfoService;
+import com.wzitech.gamegold.facade.frontend.service.goods.dto.QueryGoodsRequest;
+import com.wzitech.gamegold.facade.frontend.service.order.IOrderService;
+import com.wzitech.gamegold.facade.frontend.service.repository.IQueryServicerService;
+import com.wzitech.gamegold.facade.frontend.service.repository.dto.QueryServicerResponse;
+import com.wzitech.gamegold.repository.business.IRepositoryManager;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+
+/**
+ * @author LuChangkai
+ */
+@Service("OrderService")
+@Path("order")
+@Produces("application/json;charset=UTF-8")
+@Consumes("application/json;charset=UTF-8")
+public class OrderServiceImpl extends AbstractBaseService implements IOrderService {
+    @Autowired
+    IOrderInfoManager orderInfoManager;
+
+    @Autowired
+    IQueryServicerService queryServicerService;
+
+    @Autowired
+    IGoodsInfoService goodsInfoService;
+
+    @Autowired
+    IRepositoryManager repositoryManager;
+
+    @Autowired
+    IInsuranceSettingsManager iInsuranceSettingsManager;
+
+    @Autowired
+    IServiceEvaluateStatisticsManager serviceEvaluateStatisticsManager;
+
+    @Autowired
+    IDiscountCouponManager discountCouponManager;
+
+    @Autowired
+    IShGameConfigManager shGameConfigManager;
+
+    @Autowired
+    IDeliveryOrderCenter deliveryOrderCenterManager;
+
+
+    @Autowired
+    IOrderCenterWithDate orderCenterWithDate;
+
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+
+    @Override
+    @Path("/orderPushToOrderCenterWithDate")
+    @GET
+    public void orderPushOrderCenterWithDate(@QueryParam("dateBegin") Long dateBegin, @QueryParam("dateEnd") Long dateEnd) {
+        orderCenterWithDate.autoSellOrderToOrderCenterWithDate(dateBegin, dateEnd);
+    }
+
+    @Override
+    @Path("/deliveryOrderPushToOrderCenter")
+    @GET
+    public void deliveryOrderPushOrderCenter(@QueryParam("dateBegin") Long dateBegin, @QueryParam("dateEnd") Long dateEnd) {
+        deliveryOrderCenterManager.autoDeliveryOrderToOrderCenter(dateBegin, dateEnd);
+    }
+
+
+    @Path("htmlquery")
+    @POST
+    @Override
+    public IServiceResponse orderHtmlQuery(OrderHtmlQueryRequest orderHtmlQueryRequest, @Context HttpServletRequest request) {
+        logger.debug("创建订单页联合查询请求：{}", orderHtmlQueryRequest);
+        // 初始化返回数据
+        OrderHtmlQueryResponse response = new OrderHtmlQueryResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            // 获取当前用户
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+
+            // 查询客服
+            //QueryServicerRequest queryServicerRequest = BeanMapper.map(orderHtmlQueryRequest, QueryServicerRequest.class);
+            //QueryServicerResponse queryServicerResponse = (QueryServicerResponse) queryServicerService.queryOrderServicer(queryServicerRequest, request);
+            QueryServicerResponse queryServicerResponse = (QueryServicerResponse) queryServicerService.queryServices(orderHtmlQueryRequest.getGameName());
+            List<ServiceEvaluateStatistics> serviceEvaluateStatisticsList = serviceEvaluateStatisticsManager.loadRecords(null, "ID", true);
+            List<UserInfoEO> userInfoEOList = queryServicerResponse.getUserInfoEOs();
+            for (UserInfoEO userInfoEO : userInfoEOList) {
+                for (ServiceEvaluateStatistics serviceEvaluateStatistics : serviceEvaluateStatisticsList) {
+                    if (userInfoEO.getId().equals(serviceEvaluateStatistics.getId())) {
+                        userInfoEO.setGoodRate(serviceEvaluateStatistics.getGoodRate());
+                        break;
+                    }
+                }
+            }
+            response.setUserInfoEOs(userInfoEOList);
+
+            // 查询商品详细的信息
+            QueryGoodsRequest selectGoodsRequest = BeanMapper.map(orderHtmlQueryRequest, QueryGoodsRequest.class);
+            QueryGoodsInfoResponse goodsResponse = (QueryGoodsInfoResponse) goodsInfoService.querySingleCategoryGoods(selectGoodsRequest);
+            response.setGoodsInfo(goodsResponse.getGoodsInfo());
+            //查询最大库存量
+            //Long maxCount =repositoryManager.queryMaxCount(selectGoodsRequest.getGameName(), selectGoodsRequest.getRegion(), selectGoodsRequest.getServer(),null, null);
+            //response.setMaxCount(maxCount);
+            GoodsDTO goodsInfo = goodsResponse.getGoodsInfo();
+            if (goodsInfo != null) {
+                if (goodsInfo.getGoodsCat() == 1 || goodsInfo.getGoodsCat() == 3) {
+                    // 设置栏目1和3的最大库存
+                    response.setMaxCount(goodsInfo.getSellableCount().longValue());
+                } else {
+                    // 栏目2库存充足（-1代表库存充足）
+                    response.setMaxCount(-1L);
+                }
+            } else {
+                response.setMaxCount(0L);
+            }
+
+            // 查询最近的订单
+            QueryOrderRequest queryOrderRequest = BeanMapper.map(orderHtmlQueryRequest, QueryOrderRequest.class);
+            QueryOrderResponse queryOrderResponse = (QueryOrderResponse) this.queryNewOrder(queryOrderRequest, request);
+            response.setOrderInfoEO(queryOrderResponse.getOrderInfoEO());
+            response.setOrderInfoEOs(queryOrderResponse.getOrderInfoEOs());
+
+            // 查询保险配置
+            InsuranceSettings insuranceSettings = iInsuranceSettingsManager.queryByGameName(orderHtmlQueryRequest.getGameName());
+            response.setInsuranceSettings(insuranceSettings);
+
+            //查询最小购买数量
+            ShGameConfig shGameConfig = shGameConfigManager.getConfigByGameName(orderHtmlQueryRequest.getGameName(), orderHtmlQueryRequest.getGoodsTypeName(), null, null);
+            if (shGameConfig != null) {
+                response.setMinBuyAmount(shGameConfig.getMinBuyAmount());
+            }
+
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("创建订单页联合查询发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("创建订单页联合查询发生未知异常:{}", ex);
+        }
+        logger.debug("创建订单页联合查询响应信息:{}", response);
+        return response;
+    }
+
+    @Path("addorder")
+    @POST
+    @Override
+    public IServiceResponse addOrder(AddOrderRequest addOrderRequest,
+                                     @Context HttpServletRequest request) {
+        logger.info("当前新增订单:{}", addOrderRequest);
+        // 初始化返回数据
+        AddOrderResponse response = new AddOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+
+        try {
+            // 获取当前用户
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            OrderInfoEO orderInfo = BeanMapper.map(addOrderRequest, OrderInfoEO.class);
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+            orderInfo.setTerminalIp(RequestRealIp.getRequestRealIp(request));
+            orderInfo.setUid(userInfo.getUid());
+            orderInfo.setUserAccount(userInfo.getLoginAccount());
+            orderInfo = orderInfoManager.addOrderInfo(orderInfo, addOrderRequest.getDiscount());
+            response.setOrderInfo(orderInfo);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前新增订单发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前新增订单发生未知异常:{}", ex);
+        }
+        logger.info("当前新增订单响应信息:{}", response);
+        return response;
+    }
+
+    @Path("modifyorder")
+    @POST
+    @Override
+    public IServiceResponse reciverOrder(ModifyOrderRequest modifyOrderRequest,
+                                         @Context HttpServletRequest request) {
+        logger.debug("当前修改订单:{}", modifyOrderRequest);
+        // 初始化返回数据
+        ModifyOrderResponse response = new ModifyOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+            OrderInfoEO orderInfoEO = orderInfoManager.selectById(modifyOrderRequest.getOrderId());
+            if (orderInfoEO != null) {
+                if (!orderInfoEO.getUserAccount().trim().equals(userInfo.getLoginAccount().trim())) {
+                    responseStatus.setStatus(ResponseCodes.NotYourOrder.getCode(),
+                            ResponseCodes.NotYourOrder.getMessage());
+                    return response;
+                }
+            }
+            OrderInfoEO orderInfo = BeanMapper.map(modifyOrderRequest, OrderInfoEO.class);
+            orderInfoManager.changeOrderState(orderInfo.getOrderId(), orderInfo.getOrderState(), null);
+            response.setOrderInfo(orderInfo);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前修改订单发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前修改订单发生未知异常:{}", ex);
+        }
+        logger.debug("当前修改订单响应信息:{}", response);
+        return response;
+    }
+
+    @Path("delay")
+    @POST
+    @Override
+    public IServiceResponse delayOrder(ModifyOrderRequest modifyOrderRequest,
+                                       @Context HttpServletRequest request) {
+        logger.debug("当前修改订单为超时请求:{}", modifyOrderRequest);
+        // 初始化返回数据
+        ModifyOrderResponse response = new ModifyOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+
+            orderInfoManager.isDelay(modifyOrderRequest.getOrderId());
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前修改订单发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前修改订单发生未知异常:{}", ex);
+        }
+        logger.debug("当前修改订单响应信息:{}", response);
+        return response;
+    }
+
+    @Path("queryorder")
+    @POST
+    @Override
+    public IServiceResponse queryOrder(QueryOrderRequest queryOrderRequest,
+                                       @Context HttpServletRequest request) {
+        logger.debug("当前查询订单:{}", queryOrderRequest);
+        // 初始化返回数据
+        QueryOrderResponse response = new QueryOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            // 获取当前用户
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date startOrderCreate = null;
+            Date endOrderCreate = null;
+            String startOrder = queryOrderRequest.getStartOrderCreate();
+            String endOrder = queryOrderRequest.getEndOrderCreate();
+            if (StringUtils.isNotBlank(startOrder)) {
+                startOrder += " 00:00:00";
+                startOrderCreate = (Date) sdf.parse(startOrder);
+            }
+            if (StringUtils.isNotBlank(endOrder)) {
+                endOrder += " 23:59:59";
+                endOrderCreate = (Date) sdf.parse(endOrder);
+            }
+
+            Map<String, Object> queryMap = new HashMap<String, Object>();
+            queryMap.put("uid", userInfo.getUid());
+            queryMap.put("orderId", queryOrderRequest.getOrderId());
+            queryMap.put("orderState", queryOrderRequest.getOrderState());
+            queryMap.put("title", queryOrderRequest.getTitle());
+            queryMap.put("gameName", queryOrderRequest.getGameName());
+            queryMap.put("region", queryOrderRequest.getRegion());
+            queryMap.put("server", queryOrderRequest.getServer());
+            queryMap.put("goodsTypeName", queryOrderRequest.getGoodsTypeName());//增加商品类目为查询条件
+            queryMap.put("gameRace", queryOrderRequest.getGameRace());
+            queryMap.put("createStartTime", startOrderCreate);
+            queryMap.put("createEndTime", endOrderCreate);
+//			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//			queryMap.put("createStartTime", dateFormat.parse(queryOrderRequest.getMinDate() + " 00:00:00.000"));
+//            queryMap.put("createEndTime", dateFormat.parse(queryOrderRequest.getMaxDate() + " 23:59:59.999"));
+
+            GenericPage<OrderInfoEO> orders = orderInfoManager.queryOrderInfo(queryMap, queryOrderRequest.getOrderBy(),
+                    queryOrderRequest.isAsc(), queryOrderRequest.getPageSize(), queryOrderRequest.getStart());
+            response.setOrders(orders);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询订单发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询订单发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询订单响应信息:{}", response);
+        return response;
+    }
+
+    @Path("sellerquery")
+    @POST
+    @Override
+    public IServiceResponse querySellerOrder(QueryConfigResultRequest querySellerOrder,
+                                             @Context HttpServletRequest request) {
+        logger.debug("查询卖家订单:{}", querySellerOrder);
+        // 初始化返回数据
+        QueryConfigResultResponse response = new QueryConfigResultResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+
+
+        try {
+            // 获取当前用户
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date startOrderCreate = null;
+            Date endOrderCreate = null;
+            String startOrder = querySellerOrder.getStartOrderCreate();
+            String endOrder = querySellerOrder.getEndOrderCreate();
+            if (StringUtils.isNotBlank(startOrder)) {
+                startOrder += " 00:00:00";
+                startOrderCreate = (Date) sdf.parse(startOrder);
+            }
+            if (StringUtils.isNotBlank(endOrder)) {
+                endOrder += " 23:59:59";
+                endOrderCreate = (Date) sdf.parse(endOrder);
+            }
+
+            Map<String, Object> queryMap = new HashMap<String, Object>();
+            queryMap.put("accountUid", userInfo.getUid());
+            queryMap.put("loginAccount", userInfo.getLoginAccount());
+            queryMap.put("isDeleted", querySellerOrder.getIsDeleted());
+            queryMap.put("orderState", querySellerOrder.getOrderState());
+            queryMap.put("orderBy", querySellerOrder.getOrderBy());
+            queryMap.put("gameName", querySellerOrder.getGameName());
+            queryMap.put("region", querySellerOrder.getRegion());
+            queryMap.put("server", querySellerOrder.getServer());
+            queryMap.put("gameRace", querySellerOrder.getGameRace());
+            queryMap.put("goodsTypeName", querySellerOrder.getGoodsTypeName());//增加商品类目为查询条件
+            queryMap.put("startOrderCreate", startOrderCreate);
+            queryMap.put("endOrderCreate", endOrderCreate);
+            queryMap.put("searchOrderId", querySellerOrder.getSearchOrderId());
+//            GenericPage<ConfigResultInfoEO> configResult = orderInfoManager.querySellerOrder(queryMap, querySellerOrder.getOrderBy(),
+//                    querySellerOrder.isAsc(), querySellerOrder.getPageSize(), querySellerOrder.getStart());
+            GenericPage<ConfigResultInfoEO> configResult;
+            if (StringUtils.isBlank(querySellerOrder.getGameName()) && StringUtils.isBlank(querySellerOrder.getRegion()) && StringUtils.isBlank(querySellerOrder.getServer()) && StringUtils.isBlank(querySellerOrder.getGameRace()) && querySellerOrder.getOrderState() == null && startOrderCreate == null && endOrderCreate == null && StringUtils.isBlank(querySellerOrder.getSearchOrderId())) {
+                logger.error("查询卖家订单querySellerOrder(优化):{}", queryMap);
+                configResult = orderInfoManager.querySellerOrderForOptimization(queryMap, querySellerOrder.getOrderBy(),
+                        querySellerOrder.isAsc(), querySellerOrder.getPageSize(), querySellerOrder.getStart());
+            } else {
+                logger.error("查询卖家订单querySellerOrder:{}", queryMap);
+                configResult = orderInfoManager.querySellerOrder(queryMap, querySellerOrder.getOrderBy(),
+                        querySellerOrder.isAsc(), querySellerOrder.getPageSize(), querySellerOrder.getStart());
+            }
+
+            if (configResult != null && configResult.getData() != null && configResult.getData().size() > 0) {
+                List<ConfigResultInfoEO> list = configResult.getData();
+                for (ConfigResultInfoEO configResultInfo : list) {
+                    OrderInfoEO orderInfo = configResultInfo.getOrderInfoEO();
+                    if (orderInfo != null) {
+                        orderInfo.setMobileNumber(null);
+                        orderInfo.setQq(null);
+                    }
+                }
+            }
+            response.setConfigResult(configResult);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("查询卖家订单发生异常:{}", ex);
+        } catch (Exception e) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("查询卖家订单发生未知异常:{}", e);
+        }
+        logger.debug("查询卖家订单响应信息:{}", response);
+        return response;
+    }
+
+    @Path("queryorderbyid")
+    @POST
+    @Override
+    public IServiceResponse queryOrderById(
+            QueryOrderRequest queryOrderByIdRequest,
+            @Context HttpServletRequest request) {
+        logger.debug("当前查询订单:{}", queryOrderByIdRequest);
+        // 初始化返回数据
+        QueryOrderResponse response = new QueryOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            // 获取当前用户
+//			GameUserInfo userInfo = CurrentUserSession.getUser();
+//			if (userInfo == null) {
+//				responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+//						ResponseCodes.InvalidAuthkey.getMessage());
+//				return response;
+//			}
+            if (StringUtils.isEmpty(queryOrderByIdRequest.getOrderId())) {
+                responseStatus.setStatus(ResponseCodes.EmptyOrderId.getCode(),
+                        ResponseCodes.EmptyOrderId.getMessage());
+                return response;
+            }
+            OrderInfoEO order = orderInfoManager.selectById(queryOrderByIdRequest.getOrderId());
+            if (order != null) {
+                //超过4/24小时,逻辑上设置isEvaluate/isReEvaluate为true，以用于前台判断评论/追加评论的显示与隐藏
+                if ((order.getOrderState() == OrderState.Delivery.getCode() || order.getOrderState() == OrderState.Statement.getCode() || order.getOrderState() == OrderState.Refund.getCode()) && order.getSendTime() != null) {
+                    if (order.getIsEvaluate() == null) {
+                        order.setIsEvaluate(isDelay(4, order.getSendTime()));
+                    }
+                    if (order.getIsReEvaluate() == null) {
+                        order.setIsReEvaluate(isDelay(24, order.getSendTime()));
+                    }
+                }
+            }
+            response.setCurrentDate(new Date().getTime());
+            response.setOrderInfoEO(order);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询订单发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询订单发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询订单响应信息:{}", response);
+        return response;
+    }
+
+    private boolean isDelay(int hour, Date sendTime) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(sendTime);
+        c.add(Calendar.HOUR_OF_DAY, hour);
+        long afterHour = c.getTimeInMillis();
+        Date now = new Date();
+        if (now.getTime() > afterHour) {
+            return true;
+        }
+        return false;
+    }
+
+    @Path("queryorderfive")
+    @POST
+    @Override
+    public IServiceResponse queryOrderFive(
+            QueryOrderRequest queryOrderFiveRequest,
+            @Context HttpServletRequest request) {
+        logger.debug("当前查询最新5笔订单:{}", queryOrderFiveRequest);
+        // 初始化返回数据
+        QueryOrderResponse response = new QueryOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            // 获取当前用户
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+            List<OrderInfoEO> order = orderInfoManager.queryOrder(userInfo.getUid());
+            response.setOrderInfoEOs(order);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询最新5笔订单发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询最新5笔订单发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询最新5笔订单响应信息:{}", response);
+        return response;
+    }
+
+    @Path("querylastorder")
+    @POST
+    @Override
+    public IServiceResponse queryNewOrder(QueryOrderRequest querynewRequest,
+                                          @Context HttpServletRequest request) {
+        logger.debug("当前查询最新1笔订单:{}", querynewRequest);
+        // 初始化返回数据
+        QueryOrderResponse response = new QueryOrderResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            // 获取当前用户
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+            OrderInfoEO responseOrder = null;
+            List<OrderInfoEO> newOrderList = new ArrayList<OrderInfoEO>();
+            List<OrderInfoEO> orderList = orderInfoManager.queryOrder(userInfo.getUid());
+            if (orderList != null && orderList.size() > 0) {
+                for (OrderInfoEO order : orderList) {
+                    if (StringUtils.equals(order.getGameName(), querynewRequest.getGameName()) &&
+                            StringUtils.equals(order.getGameRace(), querynewRequest.getGameRace()) &&
+                            StringUtils.equals(order.getRegion(), querynewRequest.getRegion()) &&
+                            StringUtils.equals(order.getServer(), querynewRequest.getServer())) {
+                        newOrderList.add(order);
+                    }
+                }
+            }
+            if (newOrderList.size() > 0) {
+                responseOrder = newOrderList.get(0);
+            }
+            response.setOrderInfoEOs(newOrderList);
+            response.setOrderInfoEO(responseOrder);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("当前查询最新1笔订单发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("当前查询最新1笔订单发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询最新1笔订单响应信息:{}", response);
+        return response;
+    }
+
+    /**
+     * 验证优惠券是否有效
+     *
+     * @param request
+     * @return
+     */
+    @Path("/validateDiscountCoupon")
+    @GET
+    public IServiceResponse validateDiscountCoupon(@QueryParam("") ValidateDiscountCouponRequest request) {
+        ValidateDiscountCouponResponse response = new ValidateDiscountCouponResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            DiscountCoupon discountCoupon = discountCouponManager.selectUniqueDisCountCoupon(request.getCode(),
+                    request.getPwd(), request.getType(), request.getAmount());
+            response.setIsValid(true);
+            response.setPrice(discountCoupon.getPrice());
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("验证优惠券有效性发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("验证优惠券有效性发生未知异常:{}", ex);
+        }
+        logger.debug("当前查询最新1笔订单响应信息:{}", response);
+        return response;
+    }
+
+    /**
+     * 根据订单号查询订单信息,不需要登陆权限，只提供内部调用
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    @GET
+    @Path("insideQueryOrder")
+    public IServiceResponse queryOrder(@QueryParam("orderId") String orderId) {
+        // 初始化返回数据
+        QueryOrder2Response response = new QueryOrder2Response();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            if (StringUtils.isBlank(orderId)) {
+                throw new SystemException(ResponseCodes.EmptyOrderId.getCode(), ResponseCodes.EmptyOrderId.getMessage());
+            }
+            OrderInfoEO order = orderInfoManager.selectById(orderId);
+
+            if (order == null) {
+                throw new SystemException(ResponseCodes.EmptyOrderInfo.getCode(), "订单不存在");
+            }
+
+            response.setOrderId(order.getOrderId());
+            response.setGameId(order.getGameId());
+            response.setGameName(order.getGameName());
+            response.setPrice(order.getUnitPrice());
+            response.setOrderStatus(order.getOrderState());
+            response.setUserId(order.getUid());
+            response.setFinishTime(order.getEndTime());
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("查询订单信息发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(
+                    ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("查询订单信息发生未知异常:{}", ex);
+        }
+        return response;
+    }
+
+}

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.common.log.entity.LogInfo">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.common.log.entity.LogInfo">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="CURRENT_THREAD_ID" property="currentThreadId" jdbcType="VARCHAR" />
+		<result column="CURRENT_USER_ID" property="currentUserId" jdbcType="NUMERIC" javaType="long" />
+		<result column="CURRENT_UID" property="currentUID" jdbcType="VARCHAR" />
+		<result column="CURRENT_USER_ACCOUNT" property="currentUserAccount" jdbcType="VARCHAR" />
+		<result column="CURRENT_USER_TYPE" property="currentUserType" jdbcType="NUMERIC" javaType="int" />
+		<result column="MODULE" property="module" jdbcType="VARCHAR" />
+		<result column="OPERATE_INFO" property="operateInfo" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+    
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.common.log.entity.LogInfo"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_LOGS"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="currentThreadId != null and currentThreadId != ''">
+				"CURRENT_THREAD_ID",
+			</if>
+			<if test="currentUserId != null">
+				"CURRENT_USER_ID",
+			</if>
+			<if test="currentUID != null and currentUID != ''">
+				"CURRENT_UID",
+			</if>
+			<if test="currentUserAccount != null and currentUserAccount != ''">
+				"CURRENT_USER_ACCOUNT",
+			</if>
+			<if test="currentUserType != null">
+				"CURRENT_USER_TYPE",
+			</if>
+			<if test="module != null and module != ''">
+				"MODULE",
+			</if>
+			<if test="operateInfo != null and operateInfo != ''">
+				"OPERATE_INFO",
+			</if>
+			<if test="createTime != null">
+				"CREATE_TIME"
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="currentThreadId != null and currentThreadId != ''">
+				#{currentThreadId},
+			</if>
+			<if test="currentUserId != null">
+				#{currentUserId},
+			</if>
+			<if test="currentUID != null and currentUID != ''">
+				#{currentUID},
+			</if>
+			<if test="currentUserAccount != null and currentUserAccount != ''">
+				#{currentUserAccount},
+			</if>
+			<if test="currentUserType != null">
+				#{currentUserType},
+			</if>
+			<if test="module != null and module != ''">
+				#{module},
+			</if>
+			<if test="operateInfo != null and operateInfo != ''">
+				#{operateInfo},
+			</if>
+			<if test="createTime != null">
+				#{createTime}
+			</if>
+		</trim>
+	</insert>
+
+    <sql id="selectSql">
+		<where>
+			1=1
+			<if test="currentUserAccount != null and currentUserAccount != ''">
+				AND "CURRENT_USER_ACCOUNT" LIKE '%'||#{currentUserAccount}||'%'
+			</if>
+			<if test="operateInfo != null and operateInfo != ''">
+				AND "OPERATE_INFO" LIKE '%'||#{operateInfo}||'%'
+			</if>
+			<if test="currentUserId != null">
+				AND "CURRENT_USER_ID" = #{currentUserId}
+			</if>
+			<if test="currentThreadId != null and currentThreadId != ''">
+				AND	"CURRENT_THREAD_ID"= #{currentThreadId}
+			</if>
+			<if test="currentUID != null and currentUID != ''">
+				AND "CURRENT_UID" = #{currentUID}
+			</if>
+			<if test="currentUserType != null">
+				AND "CURRENT_USER_TYPE" = #{currentUserType}
+			</if>
+			<if test="module != null and module != ''">
+				AND "MODULE" = #{module}
+			</if>
+			<if test="id != null">
+				AND	"ID"= #{id}
+			</if>
+			<if test="createStartTime != null">
+				<![CDATA[
+					AND "CREATE_TIME" >= #{createStartTime}
+				]]>
+			</if>
+			<if test="createEndTime != null">
+				<![CDATA[
+					AND "CREATE_TIME" <= #{createEndTime}
+				]]>
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.common.log.entity.LogInfo">
+		 SELECT * FROM "TBL_GAMEGOLD_LOGS"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		 SELECT COUNT(1) FROM "TBL_GAMEGOLD_LOGS"
+		<include refid="selectSql"/>
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.common.log.entity.LogInfo">
+		${value}
+	</select>
+</mapper>

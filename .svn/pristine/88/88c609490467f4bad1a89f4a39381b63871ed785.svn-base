@@ -1,0 +1,15 @@
+.receivingRoles{margin-left:13px;}
+.receivingRoles ul.roles li{height:30px;line-height:30px;}
+.receivingRoles label{padding-left:5px;cursor: pointer;}
+.receivingRoles ul.rolesNewline li{float:left;clear:right;width:100px;overflow: hidden;}
+.receivingRoles #p_other_receiving_role{font-weight: bold;}
+div.otherReceivingRole{clear:both;display:none;} 
+.tips_sharp_box .bottom, .tips_sharp_box .top {display: block; height: 6px; overflow: hidden; width: 700px;}
+.tips_sharp_box .right {background-color: #ccc; display: block; float: right; height: 1px; overflow: hidden; width: 667px;}
+#search_button {height:25px; width:60px;color:white;letter-spacing: 1px;background: #338fff;outline: medium;-webkit-appearance: none;-webkit-border-radius: 0}
+#search{height:20px; width:150px;color:#aaa;border:2px solid #338fff;}
+#chose_serverUl {float: right;margin-right: 10px;}
+#server_box_ul {display: none;}
+#TradeTypeDiv {display:none;}
+#buyway1 {ime-mode: disabled;}
+#buyway2 {ime-mode: disabled;}

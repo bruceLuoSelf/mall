@@ -1,0 +1,360 @@
+package com.wzitech.gamegold.jsrobot.service.order.impl;
+
+import com.google.common.collect.Lists;
+import com.wzitech.chaos.framework.server.common.AbstractBaseService;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.enums.OrderState;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.common.utils.EncryptHelper;
+import com.wzitech.gamegold.jsrobot.dto.Response;
+import com.wzitech.gamegold.jsrobot.service.order.IOrderService;
+import com.wzitech.gamegold.jsrobot.service.order.dto.*;
+import com.wzitech.gamegold.order.business.IOrderConfigManager;
+import com.wzitech.gamegold.order.business.IOrderInfoManager;
+import com.wzitech.gamegold.order.entity.ConfigResultInfoEO;
+import com.wzitech.gamegold.order.entity.OrderInfoEO;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 订单service
+ * @author yemq
+ */
+@Service("OrderService")
+@Path("/order")
+@Produces("application/json;charset=UTF-8")
+public class OrderServiceImpl extends AbstractBaseService implements IOrderService {
+    @Value("${encrypt.5173.key}")
+    private String encryptKey = "";
+
+    @Value("${encrypt.5173.pwdKey}")
+    private String encryptPwdKey = "";
+
+    @Autowired
+    IOrderInfoManager orderInfoManager;
+
+    @Autowired
+    IOrderConfigManager orderConfigManager;
+
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+
+    /**
+     * 查询订单列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    @Path("/list")
+    @GET
+    public QueryOrderListResponse queryOrderList(@QueryParam("") QueryOrderListRequest request) {
+        QueryOrderListResponse response = new QueryOrderListResponse();
+        response.setMsg("查询失败");
+        response.setStatus(false);
+
+        try {
+            if (request == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "参数不能为空");
+            }
+            if (request.getPageSize() == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "pageSize不能为空");
+            }
+            if (request.getPage() == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "page不能为空");
+            }
+
+            // 校验MD5
+            String toEncrypt = EncryptHelper.md5(
+                    String.format("%s_pageSize=%s_page=%s", encryptKey, request.getPageSize(), request.getPage())
+            );
+
+            if (!StringUtils.equals(toEncrypt, request.getSign())) {
+                response.setMsg(response.getMsg() + " (签名不一致)");
+                return response;
+            }
+
+            if (request.getPageSize() <= 0)
+                request.setPageSize(25);
+            if (request.getPage() <= 0) {
+                request.setPage(1);
+            }
+
+            int start = (request.getPage() - 1) * request.getPageSize();
+
+            // 查询参数
+            Map<String, Object> queryMap = new HashMap<String, Object>();
+            queryMap.put("orderState", OrderState.WaitDelivery.getCode());
+            queryMap.put("isConsignment", true);// 只获取寄售的订单
+            queryMap.put("isJsRobot", true); // 只获取寄售全自动机器人的订单
+            GenericPage<ConfigResultInfoEO> results = orderInfoManager.queryConfigResultInfoList(queryMap, "CREATE_TIME",
+                    true, request.getPageSize(), start);
+
+            List<QueryOrderListResponse.Order> orders = Lists.newArrayList();
+            if (!CollectionUtils.isEmpty(results.getData())) {
+                Iterator<ConfigResultInfoEO> iterator = results.getData().iterator();
+                while (iterator.hasNext()) {
+                    ConfigResultInfoEO result = iterator.next();
+                    OrderInfoEO orderInfoEO = result.getOrderInfoEO();
+                    QueryOrderListResponse.Order dto = new QueryOrderListResponse.Order();
+                    dto.setOrderId(result.getOrderId());
+                    dto.setSubOrderId(result.getId());
+                    dto.setGameName(orderInfoEO.getGameName());
+                    dto.setGameId(orderInfoEO.getGameId());
+                    dto.setRegion(orderInfoEO.getRegion());
+                    dto.setRegionId(orderInfoEO.getRegionId());
+                    dto.setServer(orderInfoEO.getServer());
+                    dto.setServerId(orderInfoEO.getServerId());
+                    dto.setGameRace(orderInfoEO.getGameRace());
+                    dto.setRaceId(orderInfoEO.getRaceId());
+                    dto.setCreateTime(DATE_FORMAT.format(result.getCreateTime()));
+                    orders.add(dto);
+                }
+            }
+            response.setOrders(orders);
+            response.setPage(request.getPage());
+            response.setPageSize(request.getPageSize());
+            response.setTotalCount(results.getTotalCount());
+            response.setMsg("查询成功");
+            response.setStatus(true);
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            response.setMsg(ex.getArgs()[0].toString());
+            logger.error("查询参数：{}", request);
+            logger.error("查询订单列表发生异常", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            response.setMsg("系统发生未知异常");
+            logger.error("查询参数：{}", request);
+            logger.error("查询订单列表发生异常", ex);
+        }
+
+        return response;
+    }
+
+    /**
+     * 查询订单详情
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    @Path("/detail")
+    @GET
+    public QueryOrderInfoResponse queryOrderInfo(@QueryParam("") QueryOrderInfoRequest request) {
+        QueryOrderInfoResponse response = new QueryOrderInfoResponse();
+        response.setMsg("查询失败");
+        response.setStatus(false);
+        try {
+            if (request == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "参数不能为空");
+            }
+            if (StringUtils.isBlank(request.getOrderId())) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "订单ID不能为空");
+            }
+            if (request.getSubOrderId() == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "子订单号不能为空");
+            }
+
+            // 校验MD5
+            String toEncrypt = EncryptHelper.md5(
+                    String.format("%s_orderId=%s_subOrderId=%s", encryptKey, request.getOrderId(), request.getSubOrderId())
+            );
+
+            if (!StringUtils.equals(toEncrypt, request.getSign())) {
+                response.setMsg(response.getMsg() + " (签名不一致)");
+                return response;
+            }
+
+
+            ConfigResultInfoEO result = orderConfigManager.orderConfigById(request.getSubOrderId());
+            if (result != null) {
+                OrderInfoEO order = result.getOrderInfoEO();
+                RepositoryInfo repository = result.getRepositoryInfo();
+                QueryOrderInfoResponse.OrderInfo dto = new QueryOrderInfoResponse.OrderInfo();
+                dto.setTitle(order.getTitle());
+                dto.setTradeType(order.getTradeType());
+                dto.setOrderId(result.getOrderId());
+                dto.setSubOrderId(result.getId());
+                dto.setGameName(order.getGameName());
+                dto.setGameId(order.getGameId());
+                dto.setRegion(order.getRegion());
+                dto.setRegionId(order.getRegionId());
+                dto.setServer(order.getServer());
+                dto.setServerId(order.getServerId());
+                dto.setGameRace(order.getGameRace());
+                dto.setGameRaceId(order.getRaceId());
+                dto.setBuyerAccount(order.getUserAccount());
+                dto.setBuyerGameRole(order.getReceiver());
+                dto.setGoldCount(result.getConfigGoldCount().longValue());
+                dto.setPrice(result.getRepositoryUnitPrice());
+                dto.setGoldUnit(order.getMoneyName());
+                dto.setAmount(result.getTotalPrice());
+                dto.setSellerAccount(result.getLoginAccount());
+                dto.setSellerGameAccount(repository.getGameAccount());
+                dto.setSellerGameRole(repository.getSellerGameRole());
+                dto.setSellerGamePwd(repository.getGamePassWord());
+                dto.setSellerSecondaryPwd(repository.getSonGamePassWord());
+                dto.setSellerWarehousePwd(repository.getHousePassword());
+
+                /*if (StringUtils.isNotBlank(repository.getGamePassWord())) {
+                    String pwd = DESHelper.encrypt(repository.getGamePassWord(), encryptPwdKey);
+                    dto.setSellerGamePwd(pwd);
+                }
+                if (StringUtils.isNotBlank(repository.getSonGamePassWord())) {
+                    String pwd = DESHelper.encrypt(repository.getSonGamePassWord(), encryptPwdKey);
+                    dto.setSellerSecondaryPwd(pwd);
+                }
+                if (StringUtils.isNotBlank(repository.getHousePassword())) {
+                    String pwd = DESHelper.encrypt(repository.getHousePassword(), encryptPwdKey);
+                    dto.setSellerWarehousePwd(pwd);
+                }*/
+
+                dto.setState(result.getState());
+                dto.setCreateTime(DATE_FORMAT.format(result.getCreateTime()));
+                response.setOrderInfo(dto);
+                response.setMsg("查询成功");
+                response.setStatus(true);
+            } else {
+                response.setMsg("未找到订单");
+                response.setStatus(false);
+            }
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            response.setMsg(ex.getArgs()[0].toString());
+            logger.error("查询参数：{}", request);
+            logger.error("查询订单详情发生异常", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            response.setMsg("系统发生未知异常");
+            logger.error("查询参数：{}", request);
+            logger.error("查询订单详情发生异常", ex);
+        }
+
+        return response;
+    }
+
+    /**
+     * 订单移交
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    @Path("/transfer")
+    @GET
+    public Response transfer(@QueryParam("") TransferOrderRequest request) {
+        QueryOrderInfoResponse response = new QueryOrderInfoResponse();
+        response.setMsg("移交失败");
+        response.setStatus(false);
+        try {
+            if (request == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "参数不能为空");
+            }
+            if (StringUtils.isBlank(request.getOrderId())) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "订单ID不能为空");
+            }
+            if (request.getSubOrderId() == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "子订单号不能为空");
+            }
+
+            // 校验MD5
+            String toEncrypt = EncryptHelper.md5(
+                    String.format("%s_orderId=%s_subOrderId=%s", encryptKey, request.getOrderId(), request.getSubOrderId())
+            );
+
+            if (!StringUtils.equals(toEncrypt, request.getSign())) {
+                response.setMsg(response.getMsg() + " (签名不一致)");
+                return response;
+            }
+
+            orderInfoManager.transferOrderForJsRobot(request.getOrderId(), request.getSubOrderId());
+            response.setMsg("移交成功");
+            response.setStatus(true);
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            response.setMsg(ex.getArgs()[0].toString());
+            logger.error("查询参数：{}", request);
+            logger.error("移交订单发生异常", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            response.setMsg("系统发生未知异常");
+            logger.error("查询参数：{}", request);
+            logger.error("移交订单发生异常", ex);
+        }
+
+        return response;
+    }
+
+    /**
+     * 订单退回
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    @Path("/sendback")
+    @GET
+    public Response sendback(@QueryParam("") SendBackOrderRequest request) {
+        QueryOrderInfoResponse response = new QueryOrderInfoResponse();
+        response.setMsg("退回失败");
+        response.setStatus(false);
+        try {
+            if (request == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "参数不能为空");
+            }
+            if (StringUtils.isBlank(request.getOrderId())) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "订单ID不能为空");
+            }
+            if (request.getSubOrderId() == null) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "子订单号不能为空");
+            }
+            if (StringUtils.isBlank(request.getReason())) {
+                throw new SystemException(ResponseCodes.IllegalArguments.getCode(), "退回原因不能为空");
+            }
+
+            // 校验MD5
+            String toEncrypt = EncryptHelper.md5(
+                    String.format("%s_orderId=%s_subOrderId=%s_reason=%s", encryptKey, request.getOrderId(),
+                            request.getSubOrderId(), request.getReason())
+            );
+
+            if (!StringUtils.equals(toEncrypt, request.getSign())) {
+                response.setMsg(response.getMsg() + " (签名不一致)");
+                return response;
+            }
+
+            orderInfoManager.sendbackFromJsRobot(request.getOrderId(), request.getSubOrderId(), request.getReason());
+            response.setMsg("退回成功");
+            response.setStatus(true);
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            response.setMsg(ex.getArgs()[0].toString());
+            logger.error("查询参数：{}", request);
+            logger.error("订单退回发生异常", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            response.setMsg("系统发生未知异常");
+            logger.error("查询参数：{}", request);
+            logger.error("订单退回发生异常", ex);
+        }
+
+        return response;
+    }
+}

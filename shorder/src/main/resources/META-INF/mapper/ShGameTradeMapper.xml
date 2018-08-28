@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.ShGameTrade">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.ShGameTrade">
+        <result column="id" property="id" jdbcType="NUMERIC" javaType="long"/>
+        <result column="game_table_id" property="gameTableId" javaType="long"/>
+        <result column="trade_table_id" property="tradeTableId" javaType="long"/>
+        <result column="sh_mode" property="shMode" javaType="Integer"/>
+    </resultMap>
+
+    <resultMap id="BaseTradeResultMap" type="com.wzitech.gamegold.shorder.entity.ShGameTrade">
+        <result column="id" property="id" jdbcType="NUMERIC" javaType="long"/>
+        <result column="game_table_id" property="gameTableId" javaType="long"/>
+        <result column="trade_table_id" property="tradeTableId" javaType="long"/>
+        <result column="sh_mode" property="shMode" javaType="Integer"/>
+        <association property="trade" select="selectTrade" column="trade_table_id" javaType="long"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.wzitech.gamegold.shorder.entity.ShGameTrade"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_game_trade
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameTableId != null" >
+                game_table_id,
+            </if>
+            <if test="tradeTableId != null" >
+                trade_table_id,
+            </if>
+            <if test="shMode != null" >
+                sh_mode,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameTableId != null">
+                #{gameTableId},
+            </if>
+            <if test="tradeTableId != null">
+                #{tradeTableId},
+            </if>
+            <if test="shMode != null">
+                #{shMode},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectByMap" parameterType="map" resultMap="BaseTradeResultMap" >
+        select * from t_sh_game_trade
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <sql id="selectSql">
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="gameTableId != null">
+                    AND game_table_id = #{gameTableId}
+                </if>
+                <if test="tradeTableId != null">
+                    AND trade_table_id = #{tradeTableId}
+                </if>
+                <if test="shMode != null">
+                    AND sh_mode = #{shMode}
+                </if>
+            </trim>
+        </where>
+    </sql>
+
+    <select id="countByMap" parameterType="map" resultType="int">
+        select count(*) from t_sh_game_trade
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseTradeResultMap">
+        SELECT * FROM t_sh_game_trade WHERE id = #{id}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from t_sh_game_trade
+        where id = #{id}
+    </delete>
+
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_game_trade WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="batchUpdate" parameterType="com.wzitech.gamegold.shorder.entity.ShGameTrade">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_sh_game_trade
+            <set>
+                <if test="item.gameTableId != null">
+                    game_table_id = #{item.gameTableId},
+                </if>
+                <if test="item.tradeTableId != null">
+                    trade_table_id = #{item.tradeTableId},
+                </if>
+                <if test="item.shMode != null">
+                    sh_mode = #{item.shMode}
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <select id="getShModeByGame" parameterType="long" resultType="int">
+        select DISTINCT (sh_mode) from t_sh_game_trade where game_table_id = #{gameTableId}
+    </select>
+
+    <select id="getTradeByGameAndShMode" parameterType="map" resultMap="com.wzitech.gamegold.shorder.entity.Trade.BaseResultMap">
+        select a.* from t_sh_trade a inner join t_sh_game_trade b on a.id = b.trade_table_id and b.game_table_id = #{gameTableId}
+        and b.sh_mode = #{shMode}
+    </select>
+
+    <select id="selectTrade" parameterType="long" resultMap="com.wzitech.gamegold.shorder.entity.Trade.BaseResultMap">
+        select * from t_sh_trade where id = #{tradeTableId}
+    </select>
+
+</mapper>

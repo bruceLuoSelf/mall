@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.InsuranceOrder">
+    <resultMap id="BaseResultMap"
+               type="com.wzitech.gamegold.order.entity.InsuranceOrder">
+        <result column="ID" property="id"/>
+        <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR"/>
+        <result column="DETAIL" property="detail" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="NUMERIC"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
+        <association property="order" column="ORDER_ID" select="com.wzitech.gamegold.order.entity.OrderInfoEO.selectByOrderId" />
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.order.entity.InsuranceOrder"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO "TBL_GAMEGOLD_INSURANCE_ORDER"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">
+                "ORDER_ID",
+            </if>
+            <if test="detail != null and detail != ''">
+                "DETAIL",
+            </if>
+            <if test="type != null ">
+                "TYPE",
+            </if>
+            <if test="createTime != null ">
+                "CREATE_TIME",
+            </if>
+            <if test="lastUpdateTime != null">
+                "LAST_UPDATE_TIME",
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">
+                #{orderId},
+            </if>
+            <if test="detail != null and detail != ''">
+                #{detail},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="lastUpdateTime != null">
+                #{lastUpdateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="batchUpdate" parameterType="map" >
+      <foreach collection="list" item="item" index="index" separator=";">
+          UPDATE "TBL_GAMEGOLD_INSURANCE_ORDER"
+          <set>
+              <if test="item.orderId != null and item.orderId != ''">
+                  "ORDER_ID" = #{item.orderId},
+              </if>
+              <if test="item.detail != null and item.detail != ''">
+                  "DETAIL" = #{item.detail},
+              </if>
+              <if test="item.type != null">
+                  "TYPE" = #{item.type},
+              </if>
+              <if test="item.lastUpdateTime != null">
+                  "LAST_UPDATE_TIME" = #{item.lastUpdateTime},
+              </if>
+          </set>
+          <where>
+              <if test="item.id != null">
+                  "ID" = #{item.id}
+              </if>
+          </where>
+      </foreach>
+    </update>
+
+    <sql id="selectSql">
+      <where>
+          <if test="id != null">
+              AND "ID" = #{id}
+          </if>
+          <if test="orderId != null and orderId != ''">
+              AND "ORDER_ID" = #{orderId}
+          </if>
+          <if test="type != null">
+              AND "TYPE" = #{type}
+          </if>
+      </where>
+    </sql>
+
+    <delete id="batchDeleteByIds" parameterType="list">
+        <foreach collection="list" item="item" separator=";">
+            DELETE FROM "TBL_GAMEGOLD_INSURANCE_ORDER" WHERE "ID"=#{item}
+        </foreach>
+    </delete>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.order.entity.InsuranceOrder">
+        SELECT * FROM "TBL_GAMEGOLD_INSURANCE_ORDER"
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_INSURANCE_ORDER"
+        <include refid="selectSql"/>
+    </select>
+
+    <!-- 通过商品的ID，获得商品信息 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.InsuranceOrder">
+        SELECT * FROM "TBL_GAMEGOLD_INSURANCE_ORDER"
+        <where>
+            "ID" = #{id}
+        </where>
+    </select>
+
+    <!--查询需要创建保单的记录-->
+    <select id="queryNeedCreateBQList" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_INSURANCE_ORDER"
+        WHERE "TYPE"=#{type}
+    </select>
+    
+    <!-- 查询需要提交转账时间的保单记录(可以结单的记录) -->
+    <select id="queryNeedModifyTransferTimeList" parameterType="map" resultMap="BaseResultMap">
+        SELECT A.* FROM "TBL_GAMEGOLD_INSURANCE_ORDER" A
+            LEFT JOIN "TBL_GAMEGOLD_ORDERS" B ON A."ORDER_ID"=B."ORDER_ID"
+        WHERE A."TYPE"=#{type} AND B."ORDER_STATE"=#{orderState}
+    </select>
+</mapper>

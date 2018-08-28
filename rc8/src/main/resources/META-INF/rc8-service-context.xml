@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+	  	http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+	<description>FACADE SERVICE公共配置文件 </description>
+
+	<!-- 导入cxf的配置文件 -->
+	<import resource="classpath:/META-INF/cxf/cxf.xml" />
+
+	<jaxrs:server id="RESTService" address="/">
+		<!-- 开启cxf日志 -->
+		<jaxrs:features>
+			<cxf:logging />
+		</jaxrs:features>
+		<!-- 导入所有的Service Bean -->
+		<jaxrs:serviceBeans>
+            <ref bean="GameService" />
+			<ref bean="OrderService" />
+			<ref bean="UserService" />
+			<ref bean="OrderNewService" />
+			<ref bean="GameNewService" />
+			<ref bean="NewCustomServicer" />
+		</jaxrs:serviceBeans>
+		<!-- 配置控制过滤器 -->
+		<jaxrs:inInterceptors>
+			<ref bean="authenticationInterceptor" />
+		</jaxrs:inInterceptors>
+        <jaxrs:outInterceptors>
+            <ref bean="formattedJAXBInterceptor" />
+        </jaxrs:outInterceptors>
+
+        <jaxrs:extensionMappings>
+            <entry key="json" value="application/json"/>
+            <entry key="xml" value="application/xml"/>
+            <entry key="text" value="text/plain" />
+        </jaxrs:extensionMappings>
+
+        <!-- 使用jackson作为序列化器,根据URL中是否具有callback参数支持动态JSONP -->
+		<jaxrs:providers>
+			<bean class="com.wzitech.gamegold.rc8.providers.JacksonJsonpProvider" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<!-- 配置认证拦截器 -->
+	<bean id="authenticationInterceptor"
+		class="com.wzitech.gamegold.rc8.interceptor.AuthenticationInterceptor">
+		<!-- 配置不用做认证auth检查的url(注意全部小写) -->
+		<property name="ignoreAuthUrlsList">
+			<list>
+				<value>/services/user/login</value>
+			</list>
+		</property>
+	</bean>
+
+    <!-- 配置jaxb 输出拦截器 -->
+    <bean id="formattedJAXBInterceptor"
+          class="com.wzitech.gamegold.rc8.interceptor.FormattedJAXBInterceptor">
+    </bean>
+</beans>

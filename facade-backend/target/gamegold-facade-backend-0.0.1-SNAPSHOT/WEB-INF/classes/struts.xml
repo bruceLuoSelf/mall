@@ -1,0 +1,1428 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<!-- 最大只能上传100M -->
+	<constant name="struts.multipart.maxSize" value="107374182400"/>
+	<constant name="struts.custom.i18n.resources" value="i18n/framework-messages"/>
+	<package name="gamegold-default" extends="json-default">
+		<result-types>
+    		<result-type name="jsonerror" class="com.wzitech.gamegold.facade.backend.result.JsonErrorResult"/>
+    		<result-type name="json" class="org.apache.struts2.json.JSONResult">
+    			<param name="ignoreHierarchy">false</param>
+    			<param name="excludeNullProperties">true</param>
+    		</result-type>
+    	</result-types>
+		<interceptors>
+			<interceptor name="authentication"
+				class="com.wzitech.gamegold.facade.backend.interceptor.AuthenticationInterceptor">
+			</interceptor>
+			<interceptor name="exception"
+				class="com.wzitech.gamegold.facade.backend.interceptor.ExceptionInterceptor">
+			</interceptor>
+			 <interceptor name="json" class="org.apache.struts2.json.JSONInterceptor">
+			 	<param name="ignoreHierarchy">false</param>
+			 </interceptor>
+    		<interceptor-stack name="gamegoldStack">
+    			<interceptor-ref name="exception"/>
+    			<interceptor-ref name="authentication"/>
+    			<interceptor-ref name="defaultStack"/>
+    			<interceptor-ref name="json"/>
+    		</interceptor-stack>
+    	</interceptors>
+    	<default-interceptor-ref name="gamegoldStack"/>
+		<global-results>
+    		<result name="jspError">/WEB-INF/page/error.jsp</result>
+    		<result name="jsonError" type="jsonerror"></result>
+    		<result name="jspLogin">/WEB-INF/page/login.jsp</result>
+    		<result name="jsonLogin" type="jsonerror"></result>
+    	</global-results>
+	</package>
+	<package name="login" namespace="/" extends="gamegold-default">
+		<action name="index" class="loginAction" method="index">
+			<result name="login">/WEB-INF/page/login.jsp</result>
+			<result name="error">/WEB-INF/page/login.jsp</result>
+			<result name="success">/WEB-INF/page/index.jsp</result>
+		</action>
+		<action name="logout" class="loginAction" method="logout">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+	
+	<package name="main" namespace="/main" extends="gamegold-default">
+		<action name="currentLoginUserInfo" class="mainAction" method="currentLoginUserInfo">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="sysConfig" class="mainAction" method="sysConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="changePassword" class="mainAction" method="changePassword">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+	
+	<package name="common" namespace="/common" extends="gamegold-default">
+		<action name="queryGameCompanyList" class="commonAction" method="queryGameCompanyList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="queryGameInfoList" class="commonAction" method="queryGameInfoList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="queryGameAreaList" class="commonAction" method="queryGameAreaList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="queryGameServerList" class="commonAction" method="queryGameServerList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="queryGameRaceList" class="commonAction" method="queryGameRaceList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+	
+	<package name="log" namespace="/log" extends="gamegold-default">
+		<action name="queryLog" class="logAction" method="queryLog">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+        <action name="queryOrderLogs" class="orderLogAction" method="queryOrderLogs">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="queryRepositoryLogs" class="repositoryLogAction" method="queryRepositoryLogs">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="queryGoodsLogs" class="goodsLogAction" method="queryGoodsLogs">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+		<action name="queryUserLog" class="userLogAction" method="queryLog">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+
+	<package name="blackList" namespace="/blackList" extends="gamegold-default">
+		<action name="queryBlackList" class="blackListAction" method="queryBlackList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addUser1" class="blackListAction" method="addUser1">
+			<result name="error" type="json"/>
+			<result name="input" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableUser1" class="blackListAction" method="disableUser1">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteUser1" class="blackListAction" method="deleteUser1">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enableUser1" class="blackListAction" method="enableUser1">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+
+	<!--通货配置-->
+	<package name="CurrencyConfig" namespace="/CurrencyConfig" extends="gamegold-default">
+		<action name="queryCurrencyConfig" class="currencyConfigAction" method="queryCurrencyConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addCurrencyConfig" class="currencyConfigAction" method="addCurrencyConfig">
+			<result name="error" type="json"/>
+			<result name="input" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyCurrencyConfig" class="currencyConfigAction" method="modifyCurrencyConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteCurrencyConfig" class="currencyConfigAction" method="deleteCurrencyConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+
+
+
+	<package name="user" namespace="/user" extends="gamegold-default">
+		<action name="queryUser" class="userAction" method="queryUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addUser" class="userAction" method="addUser">
+			<result name="error" type="json"/>
+			<result name="input" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyUser" class="userAction" method="modifyUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="adminModifySubUser" class="userAction" method="adminModifySubUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableUser" class="userAction" method="disableUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteUser" class="userAction" method="deleteUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enableUser" class="userAction" method="enableUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyPwd" class="userAction" method="modifyPwd">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryUsersGame" class="usersGameAction" method="queryUsersGame">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="saveUser" class="usersGameAction" method="saveUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="productionAccount" class="userAction" method="productionAccount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+
+	<package name="goods" namespace="/goods" extends="gamegold-default">
+		<!--transferFileAcction author wangmin 20170719-->
+		<action name="updateTransferFile" class="transferFileAcction" method="updateTransferFile">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="selectTransferFile" class="transferFileAcction" method="selectTransferFile">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<!--REGION     firmsAccountAction  AUTH WANGMING CREATE 20170708-->
+		<action name="queryFirmsAccounts" class="firmsAccountAction" method="queryFirmsAccounts">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="selectFirmUserSecret" class="firmsAccountAction" method="selectFirmUserSecret">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="refreshSecretKey" class="firmsAccountAction" method="refreshSecretKey">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addFirmAccount" class="firmsAccountAction" method="addFirmAccount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteFirmAccount" class="firmsAccountAction" method="deleteFirmAccount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="ableFirm" class="firmsAccountAction" method="ableFirm">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableFirm" class="firmsAccountAction" method="disableFirm">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateFirmAccount" class="firmsAccountAction" method="updateFirmAccount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!--ENDREGION  firmsAccountAction  AUTH WANGMING CREATE 20170708-->
+		<!--firmlogaction  auth wurongfan carete20170717-->
+		<action name="selectLogs" class="firmLogAction" method="selectLogs">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!--firmlogaction  auth wurongfan carete20170717-->
+		<!--firmInfoAction  AUTH WANGMING CREATE 20170708-->
+		<action name="updateFirmName" class="firmInfoAction" method="updateFirmName">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disable" class="firmInfoAction" method="disable">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="able" class="firmInfoAction" method="able">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryFirmInfos" class="firmInfoAction" method="queryFirmInfos">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addFirm" class="firmInfoAction" method="addFirm">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteFirmInfo" class="firmInfoAction" method="deleteFirmInfo">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<!-- 新增工作室更新密匙功能_ADD_20170717_WUBIAO_START -->
+		<action name="refreshSecret" class="firmInfoAction" method="refreshSecret">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="showSecret" class="firmInfoAction" method="showSecret">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!-- 新增工作室更新密匙功能_ADD_20170717_WUBIAO_END -->
+
+		<!-- AUTH WANGMING CREATE 20170708 -->
+
+		<action name="queryGoods" class="goodsAction" method="queryGoods">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryGoodsDiscount" class="goodsAction" method="queryGoodsDiscount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addGoods" class="goodsAction" method="addGoods">
+			<result name="error" type="json"/>
+			<result name="input" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyGoods" class="goodsAction" method="modifyGoods">
+			<result name="error" type="json"/>
+			<result name="input" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="delGoods" class="goodsAction" method="delGoods">
+			<result name="error" type="json"/>
+			<result name="input" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enableGoods" class="goodsAction" method="enableGoods">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableGoods" class="goodsAction" method="disableGoods">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="batchModifyPrice" class="goodsAction" method="batchModifyPrice">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="uploadPrice" class="uploadPriceAction" method="uploadPrice">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<!--REGION SevenBao AUTH WANGMING CREATE 20170817-->
+		<action name="selectLog" class="sevenBaoBindLogAction" method="selectLog">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!--REGIONEND SevenBao AUTH WANGMING CREATE 20170817-->
+		<!--ZW_C_JB_00008_20170512 START ADD-->
+		<action name="addWarning" class="warningAction" method="addWarning">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteWarning" class="warningAction" method="deleteWarning">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyWarning" class="warningAction" method="modifyWarning">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryWarning" class="warningAction" method="queryWarning">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!--ZW_C_JB_00008_20170512 END-->
+
+	</package>
+	
+	<package name="repository" namespace="/repository" extends="gamegold-default">
+		<action name="queryMachineArtificialConfig" class="machineArtificialConfigAction" method="queryMachineArtificialConfigList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addMachineArtificialConfig" class="machineArtificialConfigAction" method="addMachineArtificialConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enableMachineArtificialConfig" class="machineArtificialConfigAction" method="enableMachineArtificialConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disabledMachineArtificialConfig" class="machineArtificialConfigAction" method="disabledMachineArtificialConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteMachineArtificialConfig" class="machineArtificialConfigAction" method="deleteMachineArtificialConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryReferencePrice" class="referencePriceAction" method="queryReferencePrice">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="updateRepositoryConfig" class="repositoryCountAction" method="update">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		 <action name="queryRepositoryCountIdList" class="repositoryCountAction" method="selectRepositoryCount">
+			 <result name="error" type="json"/>
+			 <result name="success" type="json"/>
+		 </action>
+
+		<action name="modifyRepositoryConfig" class="repositoryConfigAction" method="modifyRepositoryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="disableRepositoryConfig" class="repositoryConfigAction" method="disableConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enableRepositoryConfig" class="repositoryConfigAction" method="enabledConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteRepositoryConfig" class="repositoryConfigAction" method="deleteConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryRepository" class="repositoryAction" method="queryRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryOrderRepository" class="repositoryAction" method="queryOrderRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="querySeller" class="sellerAction" method="querySeller">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="auditSeller" class="sellerAction" method="auditSeller">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="givePower" class="sellerAction" method="givePower">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="cancelPower" class="sellerAction" method="cancelPower">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!--是否开启新资金流程-->
+		<action name="openNewFund" class="sellerAction" method="openNewFund">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="closeNewFund" class="sellerAction" method="closeNewFund">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!--是否开启新资金流程 end-->
+
+		<action name="openCross" class="sellerAction" method="openCross">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="closeCross" class="sellerAction" method="closeCross">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="shieldSeller" class="sellerAction" method="shieldSeller">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="cancelShield" class="sellerAction" method="cancelShield">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="giveManualStatus" class="sellerAction" method="giveManualStatus">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="cancelManualStatus" class="sellerAction" method="cancelManualStatus">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addRepository" class="repositoryAction" method="addRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyRepository" class="repositoryAction" method="modifyRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteRepository" class="repositoryAction" method="deleteRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="uploadRepository" class="uploadRepositoryAction" method="uploadRepository">
+			<result name="error" type="json"/>
+			<result name="input" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="exportRepository" class="exportRepositoryAction" method="exportRepository">
+			<result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="repository.xls"</param>
+                <param name="bufferSize">1024</param>
+            </result>
+		</action>
+		<action name="saveShieldSeller" class="sellerAction" method="saveShieldSeller">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="eidtSeller" class="sellerAction" method="eidtSeller">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="querySellerSetting" class="sellerSettingAction" method="querySellerSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="settingEnable" class="sellerSettingAction" method="settingEnable">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteSellerSetting" class="sellerSettingAction" method="deleteSellerSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addSellerSetting" class="sellerSettingAction" method="addSellerSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifySellerSetting" class="sellerSettingAction" method="modifySellerSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateShopSort" class="sellerSettingAction" method="updateShopSort">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryAutoDeliverSetting" class="autoDeliverSettingAction" method="queryAutoDeliverSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="settingEnableDeliverSetting" class="autoDeliverSettingAction" method="settingEnableDeliverSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteAutoDeliverSetting" class="autoDeliverSettingAction" method="deleteAutoDeliverSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addAutoDeliverSetting" class="autoDeliverSettingAction" method="addAutoDeliverSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyAutoDeliverSetting" class="autoDeliverSettingAction" method="modifyAutoDeliverSetting">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="online" class="sellerAction" method="online">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="checkSh" class="sellerAction" method="checkSh">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enablePriceRob" class="sellerAction" method="enablePriceRob">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="MassProductionAccount" class="sellerAction" method="massProductionAccount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addRepositoryConfig" class="repositoryConfigAction" method="addRepositoryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryRepositoryConfig" class="repositoryConfigAction" method="queryRepositoryConfigList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addGameRepository" class="gameRepositoryAction" method="addRepositoryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryGameRepository" class="gameRepositoryAction" method="queryGameRepositoryList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateAll" class="gameRepositoryAction" method="updateAll">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateGameRepository" class="gameRepositoryAction" method="updateGameRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enableRepository" class="gameRepositoryAction" method="enableRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableRepository" class="gameRepositoryAction" method="disableRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteGameRepository" class="gameRepositoryAction" method="deleteGameRepository">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+	
+	<package name="order" namespace="/order" extends="gamegold-default">
+		<action name="queryOrder" class="orderAction" method="queryOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+        <action name="queryBuyInsuranceOrder" class="orderAction" method="queryBuyInsuranceOrder">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+		<action name="queryTradeOrderList" class="tradeOrderAction" method="queryTradeOrderList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="querySellerByOrderId" class="shippingAction" method="querySellerByOrderId">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryShipping" class="shippingAction" method="queryShipping">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="exportShippingOrder" class="exportShippingOrderAction" method="exportShippingOrder">
+			<result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="shippingOrder.xls"</param>
+                <param name="bufferSize">1024</param>
+            </result>
+		</action>
+		<action name="queryOrderConfig" class="orderAction" method="queryOrderConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="configOrder" class="orderAction" method="configOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="replaceConfigOrder" class="orderAction" method="replaceConfigOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="changeOrderState" class="orderAction" method="changeOrderState">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="notStoreOrder" class="orderAction" method="notStoreOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+        <action name="statisticPremiums" class="orderAction" method="statisticPremiums">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="cancelConfigResult" class="cancelConfigResultAction" method="cancelConfigResult">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="transferOrder" class="transferOrderAction" method="transferOrder">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+		<action name="batchTransferOrder" class="transferOrderAction" method="batchTransferOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryGameConfig" class="gameConfigAction" method="queryGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryGoodsTypeNameIdList" class="gameConfigAction" method="queryGoodsTypeNameIdList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyGameConfig" class="gameConfigAction" method="modifyGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+			<result name="input" type="json"/>
+		</action>
+		<action name="addGameConfig" class="gameConfigAction" method="addGameConfig">
+			<result name="error" type="json"/>
+			<result name="input" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteGameConfig" class="gameConfigAction" method="deleteGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+        <action name="queryGameNameIdList" class="gameConfigAction" method="queryGameNameIdList">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+		<action name="queryConfig" class="configPowerAction" method="queryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="alterTradeType" class="configPowerAction" method="alterTradeType">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="givePower" class="configPowerAction" method="givePower">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="cancelPower" class="configPowerAction" method="cancelPower">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="modifyMaxCount" class="configPowerAction" method="modifyMaxCount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!--ZW_C_JB_00008_20170512 START ADD-->
+		<action name="addConfigPower" class="configPowerAction" method="addConfigPower">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<!--ZW_C_JB_00008_20170512 END-->
+		<action name="setCopy" class="shippingAction" method="setCopy">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="syncOrderPaymentStatus" class="orderAction" method="syncOrderPaymentStatus">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+        <action name="exportDelayOrder" class="exportDelayOrderAction" method="exportDelayOrder">
+            <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="orderDelay.xlsx"</param>
+                <param name="bufferSize">1024</param>
+            </result>
+        </action>
+        <action name="exportInsuranceOrder" class="exportInsuranceOrder" method="exportInsuranceOrder">
+            <result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="orders.xlsx"</param>
+                <param name="bufferSize">1024</param>
+            </result>
+        </action>
+		<action name="sendbackFromRobot" class="sendBackFromRobotAction" method="sendbackFromRobot">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryServiceEvaluate" class="serviceEvaluateAction" method="queryServiceEvaluate">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryOrderEvaluate" class="serviceEvaluateAction" method="queryOrderEvaluate">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryDiscountCoupon" class="discountCouponAction" method="queryDiscountCoupon">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="exportCoupon" class="exportCouponAction" method="exportCoupon">
+			<result name="success" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="coupon.xls"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		<action name="generateCoupon" class="exportCouponAction" method="generateCoupon">
+			<result name="success" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="coupon.xls"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		<action name="validateUser" class="exportCouponAction" method="validateUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="exportCancelOrder" class="exportOrderCancelAction" method="exportOrder">
+			<result name="success" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="cancel.xlsx"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+	</package>
+	
+	<package name="funds" namespace="/funds" extends="gamegold-default">
+		<action name="queryTransaction" class="transactionInfoAction" method="queryTransaction">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+        <action name="statisticOrderInfo" class="transactionInfoAction" method="statisticOrderInfo">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+		<action name="queryGameTradingList" class="transactionInfoAction" method="queryGameTradingList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="exportTransactionFlow" class="exportTransactionFlowAction" method="exportTransactionFlow">
+			<result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="transationFlow.xls"</param>
+                <param name="bufferSize">1024</param>
+            </result>
+		</action>
+		<action name="exportGameTradingFlow" class="transactionInfoAction" method="exportGameTradingFlow">
+			<result name="success" type="stream">
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="gameTradingFlow.xls"</param>
+                <param name="bufferSize">1024</param>
+            </result>
+		</action>
+		<action name="tradingStatistics" class="transactionInfoAction" method="tradingStatistics">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+
+    <package name="hotrecommend" namespace="/hotrecommend" extends="gamegold-default">
+        <action name="queryConfigList" class="hotRecommendConfigAction" method="queryConfigList">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="addConfig" class="hotRecommendConfigAction" method="addConfig">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="updateConfig" class="hotRecommendConfigAction" method="updateConfig">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="deleteConfig" class="hotRecommendConfigAction" method="deleteConfig">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+    </package>
+
+    <package name="message" namespace="/messageRule" extends="gamegold-default">
+        <action name="list" class="messageRuleAction" method="list">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="add" class="messageRuleAction" method="add">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="update" class="messageRuleAction" method="update">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="delete" class="messageRuleAction" method="delete">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+
+        <action name="enabled" class="messageRuleAction" method="enabled">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+
+        <action name="disabled" class="messageRuleAction" method="disabled">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+
+        <action name="loadRuleLogs" class="messageRuleLogAction" method="loadRuleLogs">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+    </package>
+
+    <package name="sentMessage" namespace="/sentMessage" extends="gamegold-default">
+        <action name="list" class="sentMessageAction" method="list">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+    </package>
+
+    <package name="insurance" namespace="/insurance" extends="gamegold-default">
+        <action name="add" class="insuranceSettingsAction" method="add">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="update" class="insuranceSettingsAction" method="update">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="delete" class="insuranceSettingsAction" method="delete">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="enabled" class="insuranceSettingsAction" method="enabled">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="disabled" class="insuranceSettingsAction" method="disabled">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+        <action name="queryPage" class="insuranceSettingsAction" method="queryPage">
+            <result name="error" type="json"/>
+            <result name="success" type="json"/>
+        </action>
+    </package>
+
+
+	<package name="delivery" namespace="/delivery" extends="gamegold-default">
+		<action name="selectTradeByGameGoodsTypeAndShMode" class="tradeAction" method="selectTradeByGameGoodsTypeAndShMode">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disabledTrade" class="tradeAction" method="disabledTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enabledTrade" class="tradeAction" method="enabledTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateTrade" class="tradeAction" method="updateTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteTrade" class="tradeAction" method="deleteTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addTrade" class="tradeAction" method="addTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryTrade" class="tradeAction" method="queryTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryTradeList" class="tradeAction" method="queryTradeList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="regularQueryTrade" class="tradeAction" method="queryTradeTypeName">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryShGameAccount" class="shGameAccountAction" method="queryShGameAccount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryDeliveryOrder" class="deliveryOrderAction" method="queryDeliveryOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryMoneyCount" class="deliveryOrderAction" method="queryMoneyCount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryDeliverySubOrder" class="deliverySubOrderAction" method="queryDeliverySubOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateDeliverySubOrder" class="deliveryOrderAction" method="updateDeliverySubOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="handleDeliverySubOrder" class="deliveryOrderAction" method="handleDeliverySubOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="turnDeliverySubOrder" class="deliveryOrderAction" method="turnDeliverySubOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="statisAmount" class="deliveryOrderAction" method="statisAmount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="statisAmountTradeCount" class="deliveryOrderAction" method="statisAmountTradeCount">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryDeliveryList" class="exportDeliveryOrderAction" method="queryDeliveryList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="distributionService" class="deliveryOrderAction" method="distributionService">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="exportDeliveryOrderList" class="exportDeliveryOrderAction" method="exportDeliveryOrderList">
+			<result name="success" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="shippingOrder.xls"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+
+		<action name="queryOrderLogByOrderId" class="shOrderLogAction" method="queryOrderLogByOrderId">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryApperalOrderLogByOrderId" class="shOrderLogAction" method="queryApperalOrderLogByOrderId">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="querySplitRepositoryLog" class="splitRepositoryLogAction" method="querySplitRepositoryLog">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="splitRepositoryRequest" class="splitRepositoryRequestAction" method="querySplitRepositoryRequestList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="exportFundExcel" class="splitRepositoryRequestAction" method="exportFundExcel">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="querySplitRepositprySubRequest" class="splitRepositprySubRequestAction" method="querySplitRepositprySubRequest">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryRefundOrder" class="refundOrderAction" method="queryRefundOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="auditRefund" class="refundOrderAction" method="auditRefund">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryFundDetail" class="fundDetailAction" method="queryFundDetail">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="refund" class="fundDetailAction" method="refund">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryPayDetail" class="payDetailAction" method="queryPayDetail">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryPayOrder" class="payOrderAction" method="queryPayOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="manualPayShOrder" class="payOrderAction" method="manualPayShOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryConfig" class="shAddressAction" method="queryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addConfig" class="shAddressAction" method="addConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateConfig" class="shAddressAction" method="updateConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteConfig" class="shAddressAction" method="deleteConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enabled" class="shAddressAction" method="enabled">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disabled" class="shAddressAction" method="disabled">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryShFundStatistics" class="shFundStatisticsAction" method="queryShFundStatistics">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryShGameConfig" class="shGameConfigAction" method="queryShGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryGameGoodsType" class="shGameConfigAction" method="queryGameGoodsType">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryShGameTrade" class="shGameTradeAction" method="queryShGameTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="deleteShGameTrade" class="shGameTradeAction" method="deleteShGameTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="addShGameTrade" class="shGameTradeAction" method="addShGameTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="updateShGameTrade" class="shGameTradeAction" method="updateShGameTrade">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryLevelCarryLimit" class="levelCarryLimitAction" method="queryLevelCarryLimit">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="deleteById" class="levelCarryLimitAction" method="deleteById">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="addLevelCarryLimit" class="levelCarryLimitAction" method="addLevelCarryLimit">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="updateLevelCarryLimit" class="levelCarryLimitAction" method="updateLevelCarryLimit">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="buildRedisData" class="levelCarryLimitAction" method="buildRedisData">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryConfigByGameName" class="shGameConfigAction" method="queryConfigByGameName">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryConfigByGameNameAndDeliveryTypeIdAndGoodsType" class="shGameConfigAction" method="queryConfigByGameNameAndDeliveryTypeIdAndGoodsType">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryConfigByGameNameAndDeliveryTypeId" class="shGameConfigAction" method="queryConfigByGameNameAndDeliveryTypeId">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="selectGoodsTypeByGameAndShMode" class="shGameConfigAction" method="selectGoodsTypeByGameAndShMode">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="deleteShGameConfig" class="shGameConfigAction" method="deleteShGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="isSplitWarehouse" class="shGameConfigAction" method="isSplitWarehouse">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableWarehouse" class="shGameConfigAction" method="disableWarehouse">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="updateShGameConfig" class="shGameConfigAction" method="updateShGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addShGameConfig" class="shGameConfigAction" method="addShGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableMallShGameConfig" class="shGameConfigAction" method="disableMallShGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableNineBlock" class="shGameConfigAction" method="disableNineBlock">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enableNineBlock" class="shGameConfigAction" method="enableNineBlock">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enableMallShGameConfig" class="shGameConfigAction" method="enableMallShGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableShGameConfig" class="shGameConfigAction" method="disableShGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="qyShGameConfig" class="shGameConfigAction" method="qyShGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryQqOnLine" class="qqOnLineAction" method="queryQqOnLine">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addQqOnLine" class="qqOnLineAction" method="addQqOnLine">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteQqOnLine" class="qqOnLineAction" method="deleteQqOnLine">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateQqOnLine" class="qqOnLineAction" method="updateQqOnLine">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="enabledQqOnLine" class="qqOnLineAction" method="enabledQqOnLine">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disabledQqOnLine" class="qqOnLineAction" method="disabledQqOnLine">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+	</package>
+
+	<package name="settlement" namespace="/settlement" extends="gamegold-default">
+		<action name="querySettlement" class="settlementAction" method="querySettlement">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+	<!-- 申诉单 -->
+	<package name="appealDelivery" namespace="/appealDelivery" extends="gamegold-default">
+		<action name="queryAppealDeliveryOrder" class="appealDeliveryOrderAction" method="queryAppealDeliveryOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateAppealDeliveryOrder" class="appealDeliveryOrderAction" method="updateAppealDeliveryOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+
+
+    <!--采购商-->
+	<package name="shpurchase" namespace="/shpurchase" extends="gamegold-default">
+		<action name="shPurchaseGameConfig" class="shPurchaseGameConfigAction" method="queryPurchase">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="qySell" class="mainGameConfigAction" method="qySell">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableSell" class="mainGameConfigAction" method="disableSell">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableDelivery" class="mainGameConfigAction" method="disableDelivery">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="qyDelivery" class="mainGameConfigAction" method="qyDelivery">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteMainGameConfig" class="mainGameConfigAction" method="deleteMainGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryGameConfig" class="mainGameConfigAction" method="queryGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateMainGameConfig" class="mainGameConfigAction" method="updateMainGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addMainGameConfig" class="mainGameConfigAction" method="addMainGameConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryGameNameForAll" class="mainGameConfigAction" method="queryGameNameForAll">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryTradeTypeName" class="shPurchaseGameConfigAction" method="queryTradeTypeName">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addTradeLogoData" class="shPurchaseGameConfigAction" method="addTradeLogoData">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryGoodsTypeName" class="shPurchaseGameConfigAction" method="queryGoodsTypeName">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="shPurchase" class="shPurchaseAction" method="queryShPurchase">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateShPurchase" class="shPurchaseAction" method="updateShPurchase">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="shPurchaseOrder" class="shPurchaseOrderAction" method="queryShPurchaseOrder">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+	    </action>
+		<action name="online" class="shPurchaseOrderAction" method="online">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="offline" class="shPurchaseOrderAction" method="offline">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryConfig" class="shSystemConfigAction" method="queryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteConfig" class="shSystemConfigAction" method="deleteConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addSystemConfig" class="shSystemConfigAction" method="addConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateSystemConfig" class="shSystemConfigAction" method="updateConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="qyConfig" class="shSystemConfigAction" method="qyUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableUser" class="shSystemConfigAction" method="disableUser">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="queryGameCategoryConfig" class="gameCategoryConfigAction" method="queryGameCategoryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="addGameCategoryConfig" class="gameCategoryConfigAction" method="addGameCategoryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="updateGameCategoryConfig" class="gameCategoryConfigAction" method="updateGameCategoryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="deleteGameCategoryConfig" class="gameCategoryConfigAction" method="deleteGameCategoryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="disableGameCategory" class="gameCategoryConfigAction" method="disableGameCategory">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+		<action name="qyGameCategoryConfig" class="gameCategoryConfigAction" method="qyGameCategoryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+
+
+	<package name="deliveryOrderLog" namespace="/deliveryOrderLog" extends="gamegold-default">
+		<action name="queryDeliveryOrderLog" class="deliveryOrderLogAction" method="queryDeliveryOrderLog">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+
+
+	<package name="deliveryType" namespace="/deliveryType" extends="gamegold-default">
+		<action name="queryDeliveryTypeList" class="deliveryConfigAction" method="queryDeliveryTypeList">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="addDeliveryCofig" class="deliveryConfigAction" method="addDeliveryCofig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="queryDeliveryCofig" class="deliveryConfigAction" method="queryDeliveryCofig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="deleteDeliveryConfig" class="deliveryConfigAction" method="deleteDeliveryConfig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+
+		<action name="modifyDeliveryCofig" class="deliveryConfigAction" method="modifyDeliveryCofig">
+			<result name="error" type="json"/>
+			<result name="success" type="json"/>
+		</action>
+	</package>
+</struts>

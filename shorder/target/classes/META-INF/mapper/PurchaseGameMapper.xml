@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.PurchaseGame">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.PurchaseGame">
+        <result column="id" property="id"/>
+        <result column="purchase_id" property="purchaseId"/>
+        <result column="purchase_account" property="purchaseAccount"/>
+        <result column="game_name" property="gameName"/>
+        <result column="goods_type_id" property="goodsTypeId"/>
+        <result column="goods_type_name" property="goodsTypeName"/>
+        <result column="delivery_type_id" property="deliveryTypeId"/>
+        <result column="delivery_type_name" property="deliveryTypeName"/>
+        <result column="trade_type_id" property="tradeTypeId"/>
+        <result column="trade_type_name" property="tradeTypeName"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.PurchaseGame"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_purchaser_game
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="purchaseId != null">
+                purchase_id,
+            </if>
+            <if test="purchaseAccount != null and purchaseAccount!=''">
+                purchase_account,
+            </if>
+            <if test="gameName != null and gameName!=''">
+                game_name,
+            </if>
+            <if test="goodsTypeId != null">
+                goods_type_id,
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName !=''">
+                goods_type_name,
+            </if>
+            <if test="deliveryTypeId != null">
+                delivery_type_id,
+            </if>
+            <if test="deliveryTypeName != null and deliveryTypeName !=''">
+                delivery_type_name,
+            </if>
+            <if test="tradeTypeId != null">
+                trade_type_id,
+            </if>
+            <if test="tradeTypeName != null">
+                trade_type_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="purchaseId != null">
+                #{purchaseId},
+            </if>
+            <if test="purchaseAccount != null and purchaseAccount!=''">
+                #{purchaseAccount},
+            </if>
+            <if test="gameName != null and gameName!=''">
+                #{gameName},
+            </if>
+            <if test="goodsTypeId != null">
+                #{goodsTypeId},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName !=''">
+                #{goodsTypeName},
+            </if>
+            <if test="deliveryTypeId != null">
+                #{deliveryTypeId},
+            </if>
+            <if test="deliveryTypeName != null and deliveryTypeName !=''">
+                #{deliveryTypeName},
+            </if>
+            <if test="tradeTypeId != null">
+                #{tradeTypeId},
+            </if>
+            <if test="tradeTypeName != null">
+                #{tradeTypeName},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.PurchaseGame">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_purchaser_game
+            <set>
+                <if test="item.deliveryTypeId != null">
+                    delivery_type_id= #{item.deliveryTypeId},
+                </if>
+                <if test="item.deliveryTypeName != null">
+                    delivery_type_name=#{item.deliveryTypeName},
+                </if>
+                <if test="item.tradeTypeId != null">
+                    trade_type_id= #{item.tradeTypeId},
+                </if>
+                <if test="item.tradeTypeName != null">
+                    trade_type_name=#{item.tradeTypeName},
+                </if>
+                <if test="item.goodsTypeId != null">
+                    goods_type_id=#{item.goodsTypeId},
+                </if>
+                <if test="item.goodsTypeName != null">
+                    goods_type_name=#{item.goodsTypeName},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="purchaseId != null">
+                    purchase_id= #{purchaseId}
+                </if>
+                <if test="purchaseAccount != null and purchaseAccount!=''">
+                    AND purchase_account= #{purchaseAccount}
+                </if>
+                <if test="gameName != null and gameName!=''">
+                    AND game_name= #{gameName}
+                </if>
+                <if test="goodsTypeId != null">
+                    AND goods_type_id= #{goodsTypeId}
+                </if>
+                <if test="goodsTypeName != null and goodsTypeName!=''">
+                    AND goods_type_name= #{goodsTypeName}
+                </if>
+                <if test="deliveryTypeId != null">
+                    AND delivery_type_id= #{deliveryTypeId}
+                </if>
+                <if test="deliveryTypeName != null and deliveryTypeName!=''">
+                    AND delivery_type_name= #{deliveryTypeName}
+                </if>
+                <if test="tradeTypeId != null and tradeTypeId!=''">
+                    AND trade_type_id= #{tradeTypeId}
+                </if>
+                <if test="tradeTypeName != null and tradeTypeName !=''">
+                    AND trade_type_name= #{tradeTypeName}
+                </if>
+                <if test="tradeTypeNameMode !=null">
+                    AND trade_type_name LIKE '%${tradeTypeNameMode}%'
+                </if>
+            </trim>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.PurchaseGame">
+        SELECT * FROM t_sh_purchaser_game
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+        <if test="isLocked">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_purchaser_game WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM t_sh_purchaser_game
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchaser_game WHERE id = #{id}
+    </select>
+
+
+    <!--根据trade在数据库查询-->
+    <select id="selectByLikeTrade" parameterType="Map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchaser_game WHERE trade_type_id LIKE '%${tradeTypeI}%';
+    </select>
+
+    <!--根据游戏名称和交易类目更新收货商游戏属性配置表-->
+    <!--<update id="updateByGameNameAndGoodsTypeName" parameterType="com.wzitech.gamegold.shorder.entity.PurchaseGame">-->
+     <!--update t_sh_purchaser_game set trade_type_id= #{tradeTypeId},trade_type_name=#{tradeTypeName} where id = #{id}-->
+    <!--</update>-->
+
+    <update id="updateByEnrobot" parameterType="com.wzitech.gamegold.shorder.entity.PurchaseGame">
+        update t_sh_purchaser_game set delivery_type_id = '3' , delivery_type_name = '暂停收货' where
+        game_name = #{gameName} and goods_type_name = #{goodsTypeName} and delivery_type_name='机器收货'
+    </update>
+
+    <select id="selectPurchaseGameByGameNameAndGoodsTypeName" parameterType="com.wzitech.gamegold.shorder.entity.PurchaseGame" resultMap="BaseResultMap">
+         SELECT * FROM t_sh_purchaser_game WHERE game_name = #{gameName} and goods_type_name = #{goodsTypeName}
+    </select>
+
+
+    <select id="selectByPurchaseAccount" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchaser_game WHERE purchase_account = #{purchaseAccount} and game_name=#{gameName} and goods_type_name=#{goodsTypeName} limit 1
+    </select>
+</mapper>

@@ -1,0 +1,193 @@
+package com.wzitech.gamegold.repository.business.impl;
+
+import com.fasterxml.jackson.databind.JavaType;
+import com.wzitech.chaos.framework.server.common.AbstractBusinessObject;
+import com.wzitech.chaos.framework.server.common.utils.JsonMapper;
+import com.wzitech.gamegold.repository.business.IRepositoryTransfer;
+import com.wzitech.gamegold.repository.entity.RegionServer;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * 合服库存互通基础类
+ *
+ * @author yemq
+ */
+public abstract class AbstractRepositoryTransfer extends AbstractBusinessObject implements IRepositoryTransfer {
+    protected List<RegionServer> regionServers;
+
+    private static final JsonMapper jsonMapper = JsonMapper.nonEmptyMapper();
+    @PostConstruct
+    private void afterInitialization() {
+        String repositoryTransferFile = getRepositoryTransferFile();
+        logger.debug("repositoryTransferFile:{}", repositoryTransferFile);
+        try {
+            JavaType javaType=jsonMapper.createCollectionType(ArrayList.class,RegionServer.class);
+            regionServers=jsonMapper.fromJson(repositoryTransferFile,javaType);
+        } catch (Exception e) {
+            String msg = String.format("读取合服库存互通配置文件出错了:%s", repositoryTransferFile);
+            throw new RuntimeException(msg, e);
+        }
+    }
+
+    /**
+     * 对查询参数进行处理，返回新的查询参数
+     *
+     * @param queryMap
+     * @return Map<String, Object>
+     */
+    @Override
+    public Map<String, Object> process(Map<String, Object> queryMap) {
+        logger.debug("未处理前的queryMap:{}", queryMap);
+        String gameName = (String) queryMap.get("gameName");
+        String backGameName = (String) queryMap.get("backGameName");
+        String region = (String) queryMap.get("region");
+        String backRegion = (String) queryMap.get("backRegion");
+        String server = (String) queryMap.get("server");
+        String backServer = (String) queryMap.get("backServer");
+        if (StringUtils.isBlank(gameName)) {
+            gameName = backGameName;
+        }
+        if (StringUtils.isBlank(region)) {
+            region = backRegion;
+        }
+        if (StringUtils.isBlank(server)) {
+            server = backServer;
+            if (StringUtils.isBlank(server)) {
+                return queryMap;
+            }
+        }
+
+        // 获取互通的服务器
+        Map<String, Object> result = null;
+        //ZW_J_JB_00073金币商城增加区服互通功能  start jiyangxin
+        //强制调用一次更新配置文件 每一次的配置文件都从redis中获取最新的
+        this.afterInitialization();
+        //ZW_J_JB_00073金币商城增加区服互通功能  end jiyangxin
+        if (StringUtils.isBlank(region)) {
+            result = getServers(server);
+        } else {
+            result = getServers(region, server);
+        }
+
+        logger.debug("查询合服互通的服务器响应：{}", result);
+        String errMsg = String.format("未找到合服互通的服务器:%s/%s/%s", gameName, region, server);
+        if (result == null) {
+            logger.error(errMsg);
+            return queryMap;
+        }
+        List<String> servers = (List<String>) result.get("servers");
+        if (servers == null) {
+            logger.error(errMsg);
+            return queryMap;
+        }
+        int serverCount = (Integer) result.get("serverCount");
+        if (serverCount == 1) {
+            // 该区所有的服务器都互通
+            queryMap.remove("server");
+            queryMap.remove("backServer");
+        } else {
+            StringBuilder s = new StringBuilder();
+            for (int i = 0, j = servers.size(); i < j; i++) {
+                s.append("'").append(servers.get(i)).append("'");
+                if (i != (j - 1)) s.append(",");
+            }
+            queryMap.put("servers", s.toString());
+            queryMap.remove("server");
+            queryMap.remove("backServer");
+        }
+        //ZW_J_JB_00073金币商城增加区服互通功能  start jiyangxin
+        if(gameName.equals("剑灵")|| "地下城与勇士" .equals(gameName)){
+            queryMap.remove("backRegion");
+            queryMap.remove("region");
+        }
+        //ZW_J_JB_00073金币商城增加区服互通功能  end jiyangxin
+
+        logger.debug("处理后的queryMap:{}", queryMap);
+        return queryMap;
+    }
+
+    /**
+     * 获取互通的服务器
+     *
+     * @param region 区
+     * @param server 服
+     * @return Map<String, Object>,map等于null或servers等于null表示未找到互通的服务器
+     * <li>serverCount:存放合服后还有几个服</li>
+     * <li>servers:返回所有互通的服务器</li>
+     */
+    @Override
+    public Map<String, Object> getServers(String region, String server) {
+        region = StringUtils.trim(region);
+        server = StringUtils.trim(server);
+        Map<String, Object> result = null;
+        for (RegionServer rs : regionServers) {
+            if (rs.getRegion().equals(region)) {
+                List<List<String>> servers = rs.getServers();
+                // 存放合服后还有几个服
+                result = new HashMap<String, Object>();
+                result.put("serverCount", servers.size());
+
+                if (servers.size() == 1) {
+                    // 如果该区里面所有服务器都互通的(合服后只有一个服务器了)，则直接返回
+                    result.put("servers", servers);
+                    return result;
+                } else {
+                    for (List<String> serverArr : servers) {
+                        for (String serverName : serverArr) {
+                            if (serverName.equals(server)) {
+                                result.put("servers", serverArr);
+                                return result;
+                            }
+                        }
+                    }
+                    result.put("servers", null);
+                }
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 获取合服互通的服务器
+     *
+     * @param server 服
+     * @return Map<String, Object>,map等于null或servers等于null表示未找到互通的服务器
+     * <li>serverCount:存放合服后还有几个服</li>
+     * <li>servers:返回所有互通的服务器</li>
+     */
+    @Override
+    public Map<String, Object> getServers(String server) {
+        Map<String, Object> result = null;
+        server = StringUtils.trim(server);
+        // 按名称模糊匹配
+        Pattern pattern = Pattern.compile(".*" + server + ".*");
+        for (RegionServer rs : regionServers) {
+            List<List<String>> servers = rs.getServers();
+            for (List<String> serverArr : servers) {
+                for (String serverName : serverArr) {
+                    Matcher m = pattern.matcher(serverName);
+                    if (m.matches()) {
+                        result = new HashMap<String, Object>();
+                        // 存放合服后还有几个服
+                        result.put("serverCount", servers.size());
+                        result.put("servers", serverArr);
+                        return result;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+}

@@ -1,0 +1,392 @@
+/**
+ * 获取游戏币商城热卖商品
+ * @author yemq
+ */
+$(document).ready(function () {
+    GameGoldMall.HotRecommend.load();
+});
+(function ($) {
+    if (typeof GameGoldMall === 'undefined') {
+        GameGoldMall = {};
+    }
+    /**
+     * 游戏币商城热卖商品
+     */
+    var me = GameGoldMall.HotRecommend = {
+        container: "dvMoneyMall",
+        /**
+         * 配置信息
+         */
+        config: null,
+        /**
+         * 热卖商品数据
+         */
+        goodsList: null,
+        /**
+         * 获取热卖商品数据
+         */
+        load: function () {
+            // 判断页面元素是否存在
+            if ($("#" + me.container).length <= 0) {
+                return;
+            }
+            var request = {};
+            request.currentUrl = (function () {
+                var currentUrl = window.location.href;
+                // 去除多余的参数，防止后台解析不正常编码字符串出现异常
+                if (currentUrl.indexOf("?keyword=") != -1) {
+                    currentUrl = currentUrl.substring(0, currentUrl.indexOf("?keyword="));
+                }
+                return currentUrl;
+            })();
+            //request.currentUrl = escape("http://s.5173.com/bns-0-0-0-0-qf1ica-0-0-0-a-a-a-a-a-0-0-0-0.shtml");
+            //request.currentUrl = escape("http://s.5173.com/search/a36ead01453c40b584f8e1e687723f2d-0-0-0-0-kb0ewi-0-0-0-a-a-a-a-a-0-0-0-0.shtml");
+            //request.currentUrl = escape("http://s.5173.com/search/cf424f68b6234865b956ebf65c7c4165-55bprl-on5g53-vt3t2x-0-piyoyn-0-0-0-a-a-a-a-a-0-0-0-0.shtml");
+
+            $.ajax({
+                type: "GET",
+                url: baseServiceUrl + "services/goods/selectgoods",
+                data: request,
+                contentType: "application/json; charset=UTF-8",
+                dataType: "jsonp",
+                jsonp: "callback",
+                success: function (resp) {
+                    var responseStatus = resp.responseStatus;
+                    var code = responseStatus.code;
+                    if (code == "00") {
+                        me.goodsList = resp.goodsList;
+                        me.config = resp.hotRecommendConfig;
+                        me.generate();
+                    }
+                }
+            });
+        },
+        /**
+         * 生成热卖商品列表
+         */
+        generate: function () {
+            /*if (me.goodsList.length == 0) {
+             return;
+             }*/
+
+            var html =  '<div class="hot_recommen_tt">' +
+                '<em></em>' +
+                '<div class="hot_buy_title">' +
+                '<div class="hot_buy_w1">&nbsp;</div>' +
+                '<div class="hot_buy_w2">商品单价</div>' +
+                '<div class="hot_buy_w3">购买数量</div>' +
+                '<div class="hot_buy_w4">付款金额</div>' +
+                '<div class="hot_buy_w5">服务类型</div>' +
+                '</div>' +
+                '<strong>' +
+                '<a class="sellerEnterLink" target="_blank" href="http://yxbmall.5173.com/applyseller.html">月销百万，立即免费入驻！</a>' +
+                '</strong>' +
+                '</div>' +
+                '<div class="hot_recobox">' +
+                '<ul id="hot_recommend_goods" class="hot_buy_list"></ul>' +
+                '</div>';
+            var parent = $("#" + me.container);
+            parent.attr("class", "hot_recommend");
+            parent.html(html);
+
+            if (me.goodsList.length == 0) {
+                var li = '<li class="nogoods"><div><a class="sellerEnterLink" href="http://yxbmall.5173.com/applyseller.html" target="_blank">我也要显示在最上面</a></div></li>';
+                $("#hot_recommend_goods").html(li);
+            } else {
+                // 创建具体的商品列表
+                me.buildGoodsList();
+
+                // 绑定事件
+                me.bindEvents();
+            }
+
+            // 卖家入驻文字闪烁
+            me.changeSellerEnterColor();
+        },
+        /**
+         * 生成商品列表li
+         * @returns {string}
+         */
+        buildGoodsList: function() {
+            var html = "";
+            for (var i = 0, j = me.goodsList.length; i < j; i++) {
+                var goods = me.goodsList[i];
+                if (isNull(goods) || goods.isDeleted) {
+                    continue;
+                }
+
+                var image = buildImageUrl(goods.imageUrls, "55x55");
+                var title = isNull(goods.title) ? "" : goods.title;
+                var gameInfo = goods.region + "/" + goods.server + "/" + (isNull(goods.gameRace) ? "" : goods.gameRace);
+                var price = toDecimal2(1 / parseFloat(goods.unitPrice)); // 1元对应多少金
+                var moneyName = isNull(goods.moneyName) ? "金" : goods.moneyName;
+                var count = me.getDefaultGoldCount(goods);
+                var totalPrice = toDecimal2(parseFloat(goods.unitPrice) * count);
+                var totalPriceArray = totalPrice.toString().split(".");
+                var serviceTypeHtml = me.getServiceTypeIcon(goods);
+
+                html += '<li id="goods_' + goods.id + '">' +
+                '<div class="hot_buy_detail_w0">' +
+                '<div class="hot_img">' +
+                '<img width="55" height="55" src="' + image + '">' +
+                '</div>' +
+                '</div>' +
+                '<div class="hot_buy_detail_w1">' +
+                '<p class="hot_time"><strong>' + title + '</strong></p>' +
+                '<p class="hot_service">' + gameInfo + '</p>' +
+                '</div>' +
+                '<div class="hot_buy_detail_w2">' +
+                '<p class="hot_price">1元=<span>' + price + '</span>' + moneyName + '</p>' +
+                '</div>' +
+                '<div class="hot_buy_detail_w3">' +
+                '<div class="select_list_input">' +
+                '<input id="goods_'+ goods.id +'_goldCount" name="goldCount" value="' + count + '" maxlength="8" class="input_select_list_number">' +
+                '<span class="select_list_unit">' + moneyName + '</span>' +
+                '<div class="popup_select"></div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="hot_buy_detail_w4">' +
+                '<span class="hot_price_account_buy">' +
+                '<strong>' + totalPriceArray[0] + '</strong>.' + totalPriceArray[1] + '<em>元</em>' +
+                '</span>' +
+                '</div>' +
+                '<div class="hot_buy_detail_w6">' +
+                '<ul class="integrity_ul">' + serviceTypeHtml + '</ul>' +
+                '</div>' +
+                '<div class="hot_buy_detail_w5">' +
+                '<a class="a_buy_now" href="javascript:void(0);">立即购买</a>' +
+                '</div>' +
+                '</li>';
+            }
+            $("#hot_recommend_goods").html(html);
+            //return html;
+        },
+        bindEvents: function() {
+
+            // 实时监控，input金币数的变化，以及时生成价格
+            $('.hot_recommend .input_select_list_number').bind('input propertychange', me.changeGoldCount);
+
+            // 游戏币购买数量输入框
+            $(".hot_recommend .input_select_list_number").css("ime-mode", "disabled");
+            $(".hot_recommend .input_select_list_number").bind('keypress', function (event) {
+                var keycode = document.all ? event.keyCode : event.charCode;
+                if (keycode != 8 && keycode != 9 && keycode != 0) {
+                    if ((keycode < 48 || keycode > 57)) {
+                        return false;
+                    }
+                }
+            });
+            // 金币select下拉框点击事件
+            $(".hot_recommend .select_list_input").bind('click', me.toggleGoldSelect);
+
+            // 立即购买事件
+            $(".hot_recommend .a_buy_now").bind('click', me.openOrderUrl);
+
+            // 在页面空白处点击，触发游戏币下拉框隐藏
+            $(document.body).bind('click', function () {
+                // 点击后隐藏所有游戏币select下拉框
+                $(".hot_recommend .select_list_popup").hide();
+            });
+        },
+        /**
+         * 游戏币购买数量改变事件
+         */
+        changeGoldCount: function () {
+            // 当前购买金币数
+            var goldCount = $(this).val();
+
+            if (isNull(goldCount)) {
+                goldCount = 0;
+                $(this).val(0);
+            } else if (parseInt(goldCount) < 0) {
+                goldCount = 0;
+                $(this).val(0);
+            }
+
+            if (!isNumber(goldCount)) {
+                alert("游戏币购买数量请输入正确的数字！");
+                return;
+            }
+
+            // 数量不超过99999999
+            if (parseInt(goldCount) >= 99999999) {
+                goldCount = 99999999;
+                $(this).val(goldCount);
+            }
+
+            var id = $(this).attr("id");
+            var goodsId = id.split("_")[1];
+            var goods = me.getGoodsInfo(goodsId);
+            var totalPrice = toDecimal2(parseFloat(goods.unitPrice) * parseInt(goldCount));
+            var totalPriceArray = totalPrice.toString().split(".");
+            $("#goods_" + goodsId + " .hot_price_account_buy").html("<strong>" + totalPriceArray[0] + "</strong>." + totalPriceArray[1] + "<em>元</em>");
+        },
+        /**
+         * 获取游戏币默认购买数量
+         * @param goods
+         * @returns {number}
+         */
+        getDefaultGoldCount: function(goods) {
+            var count = 5000;
+            if (goods.gameName == "剑灵") {
+                count = 10000;
+            } else if (goods.gameName == "魔兽世界(国服)") {
+                count = 20000;
+            }
+            return count;
+        },
+        /**
+         * 获取服务类型图标
+         * @param goods
+         * @returns {string}
+         */
+        getServiceTypeIcon: function(goods) {
+            var categoryIcon = "";
+            if (!isNull(me.config)) {
+                if (goods.goodsCat == 1) {
+                    if (!isNull(me.config.categoryIcon1)) {
+                        categoryIcon = me.config.categoryIcon1;
+                    }
+                } else if (goods.goodsCat == 2) {
+                    if (!isNull(me.config.categoryIcon2)) {
+                        categoryIcon = me.config.categoryIcon2;
+                    }
+                } else if (goods.goodsCat == 3) {
+                    if (!isNull(me.config.categoryIcon3)) {
+                        categoryIcon = me.config.categoryIcon3;
+                    }
+                }
+            }
+            var serviceTypeHtml = "";
+            if (categoryIcon != "") {
+                var icons = categoryIcon.split(",");
+                for (var ii = 0, jj = icons.length; ii < jj; ii++) {
+                    if (parseInt(icons[ii]) == 1) {
+                        serviceTypeHtml += '<li><a href="javascript:void(0);" title="争分夺秒，急你所急"><span class="int_bg">闪电发货</span></a></li>';
+                    } else if (parseInt(icons[ii]) == 2) {
+                        serviceTypeHtml += '<li><a href="javascript:void(0);" title="商城出品，必属精品;皇冠卖家，热力倾销"><span class="int_bg integrity_ul_hb">销售火爆</span></a></li>';
+                    } else if (parseInt(icons[ii]) == 3) {
+                        serviceTypeHtml += '<li><a href="javascript:void(0);" title="售后因商品问题一律包赔"><span class="int_bg integrity_ul_bz">售后保障</span></a></li>';
+                    } else if (parseInt(icons[ii]) == 4) {
+                        serviceTypeHtml += '<li><a href="javascript:void(0);" title="购买此商品，5173将代您向中国慈善事业捐赠1分钱"><span class="int_bg integrity_ul_ai">爱心奉献</span></a></li>';
+                    }
+                }
+            } else {
+                serviceTypeHtml = '<li></li>';
+            }
+
+            return serviceTypeHtml;
+        },
+        /**
+         * 显示/隐藏游戏币下拉框
+         */
+        toggleGoldSelect: function(event) {
+            // 阻止事件冒泡
+            //event.stopPropagation();
+
+            if (isNull(me.config)) {
+                return;
+            }
+
+            var id = $(this).parent().parent().attr("id");
+            var goodsId = id.substring(id.indexOf("_")+1);
+            var popupMenu = $("#goods_select_" + goodsId);
+            if (popupMenu.length > 0) {
+                var isHide = popupMenu.is(":hidden");
+                // 先隐藏所有select下拉框
+                $(".hot_recommend .select_list_popup").hide();
+
+                if (isHide) {
+                    popupMenu.show();
+                }
+            } else {
+                // 先隐藏所有select下拉框
+                $(".hot_recommend .select_list_popup").hide();
+
+                var goldCountArr = me.config.goldCounts.split(",");
+                var li = "";
+                for (var i = 0; i < goldCountArr.length; i++) {
+                    li += "<li goldCount=" + goldCountArr[i] + "><a href='javascript:void(0)'>" + goldCountArr[i] + "</a></li>";
+                }
+                var html = '<div id="goods_select_' + goodsId + '" class="select_list_popup"><ul>' + li + '</ul></div>';
+                $("#goods_" + goodsId + " .popup_select").html(html);
+
+                // 游戏币下拉选项点击事件
+                $("#goods_select_" + goodsId + " li").click(function(event) {
+                    $("#goods_" + goodsId + " .input_select_list_number").val($(this).attr("goldCount"));
+                    // 触发事件
+                    $("#goods_" + goodsId + " .input_select_list_number").trigger("input");
+
+                    // 点击后隐藏select下拉框
+                    $("#goods_select_" + goodsId).hide();
+
+                    // 阻止事件冒泡，触发父级toggleGoldSelect()事件
+                    //event.stopPropagation();
+                    return false;
+                });
+            }
+
+            //阻止事件冒泡
+            return false;
+        },
+        /**
+         * 打开下单地址
+         */
+        openOrderUrl: function() {
+            var id = $(this).parent().parent().attr("id");
+            var goodsId = id.substring(id.indexOf("_") + 1);
+            //console.log("goodsId=" + goodsId);
+            var goods = me.getGoodsInfo(goodsId);
+            if (goods != null) {
+                var goldCount = $("#goods_" + goodsId + " .input_select_list_number").val();
+                if (isNull(goldCount) || goldCount == 0) {
+                    alert("请输入需要购买的游戏币数量！");
+                    return;
+                }
+                if (!isNumber(goldCount)) {
+                    alert("游戏币购买数量请输入正确的数字！");
+                    return;
+                }
+
+                var gameName = escape(goods.gameName);
+                var gameRegion = escape(goods.region);
+                var gameServer = escape(goods.server);
+                var gameRace = isNull(goods.gameRace) ? "" : escape(goods.gameRace);
+                var gameId = isNull(goods.gameId) ? "" : goods.gameId;
+                var regionId = isNull(goods.regionId) ? "" : goods.regionId;
+                var serverId = isNull(goods.serverId) ? "" : goods.serverId;
+                var raceId = isNull(goods.raceId) ? "" : goods.raceId;
+                var goodsCat = goods.goodsCat;
+
+                window.open(baseHtmlUrl + "createorder.html?gameId=" + gameId + "&regionId=" +
+                regionId + "&serverId=" + serverId + "&raceId=" + raceId + "&gameName=" + gameName + "&gameRegion=" +
+                gameRegion + "&gameServer=" + gameServer + "&gameRace=" + gameRace +
+                "&goodsCat=" + goodsCat + "&goldCount=" + goldCount + "&", "_blank");
+            }
+        },
+        /**
+         * 改变卖家入驻文字颜色
+         */
+        changeSellerEnterColor: function () {
+            // 卖家入驻文字闪动
+            var i = 0;
+            setInterval(function () {
+                $(".sellerEnterLink").css("color", i == 0 ? "#06c" : "#f60");
+                i == 2 ? i = 0 : i++;
+            }, 300);
+        },
+        /**
+         * 获取商品信息
+         */
+        getGoodsInfo: function (goodsId) {
+            for (var i = 0, j = me.goodsList.length; i < j; i++) {
+                if (me.goodsList[i].id == parseInt(goodsId)) {
+                    goods = me.goodsList[i];
+                    return goods;
+                }
+            }
+            return null;
+        }
+    };
+})(jQuery);
+

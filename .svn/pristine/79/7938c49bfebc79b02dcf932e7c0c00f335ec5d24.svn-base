@@ -1,0 +1,585 @@
+/************************************************************************************
+ * Copyright 2014 WZITech Corporation. All rights reserved.
+ * <p>
+ * 模	块：		RepositoryServiceImpl
+ * 包	名：		com.wzitech.gamegold.facade.frontend.service.repository.impl
+ * 项目名称：	gamegold-facade-frontend
+ * 作	者：		HeJian
+ * 创建时间：	2014-2-20
+ * 描	述：
+ * 更新纪录：	1. HeJian 创建于 2014-2-20 下午3:50:00
+ ************************************************************************************/
+package com.wzitech.gamegold.facade.frontend.service.repository.impl;
+
+import com.wzitech.chaos.framework.server.common.AbstractBaseService;
+import com.wzitech.chaos.framework.server.common.IServiceResponse;
+import com.wzitech.chaos.framework.server.common.ResponseStatus;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.common.utils.BeanMapper;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.context.CurrentUserContext;
+import com.wzitech.gamegold.common.entity.IUser;
+import com.wzitech.gamegold.common.enums.CheckState;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.facade.frontend.accessLimit.AccessLimit;
+import com.wzitech.gamegold.facade.frontend.service.repository.IRepositoryService;
+import com.wzitech.gamegold.facade.frontend.service.repository.dto.*;
+import com.wzitech.gamegold.filemgmt.business.IFileManager;
+import com.wzitech.gamegold.repository.business.IRepositoryManager;
+import com.wzitech.gamegold.repository.business.ISellerManager;
+import com.wzitech.gamegold.repository.business.ISellerSettingManager;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import com.wzitech.gamegold.repository.entity.SellerInfo;
+import com.wzitech.gamegold.repository.entity.SellerRepository;
+import com.wzitech.gamegold.repository.entity.SellerSetting;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
+import org.apache.poi.POIXMLDocument;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+/**
+ * 库存服务实现
+ *
+ * @author HeJian
+ *         * Update History
+ *         Date        Name                Reason for change
+ *         ----------  ----------------    ----------------------
+ *         2017/05/18  lvchengsheng              ZW_C_JB_00008 商城增加通货
+ */
+@Service("RepositoryService")
+@Path("repository")
+@Produces("application/json;charset=UTF-8")
+@Consumes("application/json;charset=UTF-8")
+public class RepositoryServiceImpl extends AbstractBaseService implements IRepositoryService {
+    @Autowired
+    IRepositoryManager repositoryManager;
+    @Autowired
+    ISellerManager sellerManager;
+
+    @Autowired
+    IFileManager fileManager;
+
+    @Autowired
+    ISellerSettingManager sellerSettingManager;
+
+    @Path("addrepository")
+    @POST
+    @Override
+    @AccessLimit
+    public IServiceResponse addRepository(AddRepositoryRequest addRepositoryRequest, @Context HttpServletRequest request) {
+        logger.debug("当前添加库存请求信息:{}", addRepositoryRequest);
+        // 初始化返回数据
+        AddRepositoryResponse response = new AddRepositoryResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            // 获取当前用户
+            UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(), ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+            RepositoryInfo repositoryInfo = BeanMapper.map(addRepositoryRequest, RepositoryInfo.class);
+            repositoryInfo = repositoryManager.addRepositorySingle(repositoryInfo);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("添加库存发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("添加库存发生异常:{}", ex);
+        }
+        logger.debug("添加库存响应信息:{}", response);
+        return response;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Path("querylowestprice")
+    @GET
+    @Override
+    public IServiceResponse queryLowestPrice(@QueryParam("") QueryLowestPriceRequest queryLowestPriceRequest, @Context HttpServletRequest request) {
+        logger.debug("当前获取最低价库存请求信息:{}", queryLowestPriceRequest);
+        // 初始化返回数据
+        QueryLowestPriceResponse response = new QueryLowestPriceResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            String gameName = queryLowestPriceRequest.getGameName();
+            String region = queryLowestPriceRequest.getRegion();
+            String server = queryLowestPriceRequest.getServer();
+            String race = queryLowestPriceRequest.getRace();
+
+
+            List<RepositoryInfo> genericPage = repositoryManager.queryPriceRepository(gameName, region, server, race, 0, 15);
+            for (int i = 0; i < genericPage.size(); i++) {
+                genericPage.get(i).setGameAccount(null);
+                genericPage.get(i).setGamePassWord(null);
+                genericPage.get(i).setSonGamePassWord(null);
+                genericPage.get(i).setRolePassword(null);
+                genericPage.get(i).setFundsPassword(null);
+                genericPage.get(i).setHousePassword(null);
+                genericPage.get(i).setSellerInfo(null);
+                genericPage.get(i).setLoginAccount(null);
+                genericPage.get(i).setAccountUid(null);
+                genericPage.get(i).setSellerGameRole(null);
+                genericPage.get(i).setSonAccount(null);
+            }
+            response.setRepositoryInfos(genericPage);
+
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("最低价库存查询发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("最低价库存查询发生异常:{}", ex);
+        }
+        logger.debug("最低价库存查询响应信息:{}", response);
+        return response;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    @Path("uploadfile")
+    @Consumes("multipart/form-data")
+    @Produces("text/html;charset=UTF-8")
+    @POST
+    @Override
+    @AccessLimit
+    public IServiceResponse upLoadGoods(@Multipart(value = "file", required = false) byte[] file,
+                                        @Multipart(value = "serviceId", required = false) String serviceId,
+                                        @Context HttpServletRequest request) {
+        // 初始化返回数据
+        UploadGoodsResponse response = new UploadGoodsResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        Workbook wb = null;
+        try {
+            // 获取当前用户
+            IUser user = CurrentUserContext.getUser();
+            SellerInfo userInfo = sellerManager.querySellerInfo(user.getLoginAccount());
+            //UserInfoEO userInfo = (UserInfoEO) CurrentUserContext.getUser();
+            if (userInfo == null) {
+                responseStatus.setStatus(ResponseCodes.InvalidAuthkey.getCode(),
+                        ResponseCodes.InvalidAuthkey.getMessage());
+                return response;
+            }
+            if (userInfo.getCheckState() != CheckState.PassAudited.getCode()) {
+                if (userInfo.getCheckState() == CheckState.UnAudited.getCode()) {
+                    responseStatus.setStatus(ResponseCodes.SellerUnAudited.getCode(), ResponseCodes.SellerUnAudited.getMessage());
+                } else {
+                    responseStatus.setStatus(ResponseCodes.SellerUnPassAudited.getCode(), ResponseCodes.SellerUnPassAudited.getMessage());
+                }
+                return response;
+            }
+//            else{
+//                if(userInfo.getOpenShState()!= ShOpenState.OPEN.getCode()){
+//                    responseStatus.setStatus(ResponseCodes.SellerNoOpenSh.getCode(), ResponseCodes.SellerNoOpenSh.getMessage());
+//                    return response;
+//                }
+//            }
+            if (file == null || file.length == 0) {
+                responseStatus.setStatus(ResponseCodes.EmptyUploadFile.getCode(),
+                        ResponseCodes.EmptyUploadFile.getMessage());
+                return response;
+            }
+
+            // 读取excel
+            InputStream inp = new ByteArrayInputStream(file);
+            wb = create(inp);
+            Sheet sheet = wb.getSheetAt(0);
+
+            if (sheet.getLastRowNum() <= 0) {
+                responseStatus.setStatus(ResponseCodes.EmptyUploadFile.getCode(),
+                        ResponseCodes.EmptyUploadFile.getMessage());
+                return response;
+            }
+
+            Row row = null;
+            List<RepositoryInfo> repositoryInfos = new ArrayList<RepositoryInfo>();
+            for (int i = 1; i < sheet.getLastRowNum() - 2; i++) {//循环读取每一行
+                List<String> itemList = new ArrayList<String>();
+                row = sheet.getRow(i);
+                if (null == row) {
+                    continue;
+                }
+                String data = null;
+                for (int j = 0; j < row.getLastCellNum(); j++) {//循环读取每一列
+                    data = getStringCellValue(row.getCell(j));
+                    itemList.add(data);
+                }
+
+                RepositoryInfo repositoryItem = new RepositoryInfo();
+
+                int getIndex = 0;
+
+                if (itemList.size() >= (getIndex + 1)) {
+                    // 有些卖家格式错误，空白行有隐藏内容，导致实际行数超出有内容的行数；
+                    // 这里加一个判断，读到该行内容，说明实际数据已经结束
+                    if (itemList.get(0).contains("游戏名称区服请与5173名称相符")) {
+                        break;
+                    }
+                    repositoryItem.setGameName(itemList.get(getIndex).trim()); //游戏名称
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setRegion(itemList.get(getIndex).trim()); //游戏区
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setServer(itemList.get(getIndex).trim()); //游戏服
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setMoneyName(itemList.get(getIndex));//游戏币名
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    if (StringUtils.isBlank(itemList.get(getIndex))) {
+                        repositoryItem.setUnitPrice(null);
+                    } else {
+                        repositoryItem.setUnitPrice(new BigDecimal(itemList.get(getIndex)));//发布单价
+                    }
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    Long goldCount = null;
+                    if (itemList.get(getIndex) != null && itemList.get(getIndex) != "") {
+                        goldCount = new BigDecimal(itemList.get(getIndex)).longValue();
+                    }
+                    repositoryItem.setGoldCount(goldCount);//库存数量
+                    getIndex++;
+                }
+
+                if (itemList.size() >= (getIndex + 1)) {
+                    if (StringUtils.equals(itemList.get(0), "地下城与勇士") || StringUtils.equals(itemList.get(0), "魔兽世界(国服)") || StringUtils.equals(itemList.get(0), "新天龙八部")) {
+                        Long sellerableCount = null;
+                        if (itemList.get(getIndex) != null && itemList.get(getIndex) != "") {
+                            sellerableCount = new BigDecimal(itemList.get(getIndex)).longValue();
+                        }
+                        repositoryItem.setSellableCount(sellerableCount); //可销售库存
+                        getIndex++;
+                    }
+                }
+
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setGameAccount(itemList.get(getIndex));//对应游戏账号
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setGamePassWord(itemList.get(getIndex));//游戏密码
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setSellerGameRole(itemList.get(getIndex));//游戏角色名
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    if (StringUtils.equals(itemList.get(0), "剑侠情缘Ⅲ")) {
+                        repositoryItem.setHousePassword(itemList.get(getIndex));//仓库密码
+                        getIndex++;
+                    } else if (StringUtils.equals(itemList.get(0), "疾风之刃")) {
+                        repositoryItem.setSonGamePassWord(itemList.get(getIndex));//二级密码
+                        getIndex++;
+                    }
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setSonGamePassWord(itemList.get(getIndex));//二级密码
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setGameRace(itemList.get(getIndex));//阵营
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setRolePassword(itemList.get(getIndex));//人物密码
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setFundsPassword(itemList.get(getIndex));//财产密码
+                    getIndex++;
+                }
+                if (itemList.size() >= (getIndex + 1)) {
+                    repositoryItem.setHousePassword(itemList.get(getIndex));//仓库密码
+                    getIndex++;
+                }
+
+                repositoryItem.setAccountUid(userInfo.getUid());
+                repositoryItem.setLoginAccount(userInfo.getLoginAccount());
+                repositoryInfos.add(repositoryItem);
+            }
+
+//	        if(StringUtils.isEmpty(serviceId)){
+//	        	serviceId = request.getHeader("gamegold-serviceId");
+//	        }
+//
+//            for (RepositoryInfo repositoryInfo : repositoryInfos) {
+//                //repositoryInfo.setServicerId(Long.valueOf(serviceId));
+//                repositoryManager.addRepository(repositoryInfo);
+//            }
+            repositoryManager.addRepositoryList(repositoryInfos);
+
+            response.setRepositoryInfos(repositoryInfos);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(),
+                    ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(),
+                    ResponseCodes.getResponseByCode(ex.getErrorCode()).getMessage());
+            logger.error("上传文件发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(),
+                    ResponseCodes.UnKnownError.getMessage());
+            logger.error("上传文件发生异常:{}", ex);
+        } finally {
+            if (wb != null)
+                try {
+                    wb.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+        logger.debug("上传文件响应信息:{}", response);
+        return response;
+    }
+
+    private Workbook create(InputStream in) throws IOException, InvalidFormatException {
+        try {
+            if (!in.markSupported()) {
+                in = new PushbackInputStream(in, 8);
+            }
+            if (POIFSFileSystem.hasPOIFSHeader(in)) {
+                return new HSSFWorkbook(in);
+            }
+            if (POIXMLDocument.hasOOXMLHeader(in)) {
+                return new XSSFWorkbook(OPCPackage.open(in));
+            }
+            throw new IllegalArgumentException("你的excel版本目前解析不了");
+        }finally {
+            if (in!=null){
+                in.close();
+            }
+        }
+    }
+
+    private String getStringCellValue(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        String strCell = "";
+        switch (cell.getCellType()) {
+            case HSSFCell.CELL_TYPE_STRING:
+                strCell = cell.getStringCellValue();
+                break;
+            case HSSFCell.CELL_TYPE_NUMERIC:
+                strCell = String.valueOf(cell.getNumericCellValue());
+                break;
+            case HSSFCell.CELL_TYPE_BOOLEAN:
+                strCell = String.valueOf(cell.getBooleanCellValue());
+                break;
+            case HSSFCell.CELL_TYPE_BLANK:
+                strCell = "";
+                break;
+            default:
+                strCell = "";
+                break;
+        }
+        if (strCell.equals("") || strCell == null) {
+            return "";
+        }
+        return strCell;
+    }
+
+    @Path("querySellerGoodslist")
+    @GET
+    @Override
+    public IServiceResponse querySellerGoodslist(@QueryParam("") SellerRepositoryRequest sellerRepositoryRequest, @Context HttpServletRequest request) {
+        SellerRepositoryReponse response = new SellerRepositoryReponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+
+        try {
+            String gameName = sellerRepositoryRequest.getGameName();
+            String regionName = sellerRepositoryRequest.getRegionName();
+            String serverName = sellerRepositoryRequest.getServerName();
+            String filedName = sellerRepositoryRequest.getFiledName();
+            String raceName = sellerRepositoryRequest.getRaceName();
+            String sort = sellerRepositoryRequest.getSort();
+            String goodsTypeName = sellerRepositoryRequest.getGoodsTypeName();
+            int startIndex = sellerRepositoryRequest.getStartIndex();
+            int pageCount = sellerRepositoryRequest.getPageCount();
+            boolean flagSort = true;
+            if (sort.equals("DESC")) {
+                flagSort = false;
+            }
+            GenericPage<RepositoryInfo> genericPageRepository = repositoryManager.querySellerRepositoryList(goodsTypeName, gameName, regionName, serverName, raceName, pageCount, startIndex, filedName, flagSort);
+
+            String sql = "";
+            StringBuffer sbSql = new StringBuffer();
+            List<SellerRepository> sellerRepositoryList = new ArrayList<SellerRepository>();
+            if (genericPageRepository != null && genericPageRepository.getPageSize() > 0 && genericPageRepository.getData() != null && genericPageRepository.getData().size() > 0) {
+                List<RepositoryInfo> list = genericPageRepository.getData();
+                for (RepositoryInfo repositoryInfo : list) {
+                    sbSql.append("'" + repositoryInfo.getLoginAccount() + "',");
+                }
+                if (!sbSql.toString().equals("")) {
+                    sql = sbSql.substring(0, sbSql.length() - 1);
+                }
+                List<SellerSetting> sellerSettingList = sellerSettingManager.selectByLoginAccountList(gameName, sql);
+
+                List<RepositoryInfo> repositoryInfoList = genericPageRepository.getData();
+                Random rand = new Random();
+                for (RepositoryInfo repositoryInfo : repositoryInfoList) {
+                    String loginAccount = repositoryInfo.getLoginAccount();
+                    for (SellerSetting sellerSetting : sellerSettingList) {
+                        if (loginAccount.equals(sellerSetting.getLoginAccount()) && repositoryInfo.getGoodsTypeName().equals(sellerSetting.getGoodsTypeName())) { //ZW_C_JB_00008_20170518 MOD
+                            SellerRepository sellerRepository = new SellerRepository();
+                            Long id = Long.valueOf(rand.nextInt(1000000));
+                            sellerRepository.setId(id);
+                            sellerRepository.setGameName(repositoryInfo.getGameName());
+                            sellerRepository.setRegion(repositoryInfo.getRegion());
+                            sellerRepository.setServer(repositoryInfo.getServer());
+                            sellerRepository.setGameRace(repositoryInfo.getGameRace());
+                            sellerRepository.setSeller(loginAccount);
+                            sellerRepository.setSellableCount(repositoryInfo.getSellableCount());
+                            sellerRepository.setUnitPrice(repositoryInfo.getUnitPrice());
+                            sellerRepository.setMoneyName(repositoryInfo.getMoneyName());
+                            sellerRepository.setGoodsTypeName(repositoryInfo.getGoodsTypeName());
+                            sellerRepository.setCommision(sellerSetting.getCommision());
+                            sellerRepository.setDeliverSpeed(sellerSetting.getDeliverSpeed());
+                            sellerRepository.setPraiseCount(sellerSetting.getPraiseCount());
+                            sellerRepository.setMonthDealCount(sellerSetting.getMonthDealCount());
+                            sellerRepository.setSuccessPercent(sellerSetting.getSuccessPercent());
+                            sellerRepository.setShopName(sellerSetting.getShopName());
+                            sellerRepository.setIsShieldedType(repositoryInfo.getIsShieldedType());
+                            sellerRepository.setSort(sellerSetting.getSort());
+
+                            sellerRepositoryList.add(sellerRepository);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            response.setTotalCount(genericPageRepository.getTotalPageCount());
+            response.setSellerRepositoryList(sellerRepositoryList);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("店铺最低价列表查询发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("店铺最低价列表查询发生异常:{}", ex);
+        }
+        logger.debug("店铺最低价列表查询响应信息:{}", response);
+        return response;
+    }
+
+    @Path("countSellerGoodslist")
+    @GET
+    @Override
+    public IServiceResponse countSellerGoodslist(@QueryParam("") SellerRepositoryRequest sellerRepositoryRequest, @Context HttpServletRequest request) {
+        SellerRepositoryReponse response = new SellerRepositoryReponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+
+        try {
+            String gameName = sellerRepositoryRequest.getGameName();
+            String regionName = sellerRepositoryRequest.getRegionName();
+            String serverName = sellerRepositoryRequest.getServerName();
+            String raceName = sellerRepositoryRequest.getRaceName();
+            int pageCount = sellerRepositoryRequest.getPageCount();
+
+            String goodsTypeName = sellerRepositoryRequest.getGoodsTypeName();
+
+            long count = repositoryManager.countSellerGoodslist(gameName, regionName, serverName, raceName, pageCount, goodsTypeName);
+            response.setTotalCount(count);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("店铺最低价列表笔数查询发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("店铺最低价列表笔数查询发生异常:{}", ex);
+        }
+        logger.debug("店铺最低价列表笔数查询响应信息:{}", response);
+        return response;
+    }
+
+//    /**
+//     * 店铺卖家平均价查询
+//     *
+//     * @param sellerRepositoryRequest
+//     * @param request
+//     * @return
+//     */
+//    @Path("querySellerAvgPriceRepository")
+//    @GET
+//    @Override
+//    public IServiceResponse querySellerAvgPriceRepository(@QueryParam("") SellerRepositoryRequest sellerRepositoryRequest, @Context HttpServletRequest request) {
+//        QueryLowestPriceResponse response = new QueryLowestPriceResponse();
+//        ResponseStatus responseStatus = new ResponseStatus();
+//        response.setResponseStatus(responseStatus);
+//
+//        try {
+//            String gameName = sellerRepositoryRequest.getGameName();
+//            String regionName = sellerRepositoryRequest.getRegionName();
+//            String serverName = sellerRepositoryRequest.getServerName();
+//            String raceName = sellerRepositoryRequest.getRaceName();
+//            String goodsTypeName = sellerRepositoryRequest.getGoodsTypeName();
+//
+//            List<RepositoryInfo> list = repositoryManager.querySellerAvgPriceRepository(gameName, regionName, serverName, raceName, goodsTypeName);
+//            if (list != null && list.size() > 0) {
+//                for (RepositoryInfo repositoryInfo : list) {
+//                    repositoryInfo.setUnitPrice(repositoryInfo.getUnitPrice().setScale(6, RoundingMode.DOWN));
+//                }
+//            }
+//            response.setRepositoryInfos(list);
+//            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+//        } catch (SystemException ex) {
+//            // 捕获系统异常
+//            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+//            logger.error("店铺卖家平均价查询发生异常:{}", ex);
+//        } catch (Exception ex) {
+//            // 捕获未知异常
+//            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+//            logger.error("店铺卖家平均价查询发生异常:{}", ex);
+//        }
+//        logger.debug("店铺卖家平均价查询响应信息:{}", response);
+//        return response;
+//    }
+}

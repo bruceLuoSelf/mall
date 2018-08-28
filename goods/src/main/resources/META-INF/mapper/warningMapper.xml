@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 2017/05/15 liuchanghua     ZW_C_JB_00008 商城增加通货 ADD -->
+<mapper namespace="com.wzitech.gamegold.goods.entity.Warning">
+
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.goods.entity.Warning">
+		<id column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="GAME_ID" property="gameId" jdbcType="VARCHAR" />
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+		<result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR"/>
+		<result column="GOODS_TYPE_ID" property="goodsTypeId"/>
+		<result column="WARNING" property="warning" jdbcType="VARCHAR"/>
+		<result column="TRADE_TYPE" property="tradeType"/>
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.goods.entity.Warning"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="ID" >
+		INSERT INTO "TBL_GAMEGOLD_WARNING"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gameId != null and gameId != ''">
+				"GAME_ID",
+			</if>
+			<if test="gameName != null and gameName != ''">
+				"GAME_NAME",
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				"GOODS_TYPE_NAME",
+			</if>
+			<if test="goodsTypeId != null and goodsTypeId != ''">
+				"GOODS_TYPE_ID",
+			</if>
+			<if test="warning != null and warning != ''">
+				"WARNING",
+			</if>
+			<if test="tradeType != null and tradeType != ''">
+				"TRADE_TYPE",
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gameId != null and gameId != ''">
+				#{gameId},
+			</if>
+			<if test="gameName != null and gameName != ''">
+				#{gameName},
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				#{goodsTypeName},
+			</if>
+			<if test="goodsTypeId != null and goodsTypeId != ''">
+				#{goodsTypeId},
+			</if>
+			<if test="warning != null and warning != ''">
+				#{warning},
+			</if>
+			<if test="tradeType != null and tradeType != ''">
+				#{tradeType},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate"
+		parameterType="com.wzitech.gamegold.goods.entity.Warning">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE "TBL_GAMEGOLD_WARNING"
+			<set>
+				<if test="item.gameId != null">
+					"GAME_ID" = #{item.gameId},
+				</if>
+				<if test="item.gameName != null">
+					"GAME_NAME" = #{item.gameName},
+				</if>
+				<if test="item.goodsTypeName != null">
+					"GOODS_TYPE_NAME" = #{item.goodsTypeName},
+				</if>
+				<if test="item.goodsTypeId != null">
+					"GOODS_TYPE_ID" = #{item.goodsTypeId},
+				</if>
+				<if test="item.warning != null">
+					"WARNING" = #{item.warning},
+				</if>
+				<if test="item.tradeType != null and item.tradeType != ''">
+					"TRADE_TYPE" = #{item.tradeType},
+				</if>
+			</set>
+			<where>
+				"ID" = #{item.id}
+			</where>
+		</foreach>
+	</update>
+	<sql id="selectSql">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="id != null">
+				AND	"ID"= #{id}
+			</if>
+			<if test="gameId != null and gameId != ''">
+				AND "GAME_ID"= #{gameId}
+			</if>
+			<if test="gameName != null and gameName != ''">
+				AND "GAME_NAME"= #{gameName}
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName != ''and goodsTypeName != '全部'">
+				AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+			</if>
+			<if test="warning != null and warning != ''">
+				AND "WARNING"= #{warning}
+			</if>
+			<if test="tradeType != null and tradeType != ''">
+				AND "TRADE_TYPE"= #{tradeType}
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.goods.entity.Warning">
+		SELECT * FROM "TBL_GAMEGOLD_WARNING"
+		<include refid="selectSql" />
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+	
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="string" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_WARNING"
+		<include refid="selectSql" />
+	</select>
+
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.goods.entity.Warning">
+		SELECT * FROM "TBL_GAMEGOLD_WARNING"
+		<where>
+			"ID" = #{id}
+		</where>
+	</select>
+
+	<delete id="batchDeleteByIds" parameterType="java.util.List">
+		<foreach collection="list" item="item" separator=";">
+			DELETE FROM "TBL_GAMEGOLD_WARNING" WHERE"ID" = #{item}
+		</foreach>
+	</delete>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="queryByGameAndGoodsType" parameterType="map" resultMap="BaseResultMap"
+			resultType="com.wzitech.gamegold.goods.entity.Warning">
+		SELECT * FROM "TBL_GAMEGOLD_WARNING"
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="gameName != null and gameName != ''">
+		  		AND "GAME_NAME"= #{gameName}
+	  		</if>
+  			<if test="gameName ==null or gameName == ''">
+  				AND "GAME_NAME" is null
+			</if>
+		  	<if test="goodsTypeName != null and goodsTypeName != ''and goodsTypeName != '全部'">
+				AND "GOODS_TYPE_NAME"= #{goodsTypeName}
+			</if>
+			<if test="goodsTypeName == null or goodsTypeName == ''">
+				AND "GOODS_TYPE_NAME" is null
+			</if>
+			<if test="tradeType != null and tradeType != ''">
+				AND "TRADE_TYPE"= #{tradeType}
+			</if>
+		</trim>
+	</select>
+
+</mapper>

@@ -1,0 +1,495 @@
+﻿.divcss5 {
+    width: 730px;
+    height: 180px;
+    border: 1px solid #F00
+}
+
+.add_co {
+    padding: 20px 0px 20px;
+    position: relative;
+}
+
+.add_co span {
+    width: 124px;
+    height: 35px;
+    display: inline-block;
+    margin-right: 15px;
+    line-height: 35px;
+    text-align: center;
+    color: #fff;
+}
+
+.add_co span:hover {
+    cursor: pointer;
+}
+
+.add_co span.upload {
+    background: url(ui-lightness/images/hk.png) center no-repeat;
+}
+
+.add_co span.download {
+    background: url(ui-lightness/images/download.png) center no-repeat;
+}
+
+.add_co span strong {
+    padding-left: 20px;
+}
+
+.conlist {
+    font-size: 12px;
+    padding: 0px 20px 40px 0px;
+    color: #434345;
+    position: relative;
+}
+
+.conlist .listul {
+    float: left;
+    vertical-align: middle;
+}
+
+.conlist .listul li {
+    float: left;
+    width: 130px;
+    border: 1px solid #a4a4a4;
+    margin-right: 2px;
+    height: 28px;
+    cursor: pointer;
+    line-height: 23px;
+    vertical-align: middle;
+    padding-left: 4px;
+    background: url(ui-lightness/images/sel_op.jpg) 97% 43%;
+    background-repeat: no-repeat;
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
+}
+
+.listsearch {
+    float: left;
+    margin-top: 1px;
+}
+
+.listsearch a {
+    color: #666;
+}
+
+.listsearch a:hover {
+    text-decoration: none !important;
+    color: #666 !important;
+}
+
+.buto1 {
+    width: 72px;
+    height: 28px;
+    background: url(ui-lightness/images/search.png) center no-repeat;
+    border: none;
+    line-height: 28px;
+    text-align: center;
+    margin-left: 10px;
+}
+
+.bore_bottom {
+    border-bottom: 1px dashed #d5e7fe;
+}
+
+.aske {
+    padding: 0px 40px 20px 40px;;
+    position: relative;
+    background-color: #f6faff;
+    border: 1px solid #d5e7fe;
+}
+
+.line_in {
+    height: 53px;
+    line-height: 53px;
+}
+
+.line_in .open_yo {
+    width: 75px;
+    display: inline-block;
+    text-align: center;
+}
+
+.line_in .open_font {
+    display: inline-block;
+    text-align: right;
+    width: 115px;
+}
+
+.line_in .font_left {
+    float: left;
+}
+
+.line_in .font_right {
+    float: right;
+    width: 228px;
+}
+
+.poput .detcrd_conn {
+    height: auto;
+    display: block;
+    overflow: hidden;
+    padding: 10px 0px;
+}
+
+.poput .detcrd_conn dl.db_list dt {
+    height: 42px;
+    line-height: 42px;
+    background: #f2f2f2;
+    color: #333;
+    font-size: 12px;
+    text-align: center;
+}
+
+.savede {
+    background: url(ui-lightness/images/saverd.png) center no-repeat;
+    width: 56px;
+    margin-left: 10px;
+}
+
+.shangjia {
+    background: url(ui-lightness/images/shangjia.png) center no-repeat;
+    width: 56px;
+    margin-left: 10px;
+    color: #fff;
+}
+
+.xiajia {
+    background: url(ui-lightness/images/saverd.png) center no-repeat;
+    width: 56px;
+    margin-left: 10px;
+}
+
+.poput .detcrd_conn dl.db_list dt.db_pl {
+    background: #fcffe4;
+    font-size: 12px;
+    color: #666666;
+}
+
+.poput .detcrd_conn dl.db_list dt span {
+    float: left;
+    display: block;
+    height: 42px;
+}
+
+.poput .detcrd_conn dl.db_list dt span.drdt_01 {
+    width: 175px;
+}
+
+.poput .detcrd_conn dl.db_list dt span.drdt_02 {
+    width: 80px;
+}
+
+.poput .detcrd_conn dl.db_list dt span.drdt_03 {
+    width: 90px;
+}
+
+.poput .detcrd_conn dl.db_list dt span.drdt_04 {
+    width: 100px;
+}
+
+.poput .detcrd_conn dl.db_list dt span.drdt_05 {
+    width: 60px;
+}
+
+.poput .detcrd_conn dl.db_list dt span.drdt_06 {
+    width: 50px;
+}
+
+.poput .detcrd_conn dl.db_list dt span.drdt_07 {
+    width: 135px;
+}
+
+.poput .detcrd_conn dl.db_list dd {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #666666;
+    border: 1px solid #e8e8e8;
+    border-top: none;
+}
+
+.poput .detcrd_conn dl.db_list dd.crd {
+    background: #f7f7f7;
+}
+
+.poput .detcrd_conn dl.db_list dd span {
+    float: left;
+    display: block;
+    height: 40px;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_01 {
+    width: 175px;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_02 {
+    width: 80px;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_02 input {
+    width: 50px;
+    height: 28px;
+    margin-top: 4px;
+    background-color: #fff;
+    border: #ccc 1px solid;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_03 {
+    width: 90px;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_03 input {
+    width: 50px;
+    height: 28px;
+    margin-top: -4px;
+    background-color: #fff;
+    border: #ccc 1px solid;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_04 input {
+    width: 50px;
+    height: 28px;
+    margin-top: 4px;
+    background-color: #fff;
+    border: #ccc 1px solid;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_04 {
+    width: 100px;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_05 {
+    width: 60px;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_06 {
+    width: 50px;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_07 {
+    width: 135px;
+}
+
+.poput .detcrd_conn dl.db_list dd span.drdd_07 a {
+    color: #000;
+}
+
+.paing {
+    padding-left: 5px;
+}
+
+.db_page {
+    height: auto;
+    display: block;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.db_page span {
+    display: inline-block;
+    float: left;
+    margin: 0 5px;
+}
+
+.db_page .bge span {
+    height: 28px;
+    line-height: 28px;
+    padding-left: 7px;
+}
+
+.pop_left {
+    border: 1px solid #a0a0a0;
+}
+
+.db_page ul {
+    float: left;
+}
+
+.db_page ul li {
+    float: left;
+    margin: 0 5px;
+}
+
+.db_page ul li a {
+    display: inline-block;
+    width: 70px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    font-size: 12px;
+    color: #000;
+}
+
+.db_page a.active, .db_page a.active:hover {
+    background: #ff6600;
+    color: #fff;
+    text-decoration: none !important;
+}
+
+/*收货订单详情*/
+.rc-tag {
+    padding: 30px 0 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px dashed #D5E7FE;
+}
+
+.rc-tag-qq {
+    float: right
+}
+
+.rc-text {
+    border: 1px solid #D5E7FE;
+    background: #f6faff;
+    padding: 20px 35px;
+    margin-top: 20px
+}
+
+.rc-text-l {
+    width: 300px;
+    float: left;
+    line-height: 35px;
+}
+
+.rc-table {
+    clear: both;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.rc-table td {
+    border: 1px solid #ddd;
+    line-height: 40px;
+}
+
+.rc-cancel, .rc-success {
+    background: #666;
+    border: 1px solid #666;
+    width: 90px;
+    line-height: 35px;
+    margin-right: 10px;
+    padding: 0px;
+}
+
+.rc-success {
+    background: #ff9a00;
+    color: #fff;
+    border-color: #d07e01;
+    margin-right: 0px;
+    padding: 0px;
+    margin-left: 5px
+}
+
+.rc-fp {
+    margin-top: 30px;
+}
+
+.rc-fp-tag {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.rc-fp-cont {
+    border: 1px solid #ddd;
+    padding: 20px 30px;
+    margin-top: 15px;
+    line-height: 40px;
+}
+
+.rc-fp-cont input {
+    height: 27px;
+    border: 1px solid #ddd;
+    padding-left: 5px
+}
+
+.rc-fp-cont select {
+    height: 30px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+    margin-top: -1px
+}
+
+.rc-fp-but {
+    padding-left: 99px;
+}
+
+.margin-right10 {
+    margin-right: 10px
+}
+
+.clear {
+    clear: both
+}
+
+/* 新增已发货订单弹窗 */
+.mr0 {
+    margin-right: 0px !important;
+}
+
+.mr10 {
+    margin-right: 10px !important;
+}
+
+.poprm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+}
+
+.poprmCont1 {
+    position: relative;
+    top: 450px;
+    background: #fff;
+    height: 150px;
+    margin: auto;
+    width: 300px;
+    filter: alpha(opacity=100);
+    z-index: 99;
+}
+
+.poprmContTag1 {
+    height: 35px;
+    line-height: 35px;
+    padding-left: 10px;
+    font-size: 16px;
+    padding-top: 15px;
+}
+
+.poprmContNun1 {
+    clear: both;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.poprmContNun1 input {
+    height: 18px;
+    line-height: 18px;
+    padding: 5px;
+    margin-top: 5px;
+    width: 93%;
+}
+
+.poprmContBut1 {
+    text-align: right;
+    padding-right: 15px;
+}
+
+.poprmBg1 {
+    position: relative;
+    top: -150px;
+    background: #000000;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+}
+

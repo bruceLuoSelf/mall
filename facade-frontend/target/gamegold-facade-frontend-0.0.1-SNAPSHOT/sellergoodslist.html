@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>店铺卖家游戏币交易平台-5173.com</title>
+    <link rel="shortcut icon" href="http://images.5173cdn.com/images/img/ico.ico">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/pagination.css">
+    <link rel="stylesheet" type="text/css" href="css/include.css">
+    <link rel="stylesheet" type="text/css" href="css/searchlist_v3_7.css">
+    <link href="css/sellergoodslist.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery-1.5.2.min.js" charset="utf-8"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/business/sellergoodslist.js" type="text/javascript"></script>
+    <script src="./js/jquery.pagination.js" type="text/javascript"></script>
+    <script src="./js/category_filter.js" type="text/javascript"></script>
+    <script src="./js/jQuery.Hz2Py-min.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="header">
+    <!-- 顶部登陆条+快捷菜单条 -->
+    <div style="display:none" id="divLoading">
+    </div>
+    <div style="display:none" id="loadingInfo">
+        <img src="img/loading.gif"/>
+        正在加载数据，请稍等......
+    </div>
+    <div id="J_GlobalTop">
+    </div>
+    <!--网站Logo+四级联动搜索条-->
+    <div class="header_box clearfix">
+        <h1 class="logo">
+            <a href="http://www.5173.com/" title="中国网络游戏服务网">5173</a></h1>
+        <!-- 四级联动游戏选择 -->
+        <div class="game_select game_select_main clearfix" id="gameSelectV2">
+            <form id="gsForm" method="get" class="clearfix">
+                <div class="game_select_box" id="gameSelectBox">
+                    <ul class="tab_menu">
+                        <li class="current"><a href="#">
+                            普通搜索</a></li>
+                    </ul>
+                    <div class="tab_box clearfix" id="multipleSearch" style="display: block;">
+                        <div class="left_bg">
+                        </div>
+                        <!-- 游戏选择菜单 -->
+                        <ul class="gs_menu" id="gsMenu">
+                            <li id="gs_game" class="gs_name arrow" title="选择游戏名称">游戏名称</li><li id="gs_plat" class="gs_plat arrow" title="选择游戏平台" style="display: none;">平台</li>
+                            <li id="gs_area" class="gs_area arrow" title="选择游戏区">`</li>
+                            <li id="gs_server" class="gs_server arrow" title="选择游戏服务器">游戏服</li>
+                            <li id="gs_type" class="gs_type arrow" title="选择分类"> </li>
+                            <!--<li class="gs_search_item">-->
+                                <!--<input class="gs_search_box holderfont" id="gsSearchBox" type="text" placeholder="请输入任意关键字" autocomplete="off" style="width: 120px;">-->
+                            <!--</li>-->
+                        </ul>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                    <div class="tab_box clearfix tab_box_reset hide" id="simpleSearch" style="display: none;">
+                        <div class="left_bg">
+                        </div>
+                        <div class="simple_search_box">
+                            <input type="text" class="simple_search_input holderfont" id="simpleSearchInput"
+                                   placeholder="关键字找游戏、搜区服、寻商品" autocomplete="off"></div>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                </div>
+                <div class="btn_box">
+                    <input class="gs_search_btn" id="gsSearchBtn" value="搜索"></div>
+            </form>
+            <!-- 游戏选择列表 -->
+            <div class="gs_box" id="gsBox" style="display: block;">
+                <div class="gs_box_inner">
+                    <div class="gs_head clearfix">
+                        <dl class="gs_name" style="display: block;">
+                            <dt>
+                            <h1>
+                                请选择游戏：</h1>
+                            </dt>
+                            <dd><a id="all" flag="region" href="javascript:void(0);" style="display: none;">全部区</a></dd>
+                        </dl>
+                        <a target="_self" class="close_btn" title="关闭窗口" href="javascript:">关闭窗口</a></div>
+                    <ul id="gsList" class="gs_list gs_name">
+                    </ul>
+                </div>
+            </div>
+            <s id="searchbar_arrow" class="game_select_arrow" style="left: 50px; display: inline;
+                    top: 66px"></s>
+        </div>
+    </div>
+</div>
+<div class="search-body clearfix">
+    <div class="place">
+        <dl>
+            <dt>您的位置：</dt></dl>
+        <dl>
+            <dd>
+                <a href="http://www.5173.com/">首页</a></dd>
+            <dd class="arrow">
+                &gt;</dd>
+            <dd>
+                <a href="http://trading.5173.com/">全部游戏</a></dd>
+            <dd class="arrow">
+                &gt;</dd><dd id="navGame"></dd>
+        </dl>
+        <div class="recombox" id="recomFrame">
+            <div class="fed-tipsarr fed-arrtop">
+                <span class="arr-1">◆</span><span class="arr-2">◆</span></div>
+        </div>
+    </div>
+    <div class="layout">
+        <div id="SiteMap1_divSelectedConditions" class="sifting moulti-selected-nav">
+            <div class="sifting_box clearfix">
+                <dl id="sifting_box">
+                    <dt>您选择了：</dt>
+                    <dd id='cancle_game' tid='' title="游戏："><a click="#"><span></span></a></dd>
+                    <dd id='cancle_area' tid='' title="点击取消 游戏区：" onclick="cancleSelect($(this))"><a click="#"><span><em></em></span></a></dd>
+                    <dd id='cancle_server' tid='' title="点击取消 游戏服：" onclick="cancleSelect($(this))"><a click="#"><span><em></em></span></a></dd>
+                    <dd id='cancle_race' title="点击取消 阵营：" onclick="cancleSelect($(this))"><a click="#"><span><em></em></span></a></dd>
+                    <!--增加通货 by lvchengsheng -->
+                    <dd id='cancle_category' title="点击取消 商品类型：" onclick="cancleSelect($(this))"><a click="#"><span><em></em></span></a></dd>
+                </dl>
+            </div>
+        </div>
+        <div id="CategorySelector1_divGameNavigationBar" class="filterbox">
+            <div class="filterbg">
+                <div class="sing_filbox" id="gameRegion" style="display: none;">
+                    <p class="choose">按服务器选择：</p>
+                    <div class="choosebody">
+                        <p class="servers_search">快速查找&nbsp;&nbsp;<input id="searchSerQuick" type="text" onfocus="if(this.value=='请输入中文/拼音首字母'){this.value=''}" onblur="if(this.value==''){this.value='请输入中文/拼音首字母'}" value="请输入中文/拼音首字母" placeholder="请输入中文/拼音首字母" class="int_server_search_1"></p>
+                        <dl id="dlgs" class="high_begin_p">
+
+                        </dl>
+                        <p>
+                            <a class="push" href="#" onclick="showQfDiv($(this))">显示全部</a>
+                            <!--<a class="push_up" href="#">精简显示</a>-->
+                        </p>
+                    </div>
+                </div>
+                <div class="sing_filbox" id="gameRace" style="display: none;">
+                    <p class="choose">阵营选择：</p>
+                    <div class="choosebody">
+                        <dl id="dlraceid" class="high_begin">
+                            <dt><a href="#" title="联盟" id="btnRaceLM">联盟</a></dt>
+                            <dt><a href="#" title="部落" id="btnRaceBL">部落</a></dt>
+                        </dl>
+                    </div>
+                </div>
+                <!--<!--增加通货选择 by lvchengsheng -->
+                <div class="sing_filbox" id="gameCategory" style="display: none;">
+                    <p class="choose">按商品类型选择：</p>
+                    <div class="choosebody">
+                        <dl id="dlCategory" class="high_begin_ps">
+
+                        </dl>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="pdlist all_list">
+            <ul id="headerForAll" class="tb_head all_head sort_bottom1" style="left: 50%; top: 0px;">
+                <li class="info"><em>商品信息</em></li>
+                <li class="price"><a href="#" id="btnpricegrade" class="sort_title" title="按单价从小到大排序"><em>单价</em></a></li>
+                <li class="num">购买数量</li>
+                <li class="totalPrice">总价</li>
+                <li class="price"><a href="#" id="btnNumSort" class="sort_title" title="按库存从大到小排序"><em>库存</em></a></li>
+            </ul>
+            <div class="pdlistbox">
+            </div>
+            <div class="pdlist money_list">
+                <div id="Pagination" class="pagination" style="margin-top: 20px; text-align: center;">
+                    <!-- 这里显示分页 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="search-body-b">
+    <ul class="clearfix" id="ztc-bottom">
+    </ul>
+</div>
+<script type="text/javascript" src="./js/business/fed.js"></script>
+</body>
+</html>

@@ -1,0 +1,503 @@
+/************************************************************************************
+ *  Copyright 2014 WZITech Corporation. All rights reserved.
+ *	
+ *	模	块：		UserInfoManagerImpl
+ *	包	名：		com.wzitech.gamegold.usermgmt.business.impl
+ *	项目名称：	gamegold-usermgmt
+ *	作	者：		SunChengfei
+ *	创建时间：	2014-2-15
+ *	描	述：		
+ *	更新纪录：	1. SunChengfei 创建于 2014-2-15 下午1:38:03
+ * 				
+ ************************************************************************************/
+package com.wzitech.gamegold.usermgmt.business.impl;
+
+import com.wzitech.chaos.framework.server.common.AbstractBusinessObject;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.common.security.Base64;
+import com.wzitech.chaos.framework.server.common.security.Digests;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.context.CurrentIpContext;
+import com.wzitech.gamegold.common.context.CurrentUserContext;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.common.enums.UserType;
+import com.wzitech.gamegold.common.servicer.IServicerOrderManager;
+import com.wzitech.gamegold.usermgmt.business.IUserInfoManager;
+import com.wzitech.gamegold.usermgmt.dao.rdb.IUserInfoDBDAO;
+import com.wzitech.gamegold.usermgmt.dao.redis.IUserInfoRedisDAO;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.sql.Timestamp;
+import java.util.*;
+
+/**
+ * @author SunChengfei
+ *
+ */
+@Component("userInfoManagerImpl")
+public class UserInfoManagerImpl extends AbstractBusinessObject implements IUserInfoManager{
+	@Autowired
+	IUserInfoDBDAO userInfoDBDAO;
+
+	@Autowired
+	IUserInfoRedisDAO userInfoRedisDAO;
+	
+	@Autowired
+	IServicerOrderManager servicerOrderManager;
+
+	@Override
+	public UserInfoEO findUserByAccount(String loginAccount) {
+		// 先从Redis中查询用户信息
+		UserInfoEO userInfo = userInfoRedisDAO
+				.findUserByLoginAccount(loginAccount);
+		// 如Redis中为找到对应用户信息，则尝试去DB中查找
+		if (null == userInfo) {
+			logger.debug("在redis中未找到{}相关信息，尝试在数据库中查找。", loginAccount);
+			userInfo = userInfoDBDAO.findUserByLoginAccount(loginAccount);
+
+			// 如过在DB中找到对应信息返回，并将信息存入Redis中
+			if (null != userInfo) {
+				logger.debug("在数据库中查找到{}相关信息，重新讲该信息存储到Redis。", loginAccount);
+				userInfoRedisDAO.saveUser(userInfo);
+			}
+		} else {
+			logger.debug("成功的在redis中找到{}相关信息。", loginAccount);
+		}
+
+		return userInfo;
+	}
+
+	@Override
+	public UserInfoEO findUserByUid(String uid) {
+		// 先从Redis中查询用户信息
+		UserInfoEO userInfo = userInfoRedisDAO.findUserByUid(uid);
+
+		// 如Redis中为找到对应用户信息，则尝试去DB中查找
+		if (null == userInfo) {
+			logger.debug("在redis中未找到{}相关信息，尝试在数据库中查找。", uid);
+			userInfo = userInfoDBDAO.findUserById(Long.valueOf(uid));
+
+			// 如过在DB中找到对应信息返回，并将信息存入Redis中
+			if (null != userInfo) {
+				logger.debug("在数据库中查找到{}相关信息，重新讲该信息存储到Redis。", uid);
+				userInfoRedisDAO.saveUser(userInfo);
+			}
+		} else {
+			logger.debug("成功的在redis中找到{}相关信息。", uid);
+		}
+
+		return userInfo;
+	}
+	@Override
+	public UserInfoEO findDBUserById(String uid) {
+		UserInfoEO	userInfo = userInfoDBDAO.findUserById(Long.valueOf(uid));
+		return userInfo;
+	}
+
+	@Override
+	@Transactional
+	public UserInfoEO modifyUserInfo(UserInfoEO user) throws SystemException{
+		if(user==null){
+			throw new SystemException(ResponseCodes.UserEmptyWrong.getCode());
+		}
+		UserInfoEO dbUser = userInfoDBDAO.findUserById((Long)(user.getId()));
+		if(StringUtils.isBlank(user.getRealName())){
+			throw new SystemException(ResponseCodes.RealNameEmpty.getCode());
+		}
+		dbUser.setRealName(user.getRealName().trim());
+		if(StringUtils.isBlank(user.getNickName())){
+			throw new SystemException(ResponseCodes.NickNameEmpty.getCode());
+		}
+		if(!StringUtils.equals(user.getNickName().trim(),dbUser.getNickName())&&
+				userInfoDBDAO.findUserByNickName(user.getNickName())!=null){
+			throw new SystemException(ResponseCodes.ExitedNickName.getCode());
+		}
+		dbUser.setNickName(user.getNickName().trim());
+		if(user.getUserType()<=0){
+			throw new SystemException(ResponseCodes.UserTypeEmpty.getCode());
+		}
+		dbUser.setUserType(user.getUserType());
+		if(StringUtils.isNotBlank(user.getPhoneNumber())){
+			dbUser.setPhoneNumber(user.getPhoneNumber());
+		}
+		if(StringUtils.isNotBlank(user.getAvatarUrl())){
+			dbUser.setAvatarUrl(user.getAvatarUrl());
+		}
+		if(StringUtils.isNotBlank(user.getSign())){
+			dbUser.setSign(user.getSign());
+		}
+		if(StringUtils.isNotBlank(user.getFundsAccount())){
+			dbUser.setFundsAccount(user.getFundsAccount());
+		}
+		if(StringUtils.isNotBlank(user.getFundsAccount())){
+			dbUser.setFundsAccountId(user.getFundsAccountId());
+		}
+		if(StringUtils.isNotBlank(user.getQq())){
+			dbUser.setQq(user.getQq());
+		}
+		if(StringUtils.isNotBlank(user.getWeiXin())){
+			dbUser.setWeiXin(user.getWeiXin());
+		}
+		if(user.getMainAccountId()!=null){
+			dbUser.setMainAccountId(user.getMainAccountId());
+		}
+
+		//start 环信一对一 by汪俊杰 20170515
+		dbUser.setHxAppAccount(user.getHxAppAccount());
+		dbUser.setHxAppPwd(user.getHxAppPwd());
+		//end
+		//start 增加云信后台修改
+		dbUser.setYxAccount(user.getYxAccount());
+		dbUser.setYxPwd(user.getYxPwd());
+		//dbUser.setCommunicationTools(user.getCommunicationTools());
+		//end
+		dbUser.setStar(user.getStar());
+		dbUser.setQqPwd(user.getQqPwd());
+		dbUser.setServiceCharge(user.getServiceCharge());
+		dbUser.setYy(user.getYy());
+		dbUser.setSex(user.getSex());
+		dbUser.setLastUpdateTime(new Timestamp(new Date().getTime()));
+		userInfoDBDAO.update(dbUser);
+		// 更新redis
+		userInfoRedisDAO.saveUser(dbUser);
+
+		logger.info("修改用户：{},操作员:{},IP:{}", new Object[]{dbUser.getLoginAccount(),
+				CurrentUserContext.getUserLoginAccount(), CurrentIpContext.getIp()});
+		return dbUser;
+	}
+
+	@Override
+	@Transactional
+	public UserInfoEO modifyPwd(UserInfoEO user) throws SystemException{
+		if(user==null){
+			throw new SystemException(ResponseCodes.UserEmptyWrong.getCode());
+		}
+		UserInfoEO dbUser = userInfoDBDAO.findUserById((Long)(user.getId()));
+
+		String passwordWithCrypt = Base64.encodeBase64Binrary(
+				Digests.sha1(user.getPassword().trim().getBytes(), user.getLoginAccount().getBytes()));
+		dbUser.setPassword(passwordWithCrypt);
+		dbUser.setLastUpdateTime(new Timestamp(new Date().getTime()));
+		userInfoDBDAO.update(dbUser);
+		// 更新redis
+		userInfoRedisDAO.saveUser(dbUser);
+
+		logger.info("修改用户密码：%s,操作员:%s,IP:%s", new Object[]{dbUser.getLoginAccount(),
+				CurrentUserContext.getUserLoginAccount(), CurrentIpContext.getIp()});
+
+		return dbUser;
+	}
+
+	@Override
+	public GenericPage<UserInfoEO> queryUser(Map<String, Object> queryMap,
+			int limit, int start, String sortBy, boolean isAsc) {
+		if(StringUtils.isEmpty(sortBy)){
+			sortBy = "ID";
+		}
+		return userInfoDBDAO.selectByMap(queryMap, limit, start, sortBy, isAsc);
+	}
+
+	@Override
+	@Transactional
+	public void addUser(UserInfoEO user) throws SystemException {
+		if(user==null){
+			throw new SystemException(ResponseCodes.UserEmptyWrong.getCode());
+		}
+		if(StringUtils.isBlank(user.getLoginAccount())){
+			throw new SystemException(ResponseCodes.AccountEmptyWrong.getCode());
+		}
+		user.setLoginAccount(StringUtils.lowerCase(StringUtils.trim(user.getLoginAccount())));
+		if(userInfoDBDAO.findUserByLoginAccount(user.getLoginAccount())!=null){
+			throw new SystemException(ResponseCodes.ExitedAccount.getCode());
+		}
+		if(StringUtils.isBlank(user.getRealName())){
+			throw new SystemException(ResponseCodes.RealNameEmpty.getCode());
+		}
+		user.setRealName(user.getRealName().trim());
+		if(StringUtils.isBlank(user.getNickName())){
+			throw new SystemException(ResponseCodes.NickNameEmpty.getCode());
+		}
+		user.setNickName(user.getNickName().trim());
+		if(userInfoDBDAO.findUserByNickName(user.getNickName())!=null){
+			throw new SystemException(ResponseCodes.ExitedNickName.getCode());
+		}
+		if(StringUtils.isBlank(user.getPassword().trim())){
+			throw new SystemException(ResponseCodes.UserPasswordEmpty.getCode());
+		}
+		String passwordWithCrypt = Base64.encodeBase64Binrary(
+				Digests.sha1(user.getPassword().trim().getBytes(), user.getLoginAccount().getBytes()));
+		user.setPassword(passwordWithCrypt);
+		if(user.getUserType()<=0){
+			throw new SystemException(ResponseCodes.UserTypeEmpty.getCode());
+		}
+		//加入环信app账号
+		if(StringUtils.isNotBlank(user.getHxAppAccount())){
+			user.setHxAppAccount(user.getHxAppAccount().trim());
+		}
+		//加入云信账号
+		if(StringUtils.isNotBlank(user.getYxAccount())){
+			user.setYxAccount(user.getYxAccount().trim());
+		}
+		//加入qq密码
+		if(StringUtils.isNotBlank(user.getQqPwd())){
+			user.setQqPwd(user.getQqPwd().trim());
+		}
+		user.setIsDeleted(false);
+		user.setCreateTime(new Timestamp(new Date().getTime()));
+		user.setLastUpdateTime(new Timestamp(new Date().getTime()));
+		userInfoDBDAO.insert(user);
+		
+		if((user.getUserType() == UserType.AssureService.getCode()) || (user.getUserType() == UserType.ConsignmentService.getCode())){
+			// 如果为客服，初始化处理订单数
+			//servicerOrderManager.initOrderNum((Long)user.getId());
+		} else if (user.getUserType() == UserType.EnterService.getCode()) {
+			// 如果为卖家入驻审核客服，初始化处理卖家入驻数
+			servicerOrderManager.initEnterNum((Long) user.getId());
+		}
+	}
+
+	@Override
+	public List<UserInfoEO> userInfoList(List<Long> uids) {
+		return userInfoDBDAO.selectByIds(uids);
+	}
+	
+	@Override
+	@Transactional
+	public UserInfoEO modifyCurrentUserPassword(UserInfoEO currentUser, String oldPassword, String newPassword) throws SystemException {
+		
+		if(StringUtils.isBlank(oldPassword)||StringUtils.isBlank(newPassword)){
+			throw new SystemException(ResponseCodes.PasswordEmptyWrong.getCode());
+		}
+		
+		UserInfoEO dbUser = userInfoDBDAO.findUserById((Long)(currentUser.getId()));
+		
+		oldPassword  = oldPassword.trim();
+		String oldPasswordWithCrypt = Base64.encodeBase64Binrary(
+				Digests.sha1(oldPassword.getBytes(), dbUser.getLoginAccount().getBytes()));
+		if(!StringUtils.equals(oldPasswordWithCrypt, dbUser.getPassword())){
+			throw new SystemException(ResponseCodes.OldPasswordWrong.getCode());
+		}
+		
+		String passwordWithCrypt = Base64.encodeBase64Binrary(
+				Digests.sha1(newPassword.getBytes(), dbUser.getLoginAccount().getBytes()));
+		dbUser.setPassword(passwordWithCrypt);
+		// 更新DB
+		userInfoDBDAO.update(dbUser);
+		
+		// 更新redis
+		userInfoRedisDAO.saveUser(dbUser);
+		return dbUser;
+	}
+	
+	@Override
+	@Transactional
+	public void enableUser(Long id) throws SystemException {
+		if(id==null){
+			throw new SystemException(ResponseCodes.UserIdEmptyWrong.getCode());
+		}
+		UserInfoEO dbUser = userInfoDBDAO.findUserById(id);
+		if(dbUser==null){
+			throw new SystemException(ResponseCodes.UserNotExitedWrong.getCode());
+		}
+		if(!dbUser.getIsDeleted()){
+			throw new SystemException(ResponseCodes.UserIsEnableWrong.getCode());
+		}
+		dbUser.setIsDeleted(false);
+		userInfoDBDAO.update(dbUser);
+		// 更新redis
+		userInfoRedisDAO.saveUser(dbUser);
+		
+		if(dbUser.getUserType() == UserType.AssureService.getCode()){
+			/*UserInfoEO userInfoEO = userInfoDBDAO.queryServiceOrederNum(dbUser.getId());
+			// 如果为接单客服，初始化处理订单数
+			servicerOrderManager.serviceOrderNum(dbUser.getId(), userInfoEO.getOrderNum());*/
+
+			// 清除前台订单页担保客服ID排序
+			//userInfoRedisDAO.removeAssureService();
+		}/* else if (dbUser.getUserType() == UserType.ConsignmentService.getCode()) {
+            // 如果为寄售客服，初始化处理订单数
+            UserInfoEO userInfoEO = userInfoDBDAO.queryConsignmentOrderNum(dbUser.getId());
+            servicerOrderManager.serviceOrderNum(dbUser.getId(), userInfoEO.getOrderNum());
+        } */else if (dbUser.getUserType() == UserType.EnterService.getCode()) {
+			int num = userInfoDBDAO.querySellerEnterNum(dbUser.getId());
+			// 如果为入驻客服，初始化处理卖家入驻数
+			servicerOrderManager.updateServiceEnterNum(dbUser.getId(), num);
+		}
+
+		logger.info("启用用户：{},操作员:{},IP:{}", new Object[]{dbUser.getLoginAccount(),
+				CurrentUserContext.getUserLoginAccount(), CurrentIpContext.getIp()});
+	}
+
+	@Override
+	@Transactional
+	public void disableUser(Long id) throws SystemException {
+		if(id==null){
+			throw new SystemException(ResponseCodes.UserIdEmptyWrong.getCode());
+		}
+		UserInfoEO dbUser = userInfoDBDAO.findUserById(id);
+		if(dbUser==null){
+			throw new SystemException(ResponseCodes.UserNotExitedWrong.getCode());
+		}
+		if(dbUser.getIsDeleted()){
+			throw new SystemException(ResponseCodes.UserIsDisableWrong.getCode());
+		}
+		dbUser.setIsDeleted(true);
+		userInfoDBDAO.update(dbUser);
+		// 更新redis
+		userInfoRedisDAO.saveUser(dbUser);
+
+		/*if(dbUser.getUserType() == UserType.AssureService.getCode()) {
+			// 清除前台订单页担保客服ID排序
+			userInfoRedisDAO.removeAssureService();
+		}*/
+
+		logger.info("禁用用户：{},操作员:{},IP:{}", new Object[]{dbUser.getLoginAccount(),
+				CurrentUserContext.getUserLoginAccount(), CurrentIpContext.getIp()});
+		
+//		if(dbUser.getUserType() == UserType.CustomerService.getCode()){
+//			// 如果为客服，删除该客服在redis中对应的处理订单数
+//			servicerOrderManager.deleteOrderNum((Long)dbUser.getId());
+//		}
+	}
+
+	@Override
+	@Transactional
+	public void deleteUser(Long id) throws SystemException {
+		if(id==null){
+			throw new SystemException(ResponseCodes.UserIdEmptyWrong.getCode());
+		}
+		UserInfoEO dbUser = userInfoDBDAO.findUserById(id);
+		if(dbUser==null){
+			throw new SystemException(ResponseCodes.UserNotExitedWrong.getCode());
+		}
+
+		userInfoDBDAO.deleteById(id);
+		// 更新redis
+		userInfoRedisDAO.deleteUser(String.valueOf(id));
+
+		logger.info("删除用户：{},操作员:{},IP:{}", new Object[]{dbUser.getLoginAccount(),
+				CurrentUserContext.getUserLoginAccount(), CurrentIpContext.getIp()});
+	}
+	/**
+	 * 查询客服
+	 * @param queryMap
+	 * @param sortBy
+	 * @param isAsc
+	 * @return
+	 */
+	@Override
+	public List<UserInfoEO> findServicers(Map<String, Object> queryMap, String sortBy, boolean isAsc) {
+		if(StringUtils.isEmpty(sortBy)){
+			sortBy = "ID";
+		}
+		queryMap.put("userType", UserType.AssureService.getCode());
+		return userInfoDBDAO.selectByMap(queryMap, sortBy, isAsc);
+	}
+
+
+
+	/**
+	 * 查找出一个入驻客服
+	 *
+	 * @return
+	 */
+	@Override
+	public UserInfoEO findRZServicer()
+	{
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("userType", 7);
+		queryMap.put("isDeleted", false);
+		List<UserInfoEO> list=userInfoDBDAO.selectByMap(queryMap,"ID",true);
+		if(list!=null&&list.size()>0)
+		{
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * 查询指定游戏担保客服列表，待发货订单数量少的客服靠前排序
+	 *
+	 * @param gameName
+	 * @return
+	 */
+	@Override
+	public List<UserInfoEO> queryAssureServiceByGame(String gameName) {
+		List<UserInfoEO> users = null;
+		// 先从redis查询数据
+		List<String> serviceIds = userInfoRedisDAO.findAssureServiceByGame(gameName);
+		if (!CollectionUtils.isEmpty(serviceIds)) {
+			users = new ArrayList<UserInfoEO>();
+			for (String id : serviceIds) {
+				UserInfoEO user = findUserByUid(id);
+				user.setLoginAccount(null);
+				user.setPassword(null);
+				user.setRealName(null);
+				users.add(user);
+			}
+		} else {
+			// 从数据库查询数据
+			users = userInfoDBDAO.queryAssureServiceByGame(gameName);
+			if (!CollectionUtils.isEmpty(users)) {
+				for (UserInfoEO user : users) {
+					user.setLoginAccount(null);
+					user.setPassword(null);
+					user.setRealName(null);
+				}
+			}
+
+			// 将数据写入redis
+			userInfoRedisDAO.saveAssureService(gameName, users);
+		}
+		return users;
+	}
+
+	/**
+	 * 查询指定游戏担保客服列表，待发货订单数量少的客服靠前排序
+	 *
+	 * @param gameName
+	 * @return
+	 */
+	@Override
+	public List<UserInfoEO> queryAssureServiceByGameNoCache(String gameName) {
+		// 从数据库查询数据
+		List<UserInfoEO> users = userInfoDBDAO.queryAssureServiceByGame(gameName);
+		if (!CollectionUtils.isEmpty(users)) {
+			for (UserInfoEO user : users) {
+				user.setLoginAccount(null);
+				user.setPassword(null);
+				user.setRealName(null);
+			}
+		}
+		return users;
+	}
+
+	public UserInfoEO selectUserById(Long id){
+        return userInfoDBDAO.findUserById(id);
+	}
+
+
+	/**
+	 *  根据接单数量排序查询寄售客服
+	 * @return
+	 */
+	public List<UserInfoEO> selectFreeConsignmentService() {
+		return userInfoDBDAO.selectFreeConsignmentService();
+	}
+
+	/**
+	 * 查询指定游戏担保客服列表，待发货订单数量少的客服靠前排序
+	 *
+	 * @param gameName
+	 * @return
+	 */
+	@Override
+	public UserInfoEO queryAssureServiceIDByGame(String gameName) {
+		return userInfoDBDAO.queryAssureServiceIDByGame(gameName);
+	}
+}

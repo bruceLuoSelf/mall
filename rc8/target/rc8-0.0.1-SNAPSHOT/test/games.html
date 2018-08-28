@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>获取商城游戏列表</title>
+    <script src="jquery.js"></script>
+</head>
+<body>
+<script>
+    var request={
+        name: "getgamesinfo",
+        version: "8.0",
+        sign: "a561e49942c7abfb310d5464d6ceef30",
+        _type: "json"
+    };
+    $.ajax({
+        type: "GET",
+        url: "../services/game/list",
+        data: request,
+        contentType: "application/json; charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        }
+    });
+</script>
+</body>
+</html>

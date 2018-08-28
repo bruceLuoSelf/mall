@@ -1,0 +1,178 @@
+.tb_head
+{
+    background: #f6f6f6;
+}
+.tb_head .info
+{
+    width: 385px;
+}
+.pdlist .pdlist_info
+{
+    width: 385px;
+}
+.tj{
+    border:1px solid red;
+    height: 0px;
+    width:948px;
+    position: absolute;
+    margin-top:1px;
+}
+.pdlistbox .sin_pdlbox ul li.tt
+{
+    font-size: 12px;
+    font-weight: bold;
+    color: #0066cc;
+}
+#loadingInfo{
+    border:0px;height:32px;line-height:32px;padding:10px;color:#575757;font-weight:bold;
+    width:200px;
+    top:40%;
+    left:40%;
+    background-color: white;
+    position:absolute;
+    text-align: center;
+    z-index:10001;
+}
+#divLoading div img{
+    vertical-align:middle;
+    margin-right: 5px;
+}
+.pdlistbox .sin_pdlbox ul li img{
+    vertical-align: middle;
+    margin-right: 5px;
+}
+.pdlistbox .sin_pdlbox ul li span.shopName{
+    font-size: 12px;
+    color: #0066cc;
+}
+strong.st{
+    margin-left: 10px;
+}
+.tb_head .price, .pdlist .pdlist_price, .pdlist .pdlist_unitprice, .tb_head .ensure, .pdlistbox .sin_pdlbox ul.pdlist_ensure, .totalPrice, .pdlist_buy
+{
+    width: 105px;
+    text-align: center;
+    vertical-align: middle;
+}
+.tb_head .num, .pdlist .pdlist_num
+{
+    width: 130px;
+    text-align: center;
+    vertical-align: middle;
+}
+.pdlistbox .sin_pdlbox ul
+{
+    vertical-align: middle;
+}
+.pdlistbox .sin_pdlbox ul.pdlist_price li, .pdlistbox .sin_pdlbox ul.pdlist_num li, .pdlistbox .sin_pdlbox ul.pdlist_unitprice li, .pdlistbox .sin_pdlbox ul.pdlist_ensure li, .pdlist_buy li
+{
+    padding-top: 40px;
+    text-align: center;
+    width: 105px;
+    clear: none;
+}
+.pdlistbox .sin_pdlbox ul.pdlist_unitprice li span
+{
+    color: #ff6600;
+    font-size: 12px;
+    font-weight: bold;
+}
+.pdlistbox .sin_pdlbox ul.pdlist_num li
+{
+    padding-top: 40px;
+    text-align: center;
+    width: 130px;
+    clear: none;
+    padding-left: 5px;
+}
+.pdlistbox .sin_pdlbox ul.pdlist_price li.pr strong
+{
+    width: 100px;
+    font-size: 12px;
+    color: #ff0000;
+}
+.pdlistbox .sin_pdlbox ul.pdlist_unitprice li span strong
+{
+    font-size: 18px;
+    font-weight: bold;
+}
+.select_list_input3
+{
+    display: inline-block;
+    border: 1px solid #AAAAAA;
+    width: 120px;
+    height: 28px;
+    line-height: 24px;
+    padding: 2px 4px 2px 2px;
+    text-align: left;
+    position: relative;
+    margin-top: -10px;
+}
+.input_select_list_number
+{
+    width: 65px;
+    border: 0;
+    color: #333;
+    font-size: 14px;
+    line-height: 24px;
+    padding: 4px;
+    height: 20px;
+    font-family: Arial;
+}
+.no_result .rightbox h4 span
+{
+    color: #999;
+}
+#btnpricegrade
+{
+    background: url(../img/sort_up.png) no-repeat;
+}
+#btnNumSort
+{
+    background: url(../img/sort_down.png) no-repeat;
+}
+.tb_head .sort_title
+{
+    height: 19px;
+    margin-top: 5px;
+    display: inline-block;
+    text-decoration: none;
+    padding-left: 5px;
+    background-position: 0 0;
+}
+.tb_head .sort_title em
+{
+    height: 19px;
+    line-height: 19px;
+    display: inline-block;
+    padding-right: 20px;
+    text-decoration: none;
+    color: #333;
+}
+.sin_pdlbox ul li .ico_dm{
+    background: url(http://images001.5173cdn.com/images/search/v3/1m/rank.png) no-repeat left -99px;
+    height:8px;
+    display: inline-block;
+    padding-top: 2px;
+}
+#gameSelectV2{
+    position:relative;
+}
+#gameSelectV2 #gameSelectBox{
+    position:absolute;
+    right:50px;
+    text-align: right;;
+}
+.btn_box{
+    position:absolute;
+    right:50px;
+    text-align: right;;
+}
+.sellAd{
+    position:relative;
+    white-space:nowrap;
+    word-break:keep-all;
+    clear:both;
+    color:#f00;
+    margin-top:17px;
+}

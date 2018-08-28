@@ -1,0 +1,118 @@
+package com.wzitech.gamegold.shorder.business;
+
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.shorder.entity.SystemConfig;
+
+import java.math.BigDecimal;
+import java.util.Map;
+
+/**
+ * Created by Administrator on 2016/12/15.
+ */
+public interface ISystemConfigManager {
+    /**
+     * 查询系统配置
+     *
+     * @param paramMap
+     * @param limit
+     * @param startIndex
+     * @param orderBy
+     * @param isAsc
+     * @return
+     */
+    GenericPage<SystemConfig> queryPage(Map<String, Object> paramMap, int limit, int startIndex, String orderBy,
+                                        Boolean isAsc);
+
+    /**
+     * 根据KEY查询配置
+     *
+     * @param key
+     * @return
+     */
+    SystemConfig getSystemConfigByKey(String key);
+
+    /**
+     * 根据Key获取全部信息 无论是否为null
+     */
+    SystemConfig getTotalSystemConfigByKey(String key);
+
+    /**
+     * 删除系统配置
+     */
+    void deleteConfigById(Long id);
+
+    /**
+     * 增加系统配置
+     */
+    void add(SystemConfig systemConfig);
+
+    /**
+     * 修改系统配置
+     *
+     * @param systemConfig
+     */
+    void update(SystemConfig systemConfig);
+
+    /**
+     * 禁用配置
+     *
+     * @param id
+     */
+    void disableUser(Long id);
+
+
+    /**
+     * 启用配置
+     *
+     * @param id
+     */
+    void qyUser(Long id);
+
+    /**
+     * 邮寄收货误差阈值临界值
+     *
+     * @return
+     */
+    BigDecimal getMailRobotCriticalValue();
+
+    /**
+     * query overtime from backend config
+     */
+    Long getOverTime();
+
+    int tradeTimeOut();
+
+    /**
+     * 邮寄收货自动化响应超时时间
+     * */
+     int sellerDeliveryTimeOut();
+
+    /**
+     * 邮寄与拍卖收货自动化响应超时时间
+     * */
+    int allSellerDeliveryTimeOut();
+
+    /**
+     * 根据KEY查询配置
+     *
+     * @param key
+     * @return
+     */
+    SystemConfig getSystemConfig(String key);
+
+    /**
+     * 根据KEY查询配置，返回Long
+     *
+     * @param key
+     * @return
+     */
+     Long getValueByKey(String key);
+
+    /**
+     * 根据KEY查询配置，返回BigDecimal
+     *
+     * @param key
+     * @return
+     */
+     BigDecimal getBigDecimalValueByKey(String key);
+}

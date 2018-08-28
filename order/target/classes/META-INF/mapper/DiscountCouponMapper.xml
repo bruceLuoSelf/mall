@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.DiscountCoupon">
+    <resultMap id="BaseResultMap"
+               type="com.wzitech.gamegold.order.entity.DiscountCoupon">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="CODE" property="code" jdbcType="VARCHAR" />
+        <result column="PWD" property="pwd" jdbcType="VARCHAR" />
+        <result column="PRICE" property="price" jdbcType="NUMERIC" javaType="double" />
+        <result column="IS_USED" property="isUsed" jdbcType="BOOLEAN" />
+        <result column="COUPON_TYPE" property="couponType" jdbcType="NUMERIC" javaType="int" />
+        <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+        <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.order.entity.DiscountCoupon"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO "TBL_GAMEGOLD_DISCOUNT_COUPON" ("CODE", "PWD", "PRICE", "IS_USED", "COUPON_TYPE", "ORDER_ID",
+        "START_TIME", "END_TIME")
+        VALUES (#{code}, #{pwd}, #{price}, #{isUsed},#{couponType}, #{orderId}, #{startTime}, #{endTime})
+    </insert>
+
+    <!-- 批量新增记录 -->
+    <insert id="batchInsert" parameterType="com.wzitech.gamegold.order.entity.DiscountCoupon">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO "TBL_GAMEGOLD_DISCOUNT_COUPON" ("CODE", "PWD", "PRICE", "IS_USED", "COUPON_TYPE","START_TIME", "END_TIME") VALUES (#{item.code},#{item.pwd},#{item.price},false,#{item.couponType},#{item.startTime},#{item.endTime})
+        </foreach>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate" parameterType="com.wzitech.gamegold.order.entity.DiscountCoupon">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE "TBL_GAMEGOLD_DISCOUNT_COUPON"
+            <set>
+                <if test="item.isUsed != null and item.isUsed != ''">
+                    "IS_USED"= #{item.isUsed},
+                </if>
+                <if test="item.orderId != null and item.orderId != ''">
+                    "ORDER_ID"= #{item.orderId}
+                </if>
+            </set>
+            <where>
+                "CODE" = #{item.code}
+            </where>
+        </foreach>
+    </update>
+
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.order.entity.DiscountCoupon">
+        SELECT * FROM "TBL_GAMEGOLD_DISCOUNT_COUPON"
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="lockMode != null">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_DISCOUNT_COUPON"
+        <include refid="selectSql" />
+    </select>
+
+    <sql id="selectSql">
+        <where>
+            1=1
+            <if test="code != null">
+                AND "CODE"=#{code}
+            </if>
+            <if test="couponType != null">
+                AND "COUPON_TYPE"=#{couponType}
+            </if>
+            <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+                <![CDATA[
+					AND (("START_TIME">=#{startTime} AND "END_TIME"<=#{endTime}) or ("START_TIME"<#{startTime} and
+					"END_TIME">#{startTime}) or ("END_TIME">#{endTime} and "START_TIME"<#{endTime}))
+				]]>
+            </if>
+            <if test="orderId != null">
+                AND "ORDER_ID"=#{orderId}
+            </if>
+            <if test="isUsed != null">
+                AND "IS_USED"=#{isUsed}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的唯一记录 -->
+    <select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.DiscountCoupon">
+        SELECT * FROM "TBL_GAMEGOLD_DISCOUNT_COUPON"
+        <where>
+            1=1
+            <if test="code != null and code != ''">
+                AND "CODE" = #{code}
+            </if>
+            <if test="couponType != null and couponType != ''">
+                AND "COUPON_TYPE" = #{couponType}
+            </if>
+        </where>
+    </select>
+</mapper>

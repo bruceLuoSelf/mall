@@ -1,0 +1,93 @@
+package com.wzitech.gamegold.order.business.impl;
+
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.dto.GameInfoDTO;
+import com.wzitech.gamegold.order.business.ISubOrderDetailManager;
+import com.wzitech.gamegold.order.dao.ISubOrderDetailDao;
+import com.wzitech.gamegold.order.dto.SubOrderDetailDTO;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
+
+/**
+ * 子订单详情查询
+ * @author yemq
+ */
+@Component
+public class SubOrderDetailManagerImpl implements ISubOrderDetailManager {
+    @Autowired
+    private ISubOrderDetailDao subOrderDetailDao;
+
+    /**
+     * 查询卖家订单列表
+     *
+     * @param params
+     * @param orderBy
+     * @param isAsc
+     * @param pageSize
+     * @param start    @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public GenericPage<SubOrderDetailDTO> querySellerOrders(Map<String, Object> params, String orderBy, boolean isAsc, int pageSize, int start) {
+        return subOrderDetailDao.querySellerOrders(params, orderBy, isAsc, pageSize, start);
+    }
+
+    /**
+     * 查询卖家订单列表，返回少量字段
+     *
+     * @param params
+     * @param orderBy
+     * @param isAsc
+     * @param pageSize
+     * @param start
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public GenericPage<SubOrderDetailDTO> querySellerSimpleOrders(Map<String, Object> params, String orderBy, boolean isAsc, int pageSize, int start) {
+        return subOrderDetailDao.querySellerSimpleOrders(params, orderBy, isAsc, pageSize, start);
+    }
+
+    /**
+     * 查询卖家的订单详情
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public SubOrderDetailDTO querySellerOrderDetail(Map<String, Object> params) {
+        return subOrderDetailDao.querySellerOrderDetail(params);
+    }
+
+    /**
+     * 查询一条卖家订单
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public SubOrderDetailDTO querySubOrderDetail(Map<String, Object> params) {
+        return subOrderDetailDao.querySubOrderDetail(params);
+    }
+
+    @Override
+    public void dealData(SubOrderDetailDTO dto) {
+        if (dto == null) {
+            return;
+        }
+        if (StringUtils.isBlank(dto.getSendRegion()) || StringUtils.isBlank(dto.getSendServer())) {
+            GameInfoDTO gameInfo = dto.getGameInfo();
+            if (gameInfo != null) {
+                dto.setSendRegion(gameInfo.getGameRegion());
+                dto.setSendServer(gameInfo.getGameServer());
+                dto.setSendRace(gameInfo.getGameRace());
+            }
+        }
+    }
+}

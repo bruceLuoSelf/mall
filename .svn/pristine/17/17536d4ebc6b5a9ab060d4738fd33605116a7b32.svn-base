@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.InsuranceSettings">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.InsuranceSettings">
+		<result column="ID" property="id"/>
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR"/>
+		<result column="RATE" property="rate"/>
+		<result column="FLOOR" property="floor"/>
+		<result column="CEILING" property="ceiling"/>
+		<result column="EXPIRE_DAY" property="expireDay"/>
+		<result column="ENABLED" property="enabled"/>
+		<result column="UPDATE_TIME" property="updateTime"/>
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.order.entity.InsuranceSettings"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_INSURANCE"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gameName != null and gameName != ''">
+				"GAME_NAME",
+			</if>
+			<if test="rate != null ">
+				"RATE",
+			</if>
+			<if test="floor != null ">
+				"FLOOR",
+			</if>
+			<if test="ceiling != null ">
+				"CEILING",
+			</if>
+			<if test="expireDay != null ">
+				"EXPIRE_DAY",
+			</if>
+			<if test="enabled != null">
+				"ENABLED",
+			</if>
+			<if test="updateTime != null">
+				"UPDATE_TIME",
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gameName != null and gameName != ''">
+				#{gameName},
+			</if>
+			<if test="rate != null and rate != ''">
+				#{rate},
+			</if>
+			<if test="floor != null and floor != ''">
+				#{floor},
+			</if>
+			<if test="ceiling != null and ceiling != ''">
+				#{ceiling},
+			</if>
+			<if test="expireDay != null">
+				#{expireDay},
+			</if>
+			<if test="enabled != null">
+				#{enabled},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+		</trim>
+	</insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.order.entity.InsuranceSettings">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE "TBL_GAMEGOLD_INSURANCE"
+            <set>
+                <if test="item.gameName != null and item.gameName != ''">
+                    "GAME_NAME" = #{item.gameName},
+                </if>
+                <if test="item.rate != null ">
+                    "RATE" = #{item.rate},
+                </if>
+                <if test="item.floor != null ">
+                    "FLOOR" = #{item.floor},
+                </if>
+                <if test="item.ceiling != null ">
+                    "CEILING" = #{item.ceiling},
+                </if>
+                <if test="item.expireDay != null ">
+                    "EXPIRE_DAY" = #{item.expireDay},
+                </if>
+                <if test="item.enabled != null ">
+                    "ENABLED" = #{item.enabled},
+                </if>
+                <if test="item.updateTime != null">
+                    "UPDATE_TIME" = #{item.updateTime},
+                </if>
+            </set>
+            <where>
+                <if test="item.id !=null">
+                    "ID" = #{item.id}
+                </if>
+            </where>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="gameName != null and gameName != ''">
+                "GAME_NAME" = #{gameName}
+            </if>
+        </where>
+    </sql>
+
+    <delete id="batchDeleteByIds" parameterType="list">
+        <foreach collection="list" item="item" separator=";">
+            DELETE FROM "TBL_GAMEGOLD_INSURANCE" WHERE "ID"=#{item}
+        </foreach>
+    </delete>
+	
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.InsuranceSettings">
+		 SELECT * FROM "TBL_GAMEGOLD_INSURANCE"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		 SELECT COUNT(1) FROM "TBL_GAMEGOLD_INSURANCE"
+		<include refid="selectSql"/>
+	</select>
+	
+	<!-- 通过商品的ID，获得商品信息 -->
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.InsuranceSettings">
+		 SELECT * FROM "TBL_GAMEGOLD_INSURANCE"
+		 <where>
+		 	"ID" = #{id}
+		 </where>
+	</select>
+	
+	<!-- 查询符合条件的唯一记录 -->
+	<select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.InsuranceSettings">
+		SELECT * FROM "TBL_GAMEGOLD_INSURANCE"
+		<where>
+			<if test="gameName != null and gameName != ''">
+				"GAME_NAME" = #{gameName}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.InsuranceSettings">
+		${value}
+	</select>
+
+</mapper>

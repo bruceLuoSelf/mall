@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>查询订单列表</title>
+    <!--<script src="http://yxbmall.5173.com/js/jquery-1.8.3.min.js"></script>-->
+    <script src="http://yxbmall.5173.com/js/jquery.js"></script>
+    <script src="http://yxbmall.5173.com/js/jquery.json-2.4.min.js"></script>
+</head>
+<body>
+<script>
+    var request = {
+        sign: "9db7c0d9257668ad233c1bed3596c42c",
+        pageSize: 10,
+        start: 1,
+        orderBy: null,
+        orderState: 7,
+        startOrderCreate: "2017-01-01" ,
+        endOrderCreate: "2017-02-18",
+        orderId: null,
+        gameName: "地下城与勇士",
+        region: "广东区",
+        server: "广东1区",
+        userId: "US16122251120213-0720",
+        userAccount: "wangjunjie"
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8085/gamegold-app/services/order/queryorder",
+        data: $.toJSON(request),
+        contentType: "application/json;charset=UTF-8",
+        dataType: "json",
+        success: function (resp) {
+            var responseStatus = resp.responseStatus;
+            var data= resp.orders.data;
+            console.log(responseStatus);
+            console.log(data);
+            alert("查询成功！");
+
+        }
+    });
+
+</script>
+</body>
+</html>

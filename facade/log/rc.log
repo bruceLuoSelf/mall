@@ -1,0 +1,221 @@
+2018-08-06 20:32:25,254 [INFO ] o.s.web.context.ContextLoader - Root WebApplicationContext: initialization started
+2018-08-06 20:32:26,129 [INFO ] o.s.w.c.s.XmlWebApplicationContext - Refreshing Root WebApplicationContext: startup date [Mon Aug 06 20:32:26 CST 2018]; root of context hierarchy
+2018-08-06 20:32:26,176 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-context.xml]
+2018-08-06 20:32:26,496 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-import-context.xml]
+2018-08-06 20:32:27,384 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-dao-context.xml]
+2018-08-06 20:32:27,446 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-business-context.xml]
+2018-08-06 20:32:27,483 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-service-context.xml]
+2018-08-06 20:32:27,499 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/cxf/cxf.xml]
+2018-08-06 20:32:28,754 [INFO ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Loading properties file from class path resource [META-INF/application.properties]
+2018-08-06 20:32:28,787 [INFO ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Loading properties file from class path resource [META-INF/application.develop.properties]
+2018-08-06 20:32:28,811 [INFO ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Loading properties file from class path resource [META-INF/application.develop.local.properties]
+2018-08-06 20:32:28,812 [WARN ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Could not load properties from class path resource [META-INF/application.develop.local.properties]: class path resource [META-INF/application.develop.local.properties] cannot be opened because it does not exist
+2018-08-06 20:32:28,817 [INFO ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Loading properties file from URL [file:/E:/workspace/goldmall/kq-20180731/facade/target/classes/META-INF/application.mybatis.properties]
+2018-08-06 20:32:28,862 [INFO ] o.s.w.c.s.XmlWebApplicationContext - Bean '(inner bean)' of type [class java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-08-06 20:32:28,881 [INFO ] o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 
+2018-08-06 20:32:28,881 [INFO ] o.s.w.c.s.XmlWebApplicationContext - Bean 'AsyncJobExecutor' of type [class org.springframework.scheduling.config.TaskExecutorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-08-06 20:32:28,881 [INFO ] o.s.w.c.s.XmlWebApplicationContext - Bean 'AsyncJobExecutor' of type [class org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-08-06 20:32:28,987 [INFO ] o.s.b.f.s.DefaultListableBeanFactory - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@370d7e17: defining beans [org.springframework.context.annotation.internalAsyncAnnotationProcessor,org.springframework.context.annotation.internalScheduledAnnotationProcessor,AsyncJobExecutor,org.springframework.context.annotation.internalConfigurationAnnotationProcessor,org.springframework.context.annotation.internalAutowiredAnnotationProcessor,org.springframework.context.annotation.internalRequiredAnnotationProcessor,org.springframework.context.annotation.internalCommonAnnotationProcessor,org.springframework.context.annotation.internalPersistenceAnnotationProcessor,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator#0,org.springframework.context.support.PropertySourcesPlaceholderConfigurer#0,ComplaintService,OrderService,ReceivingService,UserService,imageRedisDAOImpl,gameInfoRedisDAOImpl,gameInfoManagerImpl,httpClientPool,authOutInterceptor,logManagerImpl,logDBDAOImpl,getGameIdFromMain,getImageUrlFromMain,mainGerIdUtilEo,mainStationManagerImpl,mqUtilForOrderCenterToMainImpl,eucpMobileMsgImpl,batchTransferConfig,compensateConfig,directPartialRefundConfig,directPartialTransferConfig,directPayTransferConfig,paymentConfig,queryConfig,refundConfig,transferConfig,payManagerImpl,redisCommonImpl,servicerOrderManagerImpl,tradeOrderManagerImpl,userInfoServiceImpl,gameUserManagerImpl,redisDaoUtil,accountManagerImpl,authenticationImpl,servicerVoteConfigManagerImpl,servicerVoteManagerImpl,sessionManagerImpl,userInfoManagerImpl,usersGameManagerImpl,servicerVoteConfigDBDAO,servicerVoteDBDAOImpl,userInfoDBDAOImpl,usersGameDBDAOImpl,servicerVoteRedisDAOImpl,userInfoRedisDAOImpl,verifyCodeRedisDAOImpl,fileManagerImpl,imageCropper,imageManager,thumbGenerator,arrangeTraderManagerImpl,autoConfigManagerImpl,autoPayManagerImpl,commissionManagerImpl,configPowerManagerImpl,currencyConfigManagerImpl,deliveryOrderCenterManager,discountCouponManagerImpl,gameConfigManagerImpl,hxDataManagerImpl,insuranceManagerImpl,insuranceOrderManagerImpl,insuranceSettingsManager,messageRuleLogManager,messageRuleManagerImpl,orderCenterManagerWithDate,orderConfigManagerImpl,orderInfoManagerImpl,orderLogManagerImpl,orderPushMainImpl,cancelled,delivery,orderStateManagerImpl,paid,receive,refund,statement,waitDelivery,waitPayment,sentMessageManagerImpl,serviceEvaluateManagerImpl,serviceEvaluateStatisticsManagerImpl,serviceSortManagerImpl,subOrderDetailManagerImpl,zbaoFundManagerImpl,configPowerDBDAOImpl,configResultInfoDBDAOImpl,currencyConfigDBDAOImpl,discountCouponDBDAOImpl,gameConfigDBDAOImpl,insuranceOrderDaoImpl,insuranceSettingsDaoImpl,messageRuleDaoImpl,messageRuleLogDaoImpl,orderConfigLockRedisDAOImpl,orderIdRedisDAOImpl,orderInfoDBDAOImpl,orderInfoRedisDAOImpl,orderLogDaoImpl,sentMessageDaoImpl,serviceEvaluateDaoImpl,serviceEvaluateStatisticsDaoImpl,serviceSortDaoImpl,shippingInfoDBDAOImpl,subOrderDetailDaoImpl,checkRepositoryManageRedisManagerImple,discountInfoManagerImpl,firmInfoManagerImpl,firmsAccountManagerImpl,firmsLogManagerImpl,gameRepositoryManagerImpl,goodsInfoManagerImpl,goodsLogManagerImpl,hotRecommendConfigManagerImpl,MConnectionManagerImpl,referencePriceManagerImpl,repositoryConfineManagerImpl,sevenBaoBindLogManagerImpl,warningManagerImpl,checkRepostitoryManageRedisDAOImpl,discountInfoDBDAOImpl,firmInfoBDDAOImpl,firmsAccountBDDAOImpl,firmsLogDBDAOImpl,gameRepositoryDaoImpl,goodsInfoDBDAOImpl,goodsInfoRedisDAOImpl,goodsLogDaoImpl,hotRecommendConfigDBDAOImpl,hotRecommendConfigRedisDAOImpl,referencePriceDaoImpl,referencePriceRedisDaoImpl,repositoryConfigRedisDAOImpl,repositoryConfineDaoImpl,repositoryConfineInfoRedisDaoImpl,sevenBaoBindLogDBDAOImpl,warningDBDAOImpl,agreeInitAccountImpl,autoDeliverSettingManager,aysncDBIOImple,bnsRepositoryTransferManager,dnfRepositoryTransferManager,httpToSevenBao,huanXinManagerImpl,jfRepositoryTransferManager,jx3RepositoryTransferManager,queryServiceManagerImpl,queryRepositoryInfo,repositoryLogManagerImpl,repositoryManagerImpl,repositoryUploadProcessorImpl,sellerGameManagerImpl,sellerManagerImpl,sellerSettingManagerImpl,shrobotRefundOrderManagerImpl,transFileManagerImpl,wowRepositoryTransferManager,xtlbbRepositoryTransferManager,autoDeliverSettingDBDAOImpl,huanXinRedisDaoImpl,repositoryDBDAOImpl,repositoryLogDaoImpl,repositoryRedisDAOImpl,sellerDBDAOImpl,sellerGameDBDAOImpl,sellerRedisDaoImpl,sellerSettingDBDAOImpl,transferRedisDaoIMpl,transFileDBDAOImpl,accountIntDto,accountZBaoUtil,amoutHttpImpl,asyncPushToMainMethodsImple,automationManagerImpl,autoPayShManagerImpl,BlackListEOManagerImpl,configManagerImpl,deliveryConfigManagerImpl,deliveryOrderAutoConfigManagerImpl,deliveryOrderFinishManagerImpl,deliveryOrderLogManagerImpl,deliveryOrderManagerImpl,deliverySubOrderManagerImpl,fundDetailManagerImpl,fundManagerImpl,fundManagerPrivateImpl,fundStatisticsManagerImpl,gameAccountManagerImpl,gameAccountProcessorImpl,gameCategoryConfigManagerImpl,goodsTypeManagerImpl,gtrOrderManager,hxAccountManagerImpl,levelCarryLimitManagerImpl,machineArtificialConfigManagerImpl,mainGameConfigManagerImpl,manualDeliveryOrderManagerImpl,orderUserLogManagerImpl,payDetailManagerImpl,payOrderManagerImpl,purchaseGameManagerImpl,purchaseOrderManagerImpl,purchaserDataManagerImpl,purchaserGameTradeManagerImpl,pushToMqUtilImpl,qqOnLineManagerImpl,receiveMainManagerImpl,refundOrderManagerImpl,shGameConfigManagerImpl,shGameTradeManagerImpl,splitRepositoryLogManagerImpl,splitRepositoryRequestManagerImpl,splitRepositorySubRequestManagerImpl,stockManagerImpl,systemConfigManagerImpl,tradeManagerImpl,userModifiActionLogManagerImpl,automaticQueuingRedisImpl,BlackListDaoImpl,configDaoImpl,configRedisDaoImpl,deliveryConfigDaoImpl,deliveryOrderDaoImpl,deliveryOrderIdRedisDaoImpl,deliveryOrderLogDaoImpl,deliveryOrderStartRedisDaoImpl,deliverySubOrderDaoImpl,deliverySubOrderRedisDaoImpl,existLogRedisImpl,fundDetailDaoImpl,fundStatisticsDaoImpl,gameAccountCountRedisDaoImpl,gameAccountDBDAOImpl,gameCategoryConfigDaoImpl,goodsTypeDaoImpl,huanXinRedisDaoShorderImpl,hxAccountDaoImpl,hxAccountRedisDaoImpl,hxChatroomNetWorkDaoImpl,ISystemConfigRedisImpl,levelCarryLimitDaoImpl,levelCarryLimitRedisDaoImpl,machineArtificialConfigDaoImpl,mainGameConfigDaoImpl,mainGameConfigRedisDaoImpl,orderLogRedisDaoImpl,orderPushRedisDaoImpl,orderUserLogDaoImpl,payDetailDaoImpl,payOrderDaoImpl,payOrderRedisDaoImpl,purchaseGameDaoImpl,purchaseOrderDBDAOImpl,purchaserDataDaoImpl,purchaserGameTradeDaoImpl,purchaserGameTradeRedisImpl,qqOnLineDAOImpl,qqOnLineRedisDaoImpl,refundOrderDaoImpl,refundOrderIdRedisDaoImpl,repositorySplitRequestManagerImple,robotImgDaoImpl,sellerDTODao,shGameConfigDaoImpl,shGameConfigRedisDaoImpl,shGameTradeDaoImpl,splitRepoReqOrderIdRedisDaoImpl,splitRepositoryLogDaoImpl,splitRepositoryRequestDaoImpl,splitRepositorySubRequestDaoImple,stockDaoImpl,systemConfigDaoImpl,tradeImpl,tradeRedisDaoImpl,userModifiActionLogDaoImpl,deliveryOrder,purchaserData,httpToConn,sendHttpToSevenBao,sevenBaoFund,repositoryCountAspect,shStoreManagerImpl,syncRepositoryManager,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,org.springframework.context.support.PropertySourcesPlaceholderConfigurer#1,transactionManager,sqlSessionFactory,userJedisFactory,userRedisTemplate,dataSource,cxf,org.apache.cxf.bus.spring.BusWiringBeanFactoryPostProcessor,org.apache.cxf.bus.spring.Jsr250BeanPostProcessor,org.apache.cxf.bus.spring.BusExtensionPostProcessor,RESTService,authenticationInterceptor,formattedJAXBInterceptor,org.springframework.context.annotation.ConfigurationClassPostProcessor$ImportAwareBeanPostProcessor#0]; root of factory hierarchy
+2018-08-06 20:32:30,281 [INFO ] c.w.c.f.s.d.m.p.OffsetLimitInterceptor - MyBatis OffsetLimitInterceptor Dialect is com.wzitech.chaos.framework.server.dataaccess.dialect.PostgreSQLDialect
+2018-08-06 20:32:32,688 [WARN ] o.s.aop.framework.Cglib2AopProxy - Unable to proxy method [public final org.apache.ibatis.session.SqlSession org.mybatis.spring.support.SqlSessionDaoSupport.getSqlSession()] because it is final: All calls to this method via a proxy will be routed directly to the proxy.
+2018-08-06 20:32:32,688 [WARN ] o.s.aop.framework.Cglib2AopProxy - Unable to proxy method [public final void org.mybatis.spring.support.SqlSessionDaoSupport.setSqlSessionFactory(org.apache.ibatis.session.SqlSessionFactory)] because it is final: All calls to this method via a proxy will be routed directly to the proxy.
+2018-08-06 20:32:32,689 [WARN ] o.s.aop.framework.Cglib2AopProxy - Unable to proxy method [public final void org.mybatis.spring.support.SqlSessionDaoSupport.setSqlSessionTemplate(org.mybatis.spring.SqlSessionTemplate)] because it is final: All calls to this method via a proxy will be routed directly to the proxy.
+2018-08-06 20:32:32,689 [WARN ] o.s.aop.framework.Cglib2AopProxy - Unable to proxy method [public final void org.springframework.dao.support.DaoSupport.afterPropertiesSet() throws java.lang.IllegalArgumentException,org.springframework.beans.factory.BeanInitializationException] because it is final: All calls to this method via a proxy will be routed directly to the proxy.
+2018-08-06 20:32:32,834 [WARN ] c.w.c.f.s.common.utils.GenericsUtils - GameAccountDBDAOImpl$$EnhancerByCGLIB$$e745ac53的父类非泛型类
+2018-08-06 20:32:33,713 [INFO ] c.w.g.c.m.impl.MobileMsgManageImpl - 当前服务器IP：192.168.71.35
+2018-08-06 20:32:34,460 [WARN ] c.w.c.f.s.common.utils.GenericsUtils - ImageRedisDAOImpl的父类非泛型类
+2018-08-06 20:32:34,469 [WARN ] c.w.c.f.s.common.utils.GenericsUtils - RedisDaoUtil的父类非泛型类
+2018-08-06 20:32:34,847 [WARN ] c.w.c.f.s.common.utils.GenericsUtils - OrderPushRedisDaoImpl的父类非泛型类
+2018-08-06 20:32:36,005 [INFO ] org.apache.cxf.endpoint.ServerImpl - Setting the server's publish address to be /
+2018-08-06 20:32:36,095 [INFO ] o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 10084 ms
+2018-08-06 20:36:43,936 [INFO ] o.s.web.context.ContextLoader - Root WebApplicationContext: initialization started
+2018-08-06 20:36:44,899 [INFO ] o.s.w.c.s.XmlWebApplicationContext - Refreshing Root WebApplicationContext: startup date [Mon Aug 06 20:36:44 CST 2018]; root of context hierarchy
+2018-08-06 20:36:44,940 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-context.xml]
+2018-08-06 20:36:45,258 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-import-context.xml]
+2018-08-06 20:36:45,815 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-dao-context.xml]
+2018-08-06 20:36:45,851 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-business-context.xml]
+2018-08-06 20:36:45,878 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/gold-facade-service-context.xml]
+2018-08-06 20:36:45,926 [INFO ] o.s.b.f.xml.XmlBeanDefinitionReader - Loading XML bean definitions from class path resource [META-INF/cxf/cxf.xml]
+2018-08-06 20:36:47,113 [INFO ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Loading properties file from class path resource [META-INF/application.properties]
+2018-08-06 20:36:47,118 [INFO ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Loading properties file from class path resource [META-INF/application.develop.properties]
+2018-08-06 20:36:47,122 [INFO ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Loading properties file from class path resource [META-INF/application.develop.local.properties]
+2018-08-06 20:36:47,129 [WARN ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Could not load properties from class path resource [META-INF/application.develop.local.properties]: class path resource [META-INF/application.develop.local.properties] cannot be opened because it does not exist
+2018-08-06 20:36:47,147 [INFO ] o.s.c.s.PropertySourcesPlaceholderConfigurer - Loading properties file from URL [file:/E:/workspace/goldmall/kq-20180731/facade/target/classes/META-INF/application.mybatis.properties]
+2018-08-06 20:36:47,198 [INFO ] o.s.w.c.s.XmlWebApplicationContext - Bean '(inner bean)' of type [class java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-08-06 20:36:47,217 [INFO ] o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 
+2018-08-06 20:36:47,217 [INFO ] o.s.w.c.s.XmlWebApplicationContext - Bean 'AsyncJobExecutor' of type [class org.springframework.scheduling.config.TaskExecutorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-08-06 20:36:47,217 [INFO ] o.s.w.c.s.XmlWebApplicationContext - Bean 'AsyncJobExecutor' of type [class org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2018-08-06 20:36:47,290 [INFO ] o.s.b.f.s.DefaultListableBeanFactory - Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@10e3af71: defining beans [org.springframework.context.annotation.internalAsyncAnnotationProcessor,org.springframework.context.annotation.internalScheduledAnnotationProcessor,AsyncJobExecutor,org.springframework.context.annotation.internalConfigurationAnnotationProcessor,org.springframework.context.annotation.internalAutowiredAnnotationProcessor,org.springframework.context.annotation.internalRequiredAnnotationProcessor,org.springframework.context.annotation.internalCommonAnnotationProcessor,org.springframework.context.annotation.internalPersistenceAnnotationProcessor,org.springframework.aop.config.internalAutoProxyCreator,org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator#0,org.springframework.context.support.PropertySourcesPlaceholderConfigurer#0,ComplaintService,OrderService,ReceivingService,UserService,imageRedisDAOImpl,gameInfoRedisDAOImpl,gameInfoManagerImpl,httpClientPool,authOutInterceptor,logManagerImpl,logDBDAOImpl,getGameIdFromMain,getImageUrlFromMain,mainGerIdUtilEo,mainStationManagerImpl,mqUtilForOrderCenterToMainImpl,eucpMobileMsgImpl,batchTransferConfig,compensateConfig,directPartialRefundConfig,directPartialTransferConfig,directPayTransferConfig,paymentConfig,queryConfig,refundConfig,transferConfig,payManagerImpl,redisCommonImpl,servicerOrderManagerImpl,tradeOrderManagerImpl,userInfoServiceImpl,gameUserManagerImpl,redisDaoUtil,accountManagerImpl,authenticationImpl,servicerVoteConfigManagerImpl,servicerVoteManagerImpl,sessionManagerImpl,userInfoManagerImpl,usersGameManagerImpl,servicerVoteConfigDBDAO,servicerVoteDBDAOImpl,userInfoDBDAOImpl,usersGameDBDAOImpl,servicerVoteRedisDAOImpl,userInfoRedisDAOImpl,verifyCodeRedisDAOImpl,fileManagerImpl,imageCropper,imageManager,thumbGenerator,arrangeTraderManagerImpl,autoConfigManagerImpl,autoPayManagerImpl,commissionManagerImpl,configPowerManagerImpl,currencyConfigManagerImpl,deliveryOrderCenterManager,discountCouponManagerImpl,gameConfigManagerImpl,hxDataManagerImpl,insuranceManagerImpl,insuranceOrderManagerImpl,insuranceSettingsManager,messageRuleLogManager,messageRuleManagerImpl,orderCenterManagerWithDate,orderConfigManagerImpl,orderInfoManagerImpl,orderLogManagerImpl,orderPushMainImpl,cancelled,delivery,orderStateManagerImpl,paid,receive,refund,statement,waitDelivery,waitPayment,sentMessageManagerImpl,serviceEvaluateManagerImpl,serviceEvaluateStatisticsManagerImpl,serviceSortManagerImpl,subOrderDetailManagerImpl,zbaoFundManagerImpl,configPowerDBDAOImpl,configResultInfoDBDAOImpl,currencyConfigDBDAOImpl,discountCouponDBDAOImpl,gameConfigDBDAOImpl,insuranceOrderDaoImpl,insuranceSettingsDaoImpl,messageRuleDaoImpl,messageRuleLogDaoImpl,orderConfigLockRedisDAOImpl,orderIdRedisDAOImpl,orderInfoDBDAOImpl,orderInfoRedisDAOImpl,orderLogDaoImpl,sentMessageDaoImpl,serviceEvaluateDaoImpl,serviceEvaluateStatisticsDaoImpl,serviceSortDaoImpl,shippingInfoDBDAOImpl,subOrderDetailDaoImpl,checkRepositoryManageRedisManagerImple,discountInfoManagerImpl,firmInfoManagerImpl,firmsAccountManagerImpl,firmsLogManagerImpl,gameRepositoryManagerImpl,goodsInfoManagerImpl,goodsLogManagerImpl,hotRecommendConfigManagerImpl,MConnectionManagerImpl,referencePriceManagerImpl,repositoryConfineManagerImpl,sevenBaoBindLogManagerImpl,warningManagerImpl,checkRepostitoryManageRedisDAOImpl,discountInfoDBDAOImpl,firmInfoBDDAOImpl,firmsAccountBDDAOImpl,firmsLogDBDAOImpl,gameRepositoryDaoImpl,goodsInfoDBDAOImpl,goodsInfoRedisDAOImpl,goodsLogDaoImpl,hotRecommendConfigDBDAOImpl,hotRecommendConfigRedisDAOImpl,referencePriceDaoImpl,referencePriceRedisDaoImpl,repositoryConfigRedisDAOImpl,repositoryConfineDaoImpl,repositoryConfineInfoRedisDaoImpl,sevenBaoBindLogDBDAOImpl,warningDBDAOImpl,agreeInitAccountImpl,autoDeliverSettingManager,aysncDBIOImple,bnsRepositoryTransferManager,dnfRepositoryTransferManager,httpToSevenBao,huanXinManagerImpl,jfRepositoryTransferManager,jx3RepositoryTransferManager,queryServiceManagerImpl,queryRepositoryInfo,repositoryLogManagerImpl,repositoryManagerImpl,repositoryUploadProcessorImpl,sellerGameManagerImpl,sellerManagerImpl,sellerSettingManagerImpl,shrobotRefundOrderManagerImpl,transFileManagerImpl,wowRepositoryTransferManager,xtlbbRepositoryTransferManager,autoDeliverSettingDBDAOImpl,huanXinRedisDaoImpl,repositoryDBDAOImpl,repositoryLogDaoImpl,repositoryRedisDAOImpl,sellerDBDAOImpl,sellerGameDBDAOImpl,sellerRedisDaoImpl,sellerSettingDBDAOImpl,transferRedisDaoIMpl,transFileDBDAOImpl,accountIntDto,accountZBaoUtil,amoutHttpImpl,asyncPushToMainMethodsImple,automationManagerImpl,autoPayShManagerImpl,BlackListEOManagerImpl,configManagerImpl,deliveryConfigManagerImpl,deliveryOrderAutoConfigManagerImpl,deliveryOrderFinishManagerImpl,deliveryOrderLogManagerImpl,deliveryOrderManagerImpl,deliverySubOrderManagerImpl,fundDetailManagerImpl,fundManagerImpl,fundManagerPrivateImpl,fundStatisticsManagerImpl,gameAccountManagerImpl,gameAccountProcessorImpl,gameCategoryConfigManagerImpl,goodsTypeManagerImpl,gtrOrderManager,hxAccountManagerImpl,levelCarryLimitManagerImpl,machineArtificialConfigManagerImpl,mainGameConfigManagerImpl,manualDeliveryOrderManagerImpl,orderUserLogManagerImpl,payDetailManagerImpl,payOrderManagerImpl,purchaseGameManagerImpl,purchaseOrderManagerImpl,purchaserDataManagerImpl,purchaserGameTradeManagerImpl,pushToMqUtilImpl,qqOnLineManagerImpl,receiveMainManagerImpl,refundOrderManagerImpl,shGameConfigManagerImpl,shGameTradeManagerImpl,splitRepositoryLogManagerImpl,splitRepositoryRequestManagerImpl,splitRepositorySubRequestManagerImpl,stockManagerImpl,systemConfigManagerImpl,tradeManagerImpl,userModifiActionLogManagerImpl,automaticQueuingRedisImpl,BlackListDaoImpl,configDaoImpl,configRedisDaoImpl,deliveryConfigDaoImpl,deliveryOrderDaoImpl,deliveryOrderIdRedisDaoImpl,deliveryOrderLogDaoImpl,deliveryOrderStartRedisDaoImpl,deliverySubOrderDaoImpl,deliverySubOrderRedisDaoImpl,existLogRedisImpl,fundDetailDaoImpl,fundStatisticsDaoImpl,gameAccountCountRedisDaoImpl,gameAccountDBDAOImpl,gameCategoryConfigDaoImpl,goodsTypeDaoImpl,huanXinRedisDaoShorderImpl,hxAccountDaoImpl,hxAccountRedisDaoImpl,hxChatroomNetWorkDaoImpl,ISystemConfigRedisImpl,levelCarryLimitDaoImpl,levelCarryLimitRedisDaoImpl,machineArtificialConfigDaoImpl,mainGameConfigDaoImpl,mainGameConfigRedisDaoImpl,orderLogRedisDaoImpl,orderPushRedisDaoImpl,orderUserLogDaoImpl,payDetailDaoImpl,payOrderDaoImpl,payOrderRedisDaoImpl,purchaseGameDaoImpl,purchaseOrderDBDAOImpl,purchaserDataDaoImpl,purchaserGameTradeDaoImpl,purchaserGameTradeRedisImpl,qqOnLineDAOImpl,qqOnLineRedisDaoImpl,refundOrderDaoImpl,refundOrderIdRedisDaoImpl,repositorySplitRequestManagerImple,robotImgDaoImpl,sellerDTODao,shGameConfigDaoImpl,shGameConfigRedisDaoImpl,shGameTradeDaoImpl,splitRepoReqOrderIdRedisDaoImpl,splitRepositoryLogDaoImpl,splitRepositoryRequestDaoImpl,splitRepositorySubRequestDaoImple,stockDaoImpl,systemConfigDaoImpl,tradeImpl,tradeRedisDaoImpl,userModifiActionLogDaoImpl,deliveryOrder,purchaserData,httpToConn,sendHttpToSevenBao,sevenBaoFund,repositoryCountAspect,shStoreManagerImpl,syncRepositoryManager,org.springframework.transaction.annotation.AnnotationTransactionAttributeSource#0,org.springframework.transaction.interceptor.TransactionInterceptor#0,org.springframework.transaction.config.internalTransactionAdvisor,org.springframework.context.support.PropertySourcesPlaceholderConfigurer#1,transactionManager,sqlSessionFactory,userJedisFactory,userRedisTemplate,dataSource,cxf,org.apache.cxf.bus.spring.BusWiringBeanFactoryPostProcessor,org.apache.cxf.bus.spring.Jsr250BeanPostProcessor,org.apache.cxf.bus.spring.BusExtensionPostProcessor,RESTService,authenticationInterceptor,formattedJAXBInterceptor,org.springframework.context.annotation.ConfigurationClassPostProcessor$ImportAwareBeanPostProcessor#0]; root of factory hierarchy
+2018-08-06 20:36:48,314 [INFO ] c.w.c.f.s.d.m.p.OffsetLimitInterceptor - MyBatis OffsetLimitInterceptor Dialect is com.wzitech.chaos.framework.server.dataaccess.dialect.PostgreSQLDialect
+2018-08-06 20:36:50,258 [WARN ] o.s.aop.framework.Cglib2AopProxy - Unable to proxy method [public final org.apache.ibatis.session.SqlSession org.mybatis.spring.support.SqlSessionDaoSupport.getSqlSession()] because it is final: All calls to this method via a proxy will be routed directly to the proxy.
+2018-08-06 20:36:50,259 [WARN ] o.s.aop.framework.Cglib2AopProxy - Unable to proxy method [public final void org.mybatis.spring.support.SqlSessionDaoSupport.setSqlSessionFactory(org.apache.ibatis.session.SqlSessionFactory)] because it is final: All calls to this method via a proxy will be routed directly to the proxy.
+2018-08-06 20:36:50,259 [WARN ] o.s.aop.framework.Cglib2AopProxy - Unable to proxy method [public final void org.mybatis.spring.support.SqlSessionDaoSupport.setSqlSessionTemplate(org.mybatis.spring.SqlSessionTemplate)] because it is final: All calls to this method via a proxy will be routed directly to the proxy.
+2018-08-06 20:36:50,259 [WARN ] o.s.aop.framework.Cglib2AopProxy - Unable to proxy method [public final void org.springframework.dao.support.DaoSupport.afterPropertiesSet() throws java.lang.IllegalArgumentException,org.springframework.beans.factory.BeanInitializationException] because it is final: All calls to this method via a proxy will be routed directly to the proxy.
+2018-08-06 20:36:50,361 [WARN ] c.w.c.f.s.common.utils.GenericsUtils - GameAccountDBDAOImpl$$EnhancerByCGLIB$$6acb4ab7的父类非泛型类
+2018-08-06 20:36:51,364 [INFO ] c.w.g.c.m.impl.MobileMsgManageImpl - 当前服务器IP：192.168.71.35
+2018-08-06 20:36:52,334 [WARN ] c.w.c.f.s.common.utils.GenericsUtils - ImageRedisDAOImpl的父类非泛型类
+2018-08-06 20:36:52,347 [WARN ] c.w.c.f.s.common.utils.GenericsUtils - RedisDaoUtil的父类非泛型类
+2018-08-06 20:36:52,827 [WARN ] c.w.c.f.s.common.utils.GenericsUtils - OrderPushRedisDaoImpl的父类非泛型类
+2018-08-06 20:36:54,287 [INFO ] org.apache.cxf.endpoint.ServerImpl - Setting the server's publish address to be /
+2018-08-06 20:36:54,408 [INFO ] o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 9556 ms
+2018-08-06 20:37:31,774 [INFO ] o.a.c.i.LoggingInInterceptor - Inbound Message
+----------------------------
+ID: 1
+Address: http://localhost:8082/gamegold-facade/services/order/queryorderlist?queryType=1&requestNum=10&sign=
+Http-Method: GET
+Content-Type: 
+Headers: {Accept=[*/*], accept-encoding=[gzip, deflate, br], accept-language=[zh-CN,zh;q=0.9], cache-control=[no-cache], connection=[keep-alive], Content-Type=[null], host=[localhost:8082], postman-token=[d0f494fa-53cc-2c92-8f83-86cb0102bd8e], user-agent=[Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36], x-postman-interceptor-id=[570722ca-a809-f7cd-86b7-d0b49e2a40f1]}
+--------------------------------------
+2018-08-06 20:37:44,076 [INFO ] o.a.c.i.LoggingOutInterceptor - Outbound Message
+---------------------------
+ID: 1
+Response-Code: 200
+Content-Type: application/xml;charset=gb2312
+Headers: {Date=[Mon, 06 Aug 2018 12:37:43 GMT]}
+Payload: <?xml version="1.0" encoding="gb2312" standalone="yes"?>
+<Orders>
+    <Status>false</Status>
+</Orders>
+
+--------------------------------------
+2018-08-06 20:37:48,944 [INFO ] o.a.c.i.LoggingInInterceptor - Inbound Message
+----------------------------
+ID: 2
+Address: http://localhost:8082/gamegold-facade/services/order/queryorderlist?queryType=1&requestNum=10&sign=92e23e13e62a1a0cdbc6b8981ab74234
+Http-Method: GET
+Content-Type: 
+Headers: {Accept=[*/*], accept-encoding=[gzip, deflate, br], accept-language=[zh-CN,zh;q=0.9], cache-control=[no-cache], connection=[keep-alive], Content-Type=[null], host=[localhost:8082], postman-token=[5e89058f-43ea-2aa3-d526-d9c30555bb7a], user-agent=[Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36], x-postman-interceptor-id=[be373236-cfea-c5da-5978-6133982e6bcd]}
+--------------------------------------
+2018-08-06 20:37:50,564 [INFO ] o.a.c.i.LoggingOutInterceptor - Outbound Message
+---------------------------
+ID: 2
+Response-Code: 200
+Content-Type: application/xml;charset=gb2312
+Headers: {Date=[Mon, 06 Aug 2018 12:37:50 GMT]}
+Payload: <?xml version="1.0" encoding="gb2312" standalone="yes"?>
+<Orders>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>�㽭��</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>�㽭2��</GSN>
+        <Id>YX1501070000010_1802905</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>���ž���</GAN>
+        <GN>����</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>��������</GSN>
+        <Id>YX1501180001822_1835881</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>������</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>����2��</GSN>
+        <Id>YX1510050008488_3087994</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>������</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>����6��</GSN>
+        <Id>YX1510060009560_3095372</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>�㶫��</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>�㶫1��</GSN>
+        <Id>YX1510080000609_3103492</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>�㶫��</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>�㶫1��</GSN>
+        <Id>YX1510080000611_3103494</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>�㶫��</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>�㶫9��</GSN>
+        <Id>YX1510080000610_3103495</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>������</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>����1��</GSN>
+        <Id>YX1510080000625_3103506</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>�㶫��</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>�㶫1��</GSN>
+        <Id>YX1510080000626_3103507</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Order>
+        <IsBlocked>false</IsBlocked>
+        <IsCon>false</IsCon>
+        <GAN>������</GAN>
+        <GN>���³�����ʿ</GN>
+        <GoodsTypeName>��Ϸ��</GoodsTypeName>
+        <GSN>����1��</GSN>
+        <Id>YX1510080000629_3103509</Id>
+        <IsNewRC>true</IsNewRC>
+        <IsVIPkefu>false</IsVIPkefu>
+        <YXBMALL>1</YXBMALL>
+    </Order>
+    <Msg>�����ɹ�</Msg>
+    <Status>true</Status>
+</Orders>
+
+--------------------------------------

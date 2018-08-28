@@ -1,0 +1,182 @@
+package com.wzitech.gamegold.facade.frontend;
+
+import com.wzitech.gamegold.common.game.IGameInfoManager;
+import com.wzitech.gamegold.common.utils.EncryptHelper;
+import com.wzitech.gamegold.goods.business.IGoodsInfoManager;
+import com.wzitech.gamegold.goods.entity.GoodsInfo;
+import com.wzitech.gamegold.order.business.IOrderConfigManager;
+import com.wzitech.gamegold.repository.dao.ISellerDBDAO;
+import com.wzitech.gamegold.repository.entity.SellerInfo;
+import com.wzitech.gamegold.shorder.business.*;
+import com.wzitech.gamegold.shorder.dao.IDeliverySubOrderDao;
+import com.wzitech.gamegold.shorder.dao.IQqOnLineDAO;
+import com.wzitech.gamegold.shorder.entity.DeliveryOrder;
+import com.wzitech.gamegold.shorder.entity.DeliverySubOrder;
+import com.wzitech.gamegold.shorder.entity.QqOnLineEO;
+import com.wzitech.gamegold.shorder.utils.HttpToConn;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
+        DirtiesContextTestExecutionListener.class,
+        TransactionalTestExecutionListener.class})
+@ContextConfiguration(locations = {"classpath:/META-INF/gold-facade-frontend-context.xml"})
+@ActiveProfiles("development")
+public class xmlTest {
+	@Autowired
+	private IAmoutHttp amoutHttp;
+
+	@Autowired
+	private IDeliveryOrderManager deliveryOrderManager;
+	@Autowired
+	private IQqOnLineManager qqOnLineManager;
+
+
+	@Test
+	public void javaToXml() throws JAXBException{
+//		deliveryOrderManager.settlement("SH1701190000007");
+	}
+
+	@Test
+	public void conToMainTest() {
+//		deliveryOrderManager.settlement("SH1701190000007");
+
+//		deliveryOrderManager.transfer("SG1709050000733");
+		DeliveryOrder deliveryOrder = new DeliveryOrder();
+		deliveryOrder.setCreateTime(new Date());
+		deliveryOrder.setSellerAccount("supmj9");
+		deliveryOrder.setSellerUid("US12122233351001-016B");
+		deliveryOrder.setAmount(new BigDecimal("100"));
+		deliveryOrder.setOrderId("SH823757979977");
+		deliveryOrder.setBuyerAccount("supmj6");
+		deliveryOrder.setBuyerUid("US12072359508001-00D3");
+//		amoutHttp.conToMain(deliveryOrder);
+	}
+
+	@Autowired
+	IPurchaseOrderManager purchaseOrderManager;
+
+	@Test
+	public void test(){
+		List<Long> ids=new ArrayList<Long>();
+		ids.add(724L);
+		purchaseOrderManager.setPurchaseOrderOnline(ids,true,"liaolanlan0");
+	}
+
+	@Autowired
+	private IGameInfoManager gameInfoManager;
+
+	@Autowired
+	private IGoodsInfoManager goodsInfoManager;
+
+	@Test
+	public void test01() throws IOException, JAXBException {
+		//bb5078d359c3426d82fc6db9a0ff78df
+
+//		GoodsInfo goodsInfo = new GoodsInfo();
+//		goodsInfo.setGameName("���³�����ʿ");
+//		goodsInfo.setRegion("�㽭��");
+//		goodsInfo.setServer("�㽭2��");
+//
+//		GoodsInfo gameRegionServerId = goodsInfoManager.setGoodsGameId(goodsInfo);
+//
+//		System.out.println(gameRegionServerId);
+
+	}
+
+
+	@Value("${7Bao.update.mulitPayment}")
+	private String mulitPayment;
+	@Test
+	public void test22() throws IOException {
+		String format="4Uj3V9%_US08121986705055_SG1801080000121_0,1.30_技术部测试组11_0.00_2_SG1801080000121_997.12_997.12_0.00";
+
+ 		String sign = EncryptHelper.md5(format);
+		String params = "sign=" + sign + "&userId=US08121986705055&transferList=SG1801080000121_0,1.30&loginAccount=技术部测试组11&freezeFund=0.00&yesOrNo=2&orderId=SG1801080000121&totalAmount=997.12&availableAmount=997.12&freezeAmount=0.00";
+		HttpToConn httpToZBao = new HttpToConn();
+		//调用 cxymark00
+		httpToZBao.httpPostReduce(mulitPayment, params);
+	}
+
+	@Autowired
+	private IManualDeliveryOrderManager manualDeliveryOrderManager;
+
+	@Test
+	public void test66() throws IOException {
+		manualDeliveryOrderManager.confirmReceived(2205L);
+	}
+
+	@Autowired
+	IQqOnLineDAO qqOnLineDAO;
+
+	@Test
+
+	public void getQQOnLine(){
+//		QqOnLineEO qqOnLineEO = qqOnLineDAO.selectByid(13L);
+//		System.out.println(qqOnLineEO);
+	}
+
+	@Autowired
+	IDeliverySubOrderDao deliverySubOrderDao;
+	@Test
+	public void testpp() throws IOException {
+//		DeliverySubOrder subOrder =deliverySubOrderDao.selectByUniqueId(3361L);
+////		subOrder.setOtherReason("实际收货数量大于阈值,需转人工处理!");
+//		subOrder.setWaitToConfirm(true);
+//		subOrder.setUpdateTime(new Date());
+//		deliverySubOrderDao.updateById(subOrder);
+//		System.out.println(subOrder);
+//
+//		int source = 1;
+//		deliveryOrderManager.autoDistributionManager(subOrder.getOrderId(),source);
+
+//		DeliverySubOrder subOrder =deliverySubOrderDao.selectByUniqueId(3600l);
+//		Map<Long, Long> subOrdersInfos = new HashMap<Long, Long>();
+//		subOrdersInfos.put(3600l,1001l);
+//		String mainOrderId = subOrder.getOrderId();
+//		//没有问题  直接完单
+//		deliveryOrderManager.handleOrderForMailDeliveryOrderMax(subOrdersInfos, mainOrderId, null, null,null);
+
+	}
+
+	@Autowired
+	ISellerDBDAO sellerDBDAO;
+
+	@Test
+	public void testa(){
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("loginAccount","a7343644");
+		List<SellerInfo> list = sellerDBDAO.selectByMap(map,"ID",true);
+		System.out.println(list);
+	}
+
+	@Autowired
+	private IOrderConfigManager orderConfigManager;
+
+	@Test
+	public void testAfterCountSyncShGameAccountIncr(){
+//		try {
+//			orderConfigManager.updateConfigState(3095372L,7);
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
+		System.out.println(1123154646L / 10000L);
+	}
+}

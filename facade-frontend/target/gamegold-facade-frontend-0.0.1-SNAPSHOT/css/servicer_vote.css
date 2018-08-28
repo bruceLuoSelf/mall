@@ -1,0 +1,117 @@
+* {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    font-family:Arial,simsun,sans-serif,"Microsoft YaHei",Mingliu,Verdana,Helvetica,Lucida;
+}
+
+a {
+    color: #fff;
+    font-size: 12px;
+}
+
+.container {
+    background-image: url(../img/vote.jpg);
+    width: 1100px;
+    height: 2272px;
+    margin: 0 auto;
+}
+
+.top {
+    padding-top: 355px;
+}
+
+.servicers {
+    height: 175px;
+}
+
+.servicers .column1 {
+    float: left;
+    width: 12px;
+    height: 175px;
+}
+
+.servicers .column2 {
+    float: left;
+    height: 175px;
+}
+
+.servicers .column2 .servicer {
+    float: left;
+    width: 140px;
+    height: 175px;
+    margin-left: 33px;
+}
+
+.votes {
+    height: 26px;
+    padding: 2px;
+}
+
+.votes .column1 {
+    float: left;
+    width: 10px;
+    height: 28px;
+}
+
+.votes .column2 {
+    float: left;
+    height: 28px;
+}
+
+.votes .column2 .vote {
+    float: left;
+    width: 140px;
+    height: 28px;
+    line-height: 28px;
+    margin-left: 33px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+/*中奖名单模块*/
+.winners_module {
+    width: 180px;
+    height: 155px;
+    margin-left:5px;
+    padding-top:5px;
+    font-size: 12px;
+    //border: 2px solid #ffd703;
+    -moz-border-radius: 5px; /* Gecko browsers */
+    -webkit-border-radius: 5px; /* Webkit browsers */
+    border-radius: 5px; /* W3C syntax */
+}
+.winners_module .title {
+    margin: 4px;
+    font-weight: bold;
+    color: #ffd703;
+}
+.winners_module .winners {
+    padding: 3px;
+    color:#fff;
+}
+.winners_module .winners ul {
+    width:95%
+}
+.winners_module .winners .col_1{
+    width:90px;
+    float:left;
+    text-align:left;
+}
+.winners_module .winners .col_2{
+    width:28px;
+    float:left;
+    text-align:center;
+}
+.winners_module .winners .col_3{
+    width:50px;
+    float:right;
+    text-align:right;
+}

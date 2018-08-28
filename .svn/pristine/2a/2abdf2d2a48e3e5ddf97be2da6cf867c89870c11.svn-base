@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.RefundOrder">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.RefundOrder">
+        <result column="id" property="id" javaType="long" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="pay_order_id" property="payOrderId" jdbcType="VARCHAR" />
+        <result column="refund_amount" property="refundAmount" jdbcType="NUMERIC" />
+        <result column="reason" property="reason" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="NUMERIC" javaType="int"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="auditor" property="auditor" jdbcType="VARCHAR" />
+        <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+        <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
+        <result column="buyer_account" property="buyerAccount" jdbcType="VARCHAR" />
+        <result column="uid" property="uid" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="qq" property="qq" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.RefundOrder"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_refund_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="payOrderId != null">
+                pay_order_id,
+            </if>
+            <if test="refundAmount != null">
+                refund_amount,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="auditor != null">
+                auditor,
+            </if>
+            <if test="auditTime != null">
+                audit_time,
+            </if>
+            <if test="finishTime != null">
+                finish_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="payOrderId != null">
+                #{payOrderId},
+            </if>
+            <if test="refundAmount != null">
+                #{refundAmount},
+            </if>
+            <if test="reason != null">
+                #{reason},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="auditor != null">
+                #{auditor},
+            </if>
+            <if test="auditTime != null">
+                #{auditTime},
+            </if>
+            <if test="finishTime != null">
+                #{finishTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.RefundOrder">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_refund_order
+            <set>
+                <if test="item.orderId != null">
+                    order_id= #{item.orderId},
+                </if>
+                <if test="item.payOrderId != null">
+                    pay_order_id=#{item.payOrderId},
+                </if>
+                <if test="item.refundAmount != null">
+                    refund_amount= #{item.refundAmount},
+                </if>
+                <if test="item.reason != null">
+                    reason= #{item.reason},
+                </if>
+                <if test="item.status != null">
+                    status= #{item.status},
+                </if>
+                <if test="item.createTime != null">
+                    create_time= #{item.createTime},
+                </if>
+                <if test="item.auditor != null">
+                    auditor = #{item.auditor},
+                </if>
+                <if test="item.auditTime != null">
+                    audit_time= #{item.auditTime},
+                </if>
+                <if test="item.finishTime != null">
+                    finish_time= #{item.finishTime},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            aa.pay_order_id=bb.order_id and bb.uid=cc."UID"
+            <if test="id != null">
+                and aa.id = #{id}
+            </if>
+            <if test="orderId != null and orderId != ''">
+                and aa.order_id = #{orderId}
+            </if>
+            <if test="payOrderId != null and payOrderId != ''">
+                and aa.pay_order_id = #{payOrderId}
+            </if>
+            <if test="createStartTime != null">
+                <![CDATA[
+				AND aa.create_time >= #{createStartTime}
+                ]]>
+            </if>
+            <if test="createEndTime != null">
+                <![CDATA[
+                AND aa.create_time <= #{createEndTime}
+               ]]>
+            </if>
+            <if test="status != null">
+                and aa.status=#{status}
+            </if>
+            <if test="uid != null and uid != ''">
+                and bb.uid = #{uid}
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                and cc."LOGIN_ACCOUNT" = #{buyerAccount}
+            </if>
+            <if test="phone != null and phone != ''">
+                and cc."PHONE_NUMBER" = #{phone}
+            </if>
+            <if test="name != null and name != ''">
+                and cc."NAME" = #{name}
+            </if>
+            <if test="qq != null and qq != ''">
+                and cc."QQ" = #{qq}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.RefundOrder">
+        SELECT aa.*, bb.uid,cc."LOGIN_ACCOUNT" as buyer_account,cc."NAME" as name,cc."PHONE_NUMBER" as phone,cc."QQ" as qq FROM t_sh_refund_order aa, t_sh_pay_order bb, "TBL_GAMEGOLD_SELLER" cc
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="lockMode != null and lockMode == true">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_refund_order aa, t_sh_pay_order bb, "TBL_GAMEGOLD_SELLER" cc
+        <include refid="selectSql"/>
+    </select>
+
+    <!-- 根据id查询实体对象 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_refund_order WHERE id = #{id}
+    </select>
+
+    <select id="selectByIdForUpdate" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_refund_order WHERE id = #{id} for update
+    </select>
+</mapper>

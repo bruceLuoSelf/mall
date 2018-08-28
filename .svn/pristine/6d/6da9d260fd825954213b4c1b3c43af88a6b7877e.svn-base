@@ -1,0 +1,354 @@
+package com.wzitech.gamegold.order.business.impl;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wzitech.chaos.framework.server.common.AbstractBusinessObject;
+import com.wzitech.gamegold.common.constants.ServicesContants;
+import com.wzitech.gamegold.common.dto.BuyerSigns;
+import com.wzitech.gamegold.common.dto.OrderDataVO;
+import com.wzitech.gamegold.common.dto.OrderOpData;
+import com.wzitech.gamegold.common.dto.orderPushVo;
+import com.wzitech.gamegold.common.enums.ClientTypeEnum;
+import com.wzitech.gamegold.common.enums.OrderEvaluation;
+import com.wzitech.gamegold.common.enums.OrderSource;
+import com.wzitech.gamegold.common.enums.OrderType;
+import com.wzitech.gamegold.common.main.IGetImageUrlFromMain;
+import com.wzitech.gamegold.common.main.IMainGerIdUtil;
+import com.wzitech.gamegold.common.main.ImqUtilForOrderCenterToMain;
+import com.wzitech.gamegold.common.utils.RedisDaoUtil;
+import com.wzitech.gamegold.order.business.IOrderPushMainManager;
+import com.wzitech.gamegold.order.dao.IConfigResultInfoDBDAO;
+import com.wzitech.gamegold.order.entity.ConfigResultInfoEO;
+import com.wzitech.gamegold.order.entity.OrderInfoEO;
+import com.wzitech.gamegold.usermgmt.dao.rdb.IUserInfoDBDAO;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.List;
+
+/**
+ * Created by 340032 on 2017/10/25.
+ */
+@Component
+public class OrderPushMainImpl extends AbstractBusinessObject implements IOrderPushMainManager {
+
+
+    @Autowired
+    IMainGerIdUtil mainGerIdUtil;
+
+    @Autowired
+    ImqUtilForOrderCenterToMain mqUtilForOrderCenterToMain;
+
+    @Autowired
+    IUserInfoDBDAO userInfoDBDAO;
+
+    @Autowired
+    IConfigResultInfoDBDAO configResultInfoDBDAO;
+
+    @Autowired
+    private IGetImageUrlFromMain getImageUrlFromMain;
+
+    @Autowired
+    private RedisDaoUtil redisDaoUtil;
+
+    /**
+     * 订单信息同步推送主站
+     */
+    @Override
+    @Async
+    public void orderPushMain(OrderInfoEO orderInfo) {
+        try {
+        orderPushVo pushVo = new orderPushVo();
+        OrderDataVO dataVo = new OrderDataVO();
+        OrderOpData opData = new OrderOpData();
+        BuyerSigns buyer = new BuyerSigns();
+        List<ConfigResultInfoEO> configResultInfoEOs = configResultInfoDBDAO.selectByOrderId(orderInfo.getOrderId());
+
+        if (configResultInfoEOs != null && configResultInfoEOs.size() != 0) {
+            putMainConfigList(configResultInfoEOs, orderInfo);
+        }
+
+        logger.info("订单中心推送ORDERINFO为:{}", orderInfo);
+        pushVo.setId(orderInfo.getOrderId());
+        pushVo.setBuyerId(orderInfo.getUid());
+        //主站接收c#解析 需要加8小时
+        Long eightTime = 28800000L;
+        pushVo.setOrderCreateDate(orderInfo.getCreateTime().getTime() + eightTime);
+        DecimalFormat df = new DecimalFormat("#.00");
+        BigDecimal realOrderAmount = orderInfo.getTotalPrice();
+        if (orderInfo.getInsuranceAmount() != null && orderInfo.getInsuranceAmount().compareTo(BigDecimal.ZERO) == 1) {
+            realOrderAmount = orderInfo.getTotalPrice().subtract(orderInfo.getInsuranceAmount());
+        }
+        //商品类型 与商品标题 等于空或者 “游戏币” 与商品标题
+        if (StringUtils.isBlank(orderInfo.getGoodsTypeName()) || orderInfo.getGoodsTypeName().equals(ServicesContants.GOODS_TYPE_GOLD)) {
+            dataVo.setBizOfferTypeName(ServicesContants.GOODS_TYPE_GOLD);
+            dataVo.setBizOfferName(orderInfo.getGoldCount().toString() + orderInfo.getMoneyName() + "=" + new BigDecimal(df.format(realOrderAmount)) + "元");
+        } else {
+            dataVo.setBizOfferTypeName(orderInfo.getGoodsTypeName());
+            dataVo.setBizOfferName(orderInfo.getGoldCount().toString() + orderInfo.getMoneyName() + "=" + new BigDecimal(df.format(realOrderAmount)) + "元");
+        }
+
+        //商品通货或游戏币来源
+        if (StringUtils.isBlank(orderInfo.getGoodsTypeName()) || orderInfo.getGoodsTypeName().equals(ServicesContants.GOODS_TYPE_GOLD)) {
+            pushVo.setOrderSource(OrderSource.GAME_XS_GOLD.getName());
+        } else {
+            pushVo.setOrderSource(OrderSource.GAME_XS_GOODS.getName());
+        }
+        if (orderInfo.getPayTime() == null) {
+            pushVo.setIsPaid(false);
+        } else {
+            pushVo.setIsPaid(true);
+        }
+        pushVo.setGameId(orderInfo.getGameId());
+        //store image address  图片
+        String image = getImageUrlFromMain.getImage(orderInfo.getGameId());
+        dataVo.setPicUrlManager(image);
+        pushVo.setGameAreaId(orderInfo.getRegionId());
+        pushVo.setGameServerId(orderInfo.getServerId());
+        pushVo.setCqtradingType(OrderType.GAME_GOLD_SELLER_ORDER.getCode());
+        pushVo.setOriginOderStatus(orderInfo.getOrderState());
+
+        //评价
+        if (orderInfo.getIsReEvaluate() != null && orderInfo.getIsReEvaluate()) {
+            dataVo.setEvaluation(OrderEvaluation.Append_Evaluation.getCode());
+        } else if (orderInfo.getIsEvaluate() != null && orderInfo.getIsEvaluate()) {
+            dataVo.setEvaluation(OrderEvaluation.Evaluation.getCode());
+        } else {
+            dataVo.setEvaluation(OrderEvaluation.NO_Evaluation.getCode());
+        }
+
+//        //金币单位
+//        if (StringUtils.isBlank(orderInfo.getMoneyName())){
+//            dataVo.setMoneyName("万金");
+//        }else {
+//            dataVo.setMoneyName(orderInfo.getMoneyName());
+//        }
+        //订单来源
+        int orderFromMsite = 4;
+        int orderFromApp = 5;
+        if (orderInfo.getRefererType() != null && orderInfo.getRefererType() == orderFromMsite) {
+            pushVo.setClientType(ClientTypeEnum.M_CLIENT.getCode());
+        } else if (orderInfo.getRefererType() != null && orderInfo.getRefererType() == orderFromApp) {
+            pushVo.setClientType(ClientTypeEnum.APP_CLIENT.getCode());
+        } else {
+            pushVo.setClientType(ClientTypeEnum.PC_CLIENT.getCode());
+        }
+        pushVo.setGoodsQuantity(orderInfo.getGoldCount().toString());
+        dataVo.setBuyerName(orderInfo.getUserAccount());
+        dataVo.setSellerName(orderInfo.getSellerLoginAccount());
+        dataVo.setGameName(orderInfo.getGameName());
+        dataVo.setGameServerName(orderInfo.getServer());
+        dataVo.setGameAreaName(orderInfo.getRegion());
+        dataVo.setBuyerQQ(orderInfo.getQq());
+        dataVo.setBuyerMobile(orderInfo.getMobileNumber());
+        dataVo.setBuyerGameRole(orderInfo.getReceiver());
+        dataVo.setCancelReasons("");
+        if (StringUtils.isNotBlank(orderInfo.getCancelReson())) {
+            dataVo.setCancelReasons(orderInfo.getCancelReson());
+        }
+        dataVo.setBuyerIp(orderInfo.getTerminalIp());
+        JSONObject clientInfo = new JSONObject();
+        if (orderInfo.getMobileId() != null || orderInfo.getMobileType() != null) {
+            clientInfo.put("UUID", orderInfo.getMobileId());
+            clientInfo.put("MAC", orderInfo.getMobileType());
+        }
+        dataVo.setClientInfo(clientInfo);
+        dataVo.setBuyerIp(orderInfo.getTerminalIp());
+        pushVo.setPrice(orderInfo.getUnitPrice());
+        pushVo.setPayPrice(orderInfo.getTotalPrice());
+
+        UserInfoEO servicerInfo = userInfoDBDAO.selectById(orderInfo.getServicerId());
+        if (servicerInfo != null) {
+            opData.setKefuLoginId(servicerInfo.getId().toString());
+            opData.setKefuQQ(servicerInfo.getQq());
+            opData.setKefuName(servicerInfo.getNickName());
+        }
+        pushVo.setSellerId("");
+
+        JSONArray buyerSign = null;
+        if (orderInfo.getInsuranceAmount() != null && orderInfo.getInsuranceAmount().compareTo(BigDecimal.ZERO) == 1) {
+            buyer.setPrice(orderInfo.getInsuranceAmount());
+            buyer.setName("买家安心买");
+            buyer.setId("buyerrelieved");
+            buyerSign = JSONArray.fromObject(buyer);
+
+        }
+        if (buyerSign != null) {
+            String buyerEnd = buyerSign.toString();
+            if (buyerEnd.contains("id")) {
+                buyerEnd = buyerEnd.replace("id", "Id");
+            }
+            if (buyerEnd.contains("name")) {
+                buyerEnd = buyerEnd.replace("name", "Name");
+            }
+            if (buyerEnd.contains("price")) {
+                buyerEnd = buyerEnd.replace("price", "Price");
+            }
+            JSONArray jsonArray = JSONArray.fromObject(buyerEnd);
+            pushVo.setNewBuyerSigns(jsonArray);
+        }
+        pushVo.setJsonData(dataVo);
+
+        pushVo.setOpJsonData(opData);
+
+        Boolean isNotTrueMainId = false;
+        //商品类型等于空或者 “游戏币”
+        if (StringUtils.isBlank(orderInfo.getGoodsTypeName()) || orderInfo.getGoodsTypeName().equals(ServicesContants.GOODS_TYPE_GOLD)) {
+            String mainId = mainGerIdUtil.getMainId(true);
+            if ("-1".equals(mainId)) {
+                isNotTrueMainId = true;
+            }
+            Integer versionId = Integer.parseInt(mainId);
+            pushVo.setCurrentVersion(versionId);
+        } else {
+            String mainId = mainGerIdUtil.getMainId(false);
+            if ("-1".equals(mainId)) {
+                isNotTrueMainId = true;
+            }
+            Integer versionId = Integer.parseInt(mainId);
+            pushVo.setCurrentVersion(versionId);
+        }
+        String message = null;
+        ObjectMapper mapper = new ObjectMapper();
+
+            message = mapper.writeValueAsString(pushVo);
+            if (isNotTrueMainId) {
+                redisDaoUtil.saveOrder(message);
+            } else {
+                mqUtilForOrderCenterToMain.mqPushOrderToMain(message);
+            }
+            logger.info("调用推送mq方法结束");
+        } catch (Exception e) {
+            logger.info("调用推送mq方法异常:" + e);
+        }
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @Async
+    public Boolean putMainConfigList(List<ConfigResultInfoEO> configResultInfoEOs, OrderInfoEO orderInfo) {
+        for (int i = 0; i < configResultInfoEOs.size(); i++) {
+            ConfigResultInfoEO configResultInfoEO = configResultInfoEOs.get(i);
+            orderPushVo pushVo = new orderPushVo();
+            OrderDataVO dataVo = new OrderDataVO();
+            OrderOpData opData = new OrderOpData();
+
+
+            //订单来源
+            if (orderInfo.getRefererType() != null && orderInfo.getRefererType() == 4) {
+                pushVo.setClientType(ClientTypeEnum.M_CLIENT.getCode());
+            } else if (orderInfo.getRefererType() != null && orderInfo.getRefererType() == 5) {
+                pushVo.setClientType(ClientTypeEnum.APP_CLIENT.getCode());
+            } else {
+                pushVo.setClientType(ClientTypeEnum.PC_CLIENT.getCode());
+            }
+
+            //评价
+            if (orderInfo.getIsReEvaluate() != null && orderInfo.getIsReEvaluate()) {
+                dataVo.setEvaluation(OrderEvaluation.Append_Evaluation.getCode());
+            } else if (orderInfo.getIsEvaluate() != null && orderInfo.getIsEvaluate()) {
+                dataVo.setEvaluation(OrderEvaluation.Evaluation.getCode());
+            } else {
+                dataVo.setEvaluation(OrderEvaluation.NO_Evaluation.getCode());
+            }
+            pushVo.setIsPaid(true);
+            //store image address  图片
+            String image = getImageUrlFromMain.getImage(orderInfo.getGameId());
+            dataVo.setPicUrlManager(image);
+            pushVo.setId(configResultInfoEO.getOrderId());
+            pushVo.setPrice(configResultInfoEO.getTotalPrice());
+            pushVo.setPayPrice(configResultInfoEO.getTotalPrice());
+            //主站接收c#解析 需要加8小时
+            Long eightTime = 28800000L;
+            pushVo.setOrderCreateDate(configResultInfoEO.getCreateTime().getTime() + eightTime);
+            pushVo.setGoodsQuantity(configResultInfoEO.getConfigGoldCount().toString());
+            pushVo.setSubid(configResultInfoEO.getId().toString());
+            //商品订单来源
+            if (StringUtils.isBlank(orderInfo.getGoodsTypeName()) || orderInfo.getGoodsTypeName().equals
+                    (ServicesContants.GOODS_TYPE_GOLD)) {
+                pushVo.setOrderSource(OrderSource.GAME_XS_GOLD.getName());
+            } else {
+                pushVo.setOrderSource(OrderSource.GAME_XS_GOODS.getName());
+            }
+            DecimalFormat df = new DecimalFormat("#.00");
+            //商品类型 与商品标题 等于空或者 “游戏币” 与商品标题
+            if (StringUtils.isBlank(orderInfo.getGoodsTypeName()) || orderInfo.getGoodsTypeName().equals
+                    (ServicesContants.GOODS_TYPE_GOLD)) {
+                dataVo.setBizOfferTypeName(ServicesContants.GOODS_TYPE_GOLD);
+                dataVo.setBizOfferName(configResultInfoEO.getConfigGoldCount().toString() + orderInfo.getMoneyName() + "=" + new BigDecimal(df.format(configResultInfoEO.getTotalPrice())) + "元");
+            } else {
+                dataVo.setBizOfferTypeName(orderInfo.getGoodsTypeName());
+                dataVo.setBizOfferName(configResultInfoEO.getConfigGoldCount().toString() + orderInfo.getMoneyName() + "=" + new BigDecimal(df.format(configResultInfoEO.getTotalPrice())) + "元");
+            }
+            pushVo.setGameId(configResultInfoEO.getGameId());
+            pushVo.setGameAreaId(configResultInfoEO.getRegionId());
+            pushVo.setGameServerId(configResultInfoEO.getServerId());
+            pushVo.setCqtradingType(OrderType.GAME_GOLD_SELLER_ORDER.getCode());
+            dataVo.setGameName(configResultInfoEO.getGameName());
+            dataVo.setGameServerName(configResultInfoEO.getServer());
+            dataVo.setGameAreaName(configResultInfoEO.getRegion());
+            dataVo.setCancelReasons("");
+            if (StringUtils.isNotBlank(orderInfo.getCancelReson())) {
+                dataVo.setCancelReasons(orderInfo.getCancelReson());
+            }
+            dataVo.setSellerName(configResultInfoEO.getLoginAccount());
+            pushVo.setSellerId(configResultInfoEO.getAccountUid());
+            pushVo.setOriginOderStatus(orderInfo.getOrderState());
+            UserInfoEO optionUser = orderInfo.getServicerInfo();
+            if (optionUser != null) {
+                opData.setKefuLoginId(optionUser.getId().toString());
+                opData.setKefuQQ(optionUser.getQq());
+                opData.setKefuName(optionUser.getNickName());
+            } else {
+                opData.setKefuLoginId(null);
+                opData.setKefuQQ(null);
+                opData.setKefuName(null);
+            }
+            pushVo.setJsonData(dataVo);
+
+            pushVo.setOpJsonData(opData);
+            pushVo.setBuyerId("");
+            Boolean isNotTrueMainId = false;
+            //商品类型等于空或者 “游戏币”
+            if (StringUtils.isBlank(orderInfo.getGoodsTypeName()) || orderInfo.getGoodsTypeName().equals(ServicesContants.GOODS_TYPE_GOLD)) {
+                String mainId = mainGerIdUtil.getMainId(true);
+                if ("-1".equals(mainId)) {
+                    isNotTrueMainId = true;
+                }
+                Integer versionId = Integer.parseInt(mainId);
+                pushVo.setCurrentVersion(versionId);
+            } else {
+                String mainId = mainGerIdUtil.getMainId(false);
+                if ("-1".equals(mainId)) {
+                    isNotTrueMainId = true;
+                }
+                Integer versionId = Integer.parseInt(mainId);
+                pushVo.setCurrentVersion(versionId);
+            }
+            String message = null;
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                message = mapper.writeValueAsString(pushVo);
+                if (isNotTrueMainId) {
+                    redisDaoUtil.saveOrder(message);
+                } else {
+                    mqUtilForOrderCenterToMain.mqPushOrderToMain(message);
+                }
+                logger.info("调用推送mq方法结束");
+            } catch (Exception e) {
+                logger.info("推送子订单出错：{}", e);
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+}

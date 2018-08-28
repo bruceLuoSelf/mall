@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.5"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee   http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+	<display-name>shuabao-facade-frontend</display-name>
+
+	<!-- JBoss webAppRootKey 设置 -->
+	<context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>com.wzitech.gamegold.facade.frontend.root</param-value>
+    </context-param>
+	
+	<!-- Spring ApplicationContext配置文件的路径,可使用通配符,多个路径用,号分隔 此参数用于后面的Context Loader -->
+	<context-param>
+		<description>Spring Configuration File</description>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:/META-INF/gold-facade-frontend-context.xml
+		</param-value>
+	</context-param>
+	
+	<!-- 設定Spring Context的默认Profile -->
+	<context-param>
+    	<param-name>spring.profiles.default</param-name>
+    	<param-value>development</param-value>
+	</context-param>
+
+	<!--Spring ApplicationContext 载入 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!--cat监控-->
+	<filter>
+		<filter-name>cat-filter</filter-name>
+		<filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>cat-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>InitContent</filter-name>
+		<filter-class>com.wzitech.gamegold.common.utils.InitContent</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>InitContent</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- 导出卖家订单    配置 -->
+	<servlet>
+		<servlet-name>ExportOrderServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.ExportOrderServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExportOrderServlet</servlet-name>
+		<url-pattern>/exportorder</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 支付Servlet 配置 -->
+	<servlet>
+		<servlet-name>PaymentServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.PaymentServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PaymentServlet</servlet-name>
+		<url-pattern>/payment</url-pattern>
+	</servlet-mapping>
+
+	<!-- m站支付Servlet 配置 -->
+	<servlet>
+		<servlet-name>MPaymentServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.MPaymentServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MPaymentServlet</servlet-name>
+		<url-pattern>/mPayment</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>PaymentNotifyServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.PaymentNotifyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PaymentNotifyServlet</servlet-name>
+		<url-pattern>/paymentNotify</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>PaymentRetureServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.PaymentReturnServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PaymentRetureServlet</servlet-name>
+		<url-pattern>/paymentReturn</url-pattern>
+	</servlet-mapping>
+
+	<!-- 退款servlet配置 -->
+	<servlet>
+		<servlet-name>RefundNotifyServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.RefundNotifyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RefundNotifyServlet</servlet-name>
+		<url-pattern>/refundNotify</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>RefundReturnServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.RefundReturnServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RefundReturnServlet</servlet-name>
+		<url-pattern>/refundReturn</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 转账servlet配置 -->
+	<servlet>
+		<servlet-name>TransferNotifyServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.TransferNotifyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TransferNotifyServlet</servlet-name>
+		<url-pattern>/transferNotify</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>TransferReturnServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.TransferReturnServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TransferReturnServlet</servlet-name>
+		<url-pattern>/transferReturn</url-pattern>
+	</servlet-mapping>
+
+	<!--收货系统付款地址-->
+	<servlet>
+		<servlet-name>SHPaymentServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.SHPaymentServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SHPaymentServlet</servlet-name>
+		<url-pattern>/shPayment</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>SHPaymentNotifyServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.SHPaymentNotifyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SHPaymentNotifyServlet</servlet-name>
+		<url-pattern>/shPaymentNotify</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>SHPaymentRetureServlet</servlet-name>
+		<servlet-class>com.wzitech.gamegold.facade.frontend.servlet.SHPaymentReturnServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SHPaymentRetureServlet</servlet-name>
+		<url-pattern>/shPaymentReturn</url-pattern>
+	</servlet-mapping>
+	
+	<!-- CXF 配置 -->
+	<servlet>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404.html</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.html</location>
+	</error-page>
+</web-app>

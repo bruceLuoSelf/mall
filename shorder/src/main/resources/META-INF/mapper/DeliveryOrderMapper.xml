@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.DeliveryOrder">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.DeliveryOrder">
+        <result column="id" property="id"/>
+        <result column="cg_id" property="cgId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="seller_account" property="sellerAccount"/>
+        <result column="seller_uid" property="sellerUid"/>
+        <result column="buyer_account" property="buyerAccount"/>
+        <result column="buyer_uid" property="buyerUid"/>
+        <result column="game_name" property="gameName"/>
+        <result column="region" property="region"/>
+        <result column="region" property="region"/>
+        <result column="server" property="server"/>
+        <result column="game_race" property="gameRace"/>
+        <result column="role_name" property="roleName"/>
+        <result column="price" property="price"/>
+        <result column="count" property="count"/>
+        <result column="amount" property="amount"/>
+        <result column="real_count" property="realCount"/>
+        <result column="real_amount" property="realAmount"/>
+        <result column="phone" property="phone"/>
+        <result column="qq" property="qq"/>
+        <result column="words" property="words"/>
+        <result column="address" property="address"/>
+        <result column="status" property="status"/>
+        <result column="reason" property="reason"/>
+        <result column="other_reason" property="otherReason"/>
+        <result column="transfer_status" property="transferStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="queue_start_time" property="queueStartTime"/>
+        <result column="trade_start_time" property="tradeStartTime"/>
+        <result column="trade_end_time" property="tradeEndTime"/>
+        <result column="transfer_time" property="transferTime"/>
+        <result column="delivery_type" property="deliveryType"/>
+        <result column="trade_type" property="tradeType"/>
+        <result column="delivery_type_name" property="deliveryTypeName"/>
+        <result column="trade_type_name" property="tradeTypeName"/>
+        <result column="buyer_phone" property="buyerPhone"/>
+        <result column="is_timeout" property="isTimeout"/>
+        <result column="money_name" property="moneyName"/>
+        <result column="buyer_tel" property="buyerTel"/>
+        <result column="service_qq" property="serviceQq"/>
+        <result column="service_nickname" property="serviceNickname"/>
+        <result column="goods_type" property="goodsType"/>
+        <result column="goods_type_name" property="goodsTypeName"/>
+        <result column="chatroom_id" property="chatroomId"/>
+        <result column="seller_hx_account" property="sellerHxAccount"/>
+        <result column="seller_hx_pwd" property="sellerHxPwd"/>
+        <result column="buyer_hx_account" property="buyerHxAccount"/>
+        <result column="buyer_hx_pwd" property="buyerHxPwd"/>
+        <result column="admin_hx_account" property="adminHxAccount"/>
+        <result column="admin_hx_pwd" property="adminHxPwd"/>
+        <result column="takeover_subject_id" property="takeOverSubjectId"/>
+        <result column="takeover_subject" property="takeOverSubject"/>
+        <result column="machine_artificial_reason" property="machineArtificialReason"/>
+        <result column="machine_artificial_time" property="machineArtificialTime"/>
+        <result column="machine_artificial_status" property="machineArtificialStatus"/>
+        <result column="seller_ip" property="sellerIp"/>
+        <result column="appeal_order" property="appealOrder"/>
+        <result column="appeal_reason" property="appealReason"/>
+        <result column="relation_order_id" property="relationOrderId"/>
+        <result column="seller_role_level" property="sellerRoleLevel"/>
+        <result column="trade_logo" property="tradeLogo"/>
+    </resultMap>
+
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.DeliveryOrder"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sh_delivery_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cgId != null">
+                cg_id,
+            </if>
+            <if test="orderId != null and orderId != ''">
+                order_id,
+            </if>
+            <if test="sellerAccount != null and sellerAccount != ''">
+                seller_account,
+            </if>
+            <if test="sellerUid != null and sellerUid != ''">
+                seller_uid,
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account,
+            </if>
+            <if test="buyerUid != null and buyerUid != ''">
+                buyer_uid,
+            </if>
+            <if test="gameName != null and gameName != ''">
+                game_name,
+            </if>
+            <if test="region != null and region != ''">
+                region,
+            </if>
+            <if test="server != null and server != ''">
+                server,
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                game_race,
+            </if>
+            <if test="roleName != null and roleName != ''">
+                role_name,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="moneyName != null">
+                money_name,
+            </if>
+            <if test="realCount != null">
+                real_count,
+            </if>
+            <if test="realAmount != null">
+                real_amount,
+            </if>
+            <if test="phone != null and phone != ''">
+                phone,
+            </if>
+            <if test="qq != null and qq != ''">
+                qq,
+            </if>
+            <if test="words != null and words != ''">
+                words,
+            </if>
+            <if test="address != null and address != ''">
+                address,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="transferStatus != null">
+                transfer_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="queueStartTime != null">
+                queue_start_time,
+            </if>
+            <if test="tradeStartTime != null">
+                trade_start_time,
+            </if>
+            <if test="tradeEndTime != null">
+                trade_end_time,
+            </if>
+            <if test="deliveryType != null">
+                delivery_type,
+            </if>
+            <if test="tradeType != null">
+                trade_type,
+            </if>
+            <if test="deliveryTypeName != null and deliveryTypeName != ''">
+                delivery_type_name,
+            </if>
+            <if test="tradeTypeName != null and tradeTypeName != ''">
+                trade_type_name,
+            </if>
+            <if test="buyerPhone != null">
+                buyer_phone,
+            </if>
+            <if test="buyerTel != null and buyerTel != ''">
+                buyer_tel,
+            </if>
+            <if test="serviceQq != null and serviceQq != ''">
+                service_qq,
+            </if>
+            <if test="serviceNickname != null and serviceNickname != ''">
+                service_nickname,
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                goods_type_name,
+            </if>
+            <if test="goodsType != null and goodsType != ''">
+                goods_type,
+            </if>
+            <if test="chatroomId != null and chatroomId != ''">
+                chatroom_id,
+            </if>
+            <if test="sellerHxAccount != null and sellerHxAccount != ''">
+                seller_hx_account,
+            </if>
+            <if test="sellerHxPwd != null and sellerHxPwd != ''">
+                seller_hx_pwd,
+            </if>
+            <if test="buyerHxAccount != null and buyerHxAccount != ''">
+                buyer_hx_account,
+            </if>
+            <if test="buyerHxPwd != null and buyerHxPwd != ''">
+                buyer_hx_pwd,
+            </if>
+
+            <if test="adminHxAccount !=null and adminHxAccount != null">
+                admin_hx_account,
+            </if>
+
+            <if test="adminHxPwd !=null and adminHxPwd != null">
+                admin_hx_pwd,
+            </if>
+            <if test="takeOverSubject != null">
+                takeover_subject,
+            </if>
+            <if test="takeOverSubjectId != null">
+                takeover_subject_id,
+            </if>
+            <if test="machineArtificialReason != null">
+                machine_artificial_reason,
+            </if>
+            <if test="machineArtificialTime != null">
+                machine_artificial_time,
+            </if>
+            <if test="machineArtificialStatus != null">
+                machine_artificial_status,
+            </if>
+            <if test="sellerIp != null">
+                seller_ip,
+            </if>
+            <if test="appealOrder != null and appealOrder != ''">
+                appeal_order,
+            </if>
+            <if test="appealReason != null and appealReason != ''">
+                appeal_reason,
+            </if>
+            <if test="relationOrderId != null and relationOrderId != ''">
+                relation_order_id,
+            </if>
+            <if test="sellerRoleLevel != null and sellerRoleLevel != ''">
+                seller_role_level,
+            </if>
+            <if test="tradeLogo!=null">
+                trade_logo,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cgId != null">
+                #{cgId},
+            </if>
+            <if test="orderId != null and orderId != ''">
+                #{orderId},
+            </if>
+            <if test="sellerAccount != null and sellerAccount != ''">
+                #{sellerAccount},
+            </if>
+            <if test="sellerUid != null and sellerUid != ''">
+                #{sellerUid},
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                #{buyerAccount},
+            </if>
+            <if test="buyerUid != null and buyerUid != ''">
+                #{buyerUid},
+            </if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+            <if test="region != null and region != ''">
+                #{region},
+            </if>
+            <if test="server != null and server != ''">
+                #{server},
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                #{gameRace},
+            </if>
+            <if test="roleName != null and roleName != ''">
+                #{roleName},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="count != null">
+                #{count},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="moneyName != null">
+                #{moneyName},
+            </if>
+            <if test="realCount != null">
+                #{realCount},
+            </if>
+            <if test="realAmount != null">
+                #{realAmount},
+            </if>
+            <if test="phone != null and phone != ''">
+                #{phone},
+            </if>
+            <if test="qq != null and qq != ''">
+                #{qq},
+            </if>
+            <if test="words != null and words != ''">
+                #{words},
+            </if>
+            <if test="address != null and address != ''">
+                #{address},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="transferStatus != null">
+                #{transferStatus},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="queueStartTime != null">
+                #{queueStartTime},
+            </if>
+            <if test="tradeStartTime != null">
+                #{tradeStartTime},
+            </if>
+            <if test="tradeEndTime != null">
+                #{tradeEndTime},
+            </if>
+            <if test="deliveryType != null">
+                #{deliveryType},
+            </if>
+            <if test="tradeType != null">
+                #{tradeType},
+            </if>
+            <if test="deliveryTypeName != null and deliveryTypeName != ''">
+                #{deliveryTypeName},
+            </if>
+            <if test="tradeTypeName != null and tradeTypeName != ''">
+                #{tradeTypeName},
+            </if>
+            <if test="buyerPhone != null">
+                (select "PHONE_NUMBER" from "TBL_GAMEGOLD_SELLER" where "UID"=#{buyerUid} limit 1),
+            </if>
+            <if test="buyerTel != null and buyerTel != ''">
+                #{buyerTel},
+            </if>
+            <if test="serviceQq != null and serviceQq != ''">
+                #{serviceQq},
+            </if>
+            <if test="serviceNickname != null and serviceNickname != ''">
+                #{serviceNickname},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                #{goodsTypeName},
+            </if>
+            <if test="goodsType != null and goodsType != ''">
+                #{goodsType},
+            </if>
+
+            <if test="chatroomId != null and chatroomId != ''">
+                #{chatroomId},
+            </if>
+            <if test="sellerHxAccount!= null and sellerHxAccount != ''">
+                #{seller_hx_account},
+            </if>
+            <if test="sellerHxPwd!= null and sellerHxPwd != ''">
+                #{seller_hx_pwd},
+            </if>
+            <if test="buyerHxAccount!= null and buyerHxAccount != ''">
+                #{buyer_hx_account},
+            </if>
+            <if test="buyerHxPwd!= null and buyerHxPwd != ''">
+                #{buyer_hx_pwd},
+            </if>
+
+            <if test="adminHxAccount !=null and adminHxAccount != ''">
+                #{adminHxAccount},
+            </if>
+
+            <if test="adminHxPwd !=null and adminHxPwd != ''">
+                #{adminHxPwd},
+            </if>
+            <if test="takeOverSubject != null">
+                #{takeOverSubject},
+            </if>
+            <if test="takeOverSubjectId != null">
+                #{takeOverSubjectId},
+            </if>
+            <if test="machineArtificialReason != null">
+                #{machineArtificialReason},
+            </if>
+            <if test="machineArtificialTime != null">
+                #{machineArtificialTime},
+            </if>
+            <if test="machineArtificialStatus != null">
+                #{machineArtificialStatus},
+            </if>
+            <if test="sellerIp != null">
+                #{sellerIp},
+            </if>
+            <if test="appealOrder != null and appealOrder != ''">
+                #{appealOrder},
+            </if>
+            <if test="appealReason != null and appealReason != ''">
+                #{appealReason},
+            </if>
+            <if test="relationOrderId != null and relationOrderId != ''">
+                #{relationOrderId},
+            </if>
+            <if test="sellerRoleLevel != null and sellerRoleLevel != ''">
+                #{sellerRoleLevel},
+            </if>
+            <if test="tradeLogo!=null">
+                #{tradeLogo},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.DeliveryOrder">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE t_sh_delivery_order
+            <set>
+                <if test="item.realCount != null">
+                    real_count= #{item.realCount},
+                </if>
+                <if test="item.realAmount != null">
+                    real_amount= #{item.realAmount},
+                </if>
+                <if test="item.status != null">
+                    status= #{item.status},
+                </if>
+                <if test="item.reason != null">
+                    reason= #{item.reason},
+                </if>
+                <if test="item.otherReason != null and item.otherReason != ''">
+                    other_reason= #{item.otherReason},
+                </if>
+                <if test="item.transferStatus != null">
+                    transfer_status = #{item.transferStatus},
+                </if>
+                <if test="item.queueStartTime != null">
+                    queue_start_time=#{item.queueStartTime},
+                </if>
+                <if test="item.tradeStartTime != null">
+                    trade_start_time= #{item.tradeStartTime},
+                </if>
+                <if test="item.tradeEndTime != null">
+                    trade_end_time = #{item.tradeEndTime},
+                </if>
+                <if test="item.transferTime != null">
+                    transfer_time = #{item.transferTime},
+                </if>
+                <if test="item.isTimeout != null">
+                    is_timeout = #{item.isTimeout},
+                </if>
+                <if test="item.chatroomId != null">
+                    chatroom_id = #{item.chatroomId},
+                </if>
+                <if test="item.sellerHxAccount != null and item.sellerHxAccount!=''">
+                    seller_hx_account = #{item.sellerHxAccount},
+                </if>
+                <if test="item.sellerHxPwd != null and item.sellerHxPwd!=''">
+                    seller_hx_pwd = #{item.sellerHxPwd},
+                </if>
+                <if test="item.buyerHxAccount != null and item.buyerHxAccount!=''">
+                    buyer_hx_account = #{item.buyerHxAccount},
+                </if>
+                <if test="item.buyerHxPwd != null and item.buyerHxPwd!=''">
+                    buyer_hx_pwd = #{item.buyerHxPwd},
+                </if>
+                <if test="item.adminHxAccount !=null">
+                    admin_hx_account = #{item.adminHxAccount},
+                </if>
+                <if test="item.adminHxPwd !=null">
+                    admin_hx_pwd = #{item.adminHxPwd},
+                </if>
+                <if test="item.serviceQq !=null and item.serviceQq!=''">
+                    service_qq=#{item.serviceQq},
+                </if>
+                <if test="item.serviceNickname !=null and item.serviceNickname!=''">
+                    service_nickname=#{item.serviceNickname},
+                </if>
+                <!--<if test="item.buyerPhone !=null and item.buyerPhone!=''">-->
+                    <!--buyer_phone =#{item.buyerPhone},-->
+                <!--</if>-->
+                <if test="item.buyerTel !=null and item.buyerTel!=''">
+                    buyer_tel =#{item.buyerTel},
+                </if>
+                <if test="item.takeOverSubject != null ">
+                    takeover_subject = #{item.takeOverSubject},
+                </if>
+                <if test="item.takeOverSubjectId != null">
+                    takeover_subject_id = #{item.takeOverSubjectId},
+                </if>
+                <if test="item.machineArtificialReason != null">
+                    machine_artificial_reason = #{item.machineArtificialReason},
+                </if>
+                <if test="item.machineArtificialTime != null">
+                    machine_artificial_time = #{item.machineArtificialTime},
+                </if>
+                <if test="item.machineArtificialStatus != null">
+                    machine_artificial_status = #{item.machineArtificialStatus},
+                </if>
+                <if test="item.appealOrder !=null and item.appealOrder!=''">
+                    appeal_order =#{item.appealOrder},
+                </if>
+                <if test="item.appealReason !=null and item.appealReason!=''">
+                    appeal_reason =#{item.appealReason},
+                </if>
+                <if test="item.sellerRoleLevel !=null and item.sellerRoleLevel!=''">
+                    seller_role_level =#{item.sellerRoleLevel},
+                </if>
+                <if test="item.tradeLogo != null">
+                    trade_logo=#{item.tradeLogo},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+                <if test="item.orderId != null and item.orderId != ''">
+                    AND order_id = #{item.orderId}
+                </if>
+                <if test="item.sellerAccount != null and item.sellerAccount != ''">
+                    AND seller_account = #{item.sellerAccount}
+                </if>
+                <if test="item.buyerAccount != null and item.buyerAccount != ''">
+                    AND buyer_account = #{item.buyerAccount}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="status != null">
+                status=#{status}
+            </if>
+            <if test="sellerAccount != null and sellerAccount != ''">
+                and seller_account=#{sellerAccount}
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                and buyer_account=#{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                and game_name=#{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                and region=#{region}
+            </if>
+            <if test="server != null and server != ''">
+                and server=#{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                and game_race=#{gameRace}
+            </if>
+
+            <if test="orderId != null and orderId != ''">
+                and order_id=#{orderId}
+            </if>
+            <if test="transferStatus != null">
+                and transfer_status = #{transferStatus}
+            </if>
+            <if test="deliveryType !=null">
+                and delivery_type = #{deliveryType}
+            </if>
+            <if test="tradeTypeName !=null">
+                and trade_type_name = #{tradeTypeName}
+            </if>
+            <if test="isTimeout !=null and isTimeout==true">
+                and is_timeout = #{isTimeout}
+            </if>
+            <if test="sellerHxAccount!= null">
+                and seller_hx_account = #{sellerHxAccount},
+            </if>
+            <if test="sellerHxPwd!= null">
+                and seller_hx_pwd = #{sellerHxPwd},
+            </if>
+            <if test="buyerHxAccount!= null">
+                and buyer_hx_account = #{buyerHxAccount},
+            </if>
+            <if test="buyerHxPwd!= null">
+                and buyer_hx_pwd = #{buyerHxPwd},
+            </if>
+            <if test="machineArtificialStatus!= null">
+                and machine_artificial_status = #{machineArtificialStatus}
+            </if>
+            <if test="machineArtificialReason!= null">
+                and machine_artificial_reason = #{machineArtificialReason}
+            </if>
+            <if test="machineArtificialTime!= null">
+                and machine_artificial_time = #{machineArtificialTime}
+            </if>
+            <if test="isTimeout !=null and isTimeout==false">
+                and (is_timeout is null or is_timeout=false)
+            </if>
+            <if test="appealOrder!= null">
+                and appeal_order = #{appealOrder}
+            </if>
+            <if test="appealOrderNotNull != null and appealOrderNotNull == true">
+                and appeal_order is not null
+            </if>
+            <if test="appealOrderNull != null and appealOrderNull == true">
+                and appeal_order is null
+            </if>
+            <if test="sellerRoleLevel != null and sellerRoleLevel == true">
+                and seller_role_level = #{sellerRoleLevel}
+            </if>
+            <if test="createStartTime != null">
+                <![CDATA[
+				AND create_time >= #{createStartTime}
+                ]]>
+            </if>
+            <if test="createEndTime != null">
+                <![CDATA[
+                AND create_time <= #{createEndTime}
+               ]]>
+            </if>
+            <if test="tradeCountStartTime != null">
+                <![CDATA[
+				AND trade_end_time >= #{tradeCountStartTime}
+                ]]>
+            </if>
+            <if test="tradeCountEndTime != null">
+                <![CDATA[
+                AND trade_end_time <= #{tradeCountEndTime}
+               ]]>
+            </if>
+            <if test="statusList != null and statusList != ''">
+                AND status in (${statusList})
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_delivery_order
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="isLocked != null and isLocked==true">
+            FOR UPDATE
+        </if>
+    </select>
+    <!-- 查询符合条件的实体对象  不分页-->
+    <select id="selectAllOrder" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_delivery_order
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="isLocked != null and isLocked==true">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_delivery_order
+        <include refid="selectSql"/>
+    </select>
+
+   <!-- 查询未完结的订单-->
+    <select id="countUnEndOrder" parameterType="string" resultType="int">
+      SELECT COUNT(1) FROM  t_sh_delivery_order WHERE
+        (seller_account=#{sellerAccount}
+            OR buyer_account=#{buyerAccount} )
+        <if test="statusList != null and statusList != ''">
+            AND status in (${statusList})
+        </if>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_delivery_order WHERE id = #{id}
+    </select>
+
+    <select id="queryFund" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_delivery_order WHERE seller_uid = #{sellerUid}
+    </select>
+
+    <select id="selectByIdForUpdate" parameterType="map" resultMap="BaseResultMap">
+        SELECT *
+        FROM t_sh_delivery_order
+        WHERE id = #{id}
+        <if test="locked != null and locked==true">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <select id="selectByOrderIdForUpdate" parameterType="map" resultMap="BaseResultMap">
+        SELECT *
+        FROM t_sh_delivery_order
+        WHERE order_id = #{orderId}
+        <if test="locked != null and locked==true">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <select id="selectByOrderId" parameterType="map" resultMap="BaseResultMap">
+        SELECT *
+        FROM t_sh_delivery_order
+        WHERE order_id = #{orderId}
+    </select>
+
+    <select id="selectByAppealOrder" parameterType="map" resultMap="BaseResultMap">
+        SELECT *
+        FROM t_sh_delivery_order
+        WHERE appeal_order = #{appealOrder}
+    </select>
+
+    <select id="queryInQueueOrders" parameterType="map" resultMap="BaseResultMap">
+
+    </select>
+
+    <!-- 统计金额和数量 -->
+    <select id="statisAmountAndCount" parameterType="map" resultMap="BaseResultMap">
+        select sum(real_count) real_count,sum(real_amount) real_amount from t_sh_delivery_order
+        <include refid="selectSql"/>
+    </select>
+
+    <!--查询等待排队的订单ID-->
+    <select id="queryInQueueOrderIds" parameterType="map" resultType="long">
+        select id from t_sh_delivery_order where status=#{status} and delivery_type=1 order by id asc
+    </select>
+
+    <!--根据订单号查询订单-->
+    <select id="getByOrderId" parameterType="map" resultMap="BaseResultMap">
+        select * from t_sh_delivery_order where order_id=#{orderId} limit 1
+    </select>
+
+    <!--查询交易超时的订单，未进行交易30分钟或排队30分钟之后算超时-->
+    <select id="queryTradeTimeoutOrders" resultType="Long">
+        SELECT id
+        FROM t_sh_delivery_order
+        WHERE (((status = 1 and (now() - interval '10 min') > create_time) and delivery_type=1) or ((status = 1 and
+        (now() - interval '10 min') > create_time) and delivery_type=2)
+         or ((status = 2 and (now() - interval '30 min') > queue_start_time) and delivery_type = 1)) AND appeal_order IS NULL
+    </select>
+
+    <select id="queryWaitTransferOrderIds" resultType="String">
+        SELECT order_id
+        FROM t_sh_delivery_order
+        WHERE (status = 4 or status = 5) AND transfer_status=1
+    </select>
+
+    <!--查询手工交易超时的订单-->
+    <select id="queryTimeoutOrders" resultType="Long">
+         SELECT id FROM t_sh_delivery_order a
+        WHERE a.delivery_type=2 and ( (a.status = 2 and (now() - interval '30 min') > a.queue_start_time)
+        or (a.status = 3 and exists(select * from (select * from t_sh_delivery_sub_order b where b.ch_id=a.id order by b.update_time desc limit 1) c where c.status =4 and (now() - interval '30 min') > c.finish_time))
+        or exists(select * from t_sh_delivery_sub_order b where b.ch_id=a.id and b.status = 9 and (now() - interval '30 min') > b.create_time)
+        or exists(select * from t_sh_delivery_sub_order b where b.ch_id=a.id and b.status = 10 and (now() - interval '30 min') > b.delivery_time) )
+    </select>
+
+    <!--查询机器收货交易中超时的订单-->
+    <select id="queryMachineDeliveryTimeoutOrders" resultType="String">
+       SELECT order_id FROM t_sh_delivery_order a
+        WHERE a.delivery_type=1 and  (a.status = 3 and (now() - interval '${tradeTimeOut}') > a.trade_start_time ) and (a.machine_artificial_status is NULL OR a.machine_artificial_status=2 )
+    </select>
+    <!--资金统计汇总-->
+    <select id="summaryRelieve" parameterType="map" resultMap="BaseResultMap">
+        SELECT COUNT(*) count, sum(amount) amount, sum(real_amount) real_amount FROM t_sh_delivery_order
+        <include refid="selectSql"/>
+    </select>
+
+    <update id="updateByOrderId" parameterType="com.wzitech.gamegold.shorder.entity.DeliveryOrder">
+        UPDATE t_sh_delivery_order set chatroom_id = #{chatroomId} where order_id = #{orderId}
+    </update>
+
+    <select id="selectDeliveryOrderByOrderId" parameterType="String" resultMap="BaseResultMap">
+        select * from t_sh_delivery_order
+        where
+        order_id=#{orderId}
+    </select>
+
+    <update id="updateOrder" parameterType="com.wzitech.gamegold.shorder.entity.DeliveryOrder">
+        UPDATE t_sh_delivery_order set seller_hx_account = #{sellerHxAccount} , seller_hx_pwd = #{sellerHxPwd} , buyer_hx_account = #{buyerHxAccount} , buyer_hx_pwd = #{buyerHxPwd} ,admin_hx_account = #{adminHxAccount} , admin_hx_pwd = #{adminHxPwd}  where order_id = #{orderId}
+    </update>
+
+    <select id="selectByAutometaTimeout" parameterType="map" resultType="long">
+        SELECT id FROM "public"."t_sh_delivery_order"
+        <where>
+            <if test="deliveryType != null and deliveryType!= 0">
+                AND "delivery_type" = #{deliveryType}
+            </if>
+            <if test="timeout != null and timeout!= ''">
+                AND (queue_start_time + '${timeout}' &lt;= now()
+                OR trade_start_time + '${timeout}' &lt;= now())
+            </if>
+            AND status in (${status}) AND machine_artificial_status is NULL
+        </where>
+        order By create_time asc
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="queryAppealOrderInPage" parameterType="map" resultMap="BaseResultMap">
+        SELECT *
+        FROM t_sh_delivery_order
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="isLocked != null and isLocked==true">
+            FOR UPDATE
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="gamegold-facade:war">
+    <output-path>$PROJECT_DIR$/facade/target</output-path>
+    <root id="archive" name="gamegold-facade.war">
+      <element id="artifact" artifact-name="gamegold-facade:war exploded" />
+    </root>
+  </artifact>
+</component>

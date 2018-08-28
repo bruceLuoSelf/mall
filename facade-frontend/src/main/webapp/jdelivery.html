@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>我的5173 - [5173.com]中国网络游戏服务网</title>
+    <link href="http://images001.5173cdn.com/css/my5173/v3/module/status_info.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="http://images001.5173cdn.com/page/my5173/v4/sues/user_editinfo.css"/>
+    <script type="text/javascript" src="http://images001.5173cdn.com/js/fed-std/jquery.min.js"></script>
+    <script type="text/javascript" src="http://images001.5173cdn.com/js/my5173/v3/1m/left_menu.js"
+            charset="utf-8"></script>
+    <script type="text/javascript" src="http://images001.5173cdn.com/js/my5173/v3/1m/my5173.js"></script>
+    <script type="text/javascript" src="http://img01.5173cdn.com/common/build/1.00/js/lib/jquery-1.5.2.min.js"></script>
+    <script type="text/javascript" src="http://images001.5173cdn.com/js/user/v2/1m/realnameauthenticate.js"></script>
+    <!-------------------------------------------------------->
+    <link rel="shortcut icon" href="http://images.5173cdn.com/images/img/ico.ico">
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common-950.css"/>
+    <link href="http://images.5173cdn.com/5173/css/public_v30.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="http://images001.5173cdn.com/css/my5173/v3/module/list_2.css"/>
+    <link href="http://images001.5173cdn.com/css/my5173/v3/1m/myinfo_v30.css" rel="Stylesheet" type="text/css"/>
+    <link href="./css/ui-lightness/jquery-ui-1.8.14.custom.css" rel="stylesheet" type="text/css"/>
+    <link href="./css/fileUploader.css" rel="stylesheet" type="text/css"/>
+    <link href="css/request-buy.css" rel="Stylesheet" type="text/css"/>
+    <script src="./js/jquery-1.8.3.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://images001.5173cdn.com/js/my5173/v3/1m/newbietask.js"
+            charset="utf-8"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/jquery.json-2.4.min.js" type="text/javascript"></script>
+    <script src="./js/jquery.cookie.js" type="text/javascript"></script>
+    <script src="./js/jquery-ui-1.8.14.custom.min.js" type="text/javascript"></script>
+    <script src="./js/jquery.fileUploader.js" type="text/javascript"></script>
+    <script src="./js/gameMenu.js" type="text/javascript"></script>
+    <script src="./js/business/jdelivery.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="css/page.css">
+    <script src="./js/jqPaginator.js" type="text/javascript"></script>
+    <!-------------------------------------------------------->
+
+    <link rel="stylesheet" type="text/css" href="css/delivery.css"/>
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/fed/build/1.00/css/fed.css"/>
+    <script type="text/javascript" src="http://img01.5173cdn.com/fed/build/1.00/js/fed-min.js" charset="utf-8"></script>
+</head>
+<div class="header header_s">
+    <div class="logo"><a href="http://www.5173.com" title="中国网络游戏服务网">中国网络游戏服务网</a></div>
+    <div class="login " id="f_miniloginbar"></div>
+</div>
+<body>
+<div class="conNav">您的位置：<a href="http://www.5173.com">首页</a> &gt; <a
+        href="http://user.5173.com/Default.aspx">我的5173</a> &gt; <a href="#">帐户设置</a> &gt; 实名认证
+</div>
+<div id="main">
+    <div id="leftbox">
+        <iframe src="http://user.5173.com/UserleftLoginFrameV1.aspx" frameborder="0" height="180" width="218"
+                scrolling="no" id="_userIframe"></iframe>
+        <div id="leftMenu">
+            <script type="text/javascript">                        leftMenu();</script>
+        </div>
+    </div>
+    <div id="rightbox" class="box"><span class="rc-tp"><span></span></span>
+        <div class="r-c">
+            <div class="listbox">
+                <div class="option"><a href="delivery.html?oc=0" class="off" title=''><span>手工收货</span></a><a
+                        href="jdelivery.html?oc=1" class="on" title=""><span> 机器收货</span></a>
+                    <a href="rechargeList.html?oc=1" class="off" title=""><span> 收货预付款</span></a>
+                </div>
+                <div class="wqg_inputshb">
+                    <a href="javascript:void(0)" class="wqg_btn_01" id="btnDownloadTemplate">下载收货模板</a>
+                    <div class="uploadContent" style="position:absolute;top:15px;left:15px;">
+                        <form style="" action="./services/gameAccount/upload" method="post"
+                              enctype="multipart/form-data">
+                            <input type="file" name="excelFile" id="excelUpload" class="fileUpload" multiple>
+                            <input type="hidden" id="gameName" name="gameName" value="地下城与勇士"/>
+                        </form>
+                    </div>
+                </div>
+                <div class="searchbox">
+                    <div id="_searchbox">
+                        <div class="game_select clearfix ma5173_dao f_left" id="gameSelect">
+                            <div class="game_select_box" id="gameSelectBox">
+                                <div class="tab_box clearfix" id="multipleSearch" style="width:680px">
+                                    <div class="left_bg"></div>
+
+
+                                    <div class="condition">
+                                        <span class="title">游戏/区/服：</span>
+                                        <ul class="sel">
+                                            <li id="game" onclick="select($(this))">请选择游戏</li>
+                                            <li id="region" onclick="select($(this))">请选择区</li>
+                                            <li id="server" onclick="select($(this))">请选择服</li>
+                                        </ul>
+                                        <div style="float:right; width:80px; height:37px;"><a id="btnSearch" id="btnSearch" class="btn_g" style="width:80px; text-align:center" href="javascript:void(0)"><span>搜索</span></a>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <div class="gs_box" id="gsBox" style="display: none;">
+                                            <div class="gs_box_inner">
+                                                <div class="gs_head clearfix">
+                                                    <dl class="gs_name" style="display: block;">
+                                                        <dt>
+                                                        <h1>
+                                                            请选择游戏：</h1>
+                                                        </dt>
+                                                        <dd><a id="all" flag="region" href="javascript:void(0);"
+                                                               style="display: none;">全部区</a></dd>
+                                                    </dl>
+                                                    <a target="_self" class="close_btn" title="关闭窗口" href="javascript:">关闭窗口</a>
+                                                </div>
+                                                <ul id="gsList" class="gs_list gs_name">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <s id="searchbar_arrow" class="game_select_arrow" style="display: none;"></s>
+                                    </div>
+                                    </span>
+                                    <div class="right_bg"></div>
+                                </div>
+                            </div>
+                            <!-- 游戏选择列表 -->
+                            <!--<div class="gs_box" id="gsBox"> </div>-->
+                            <ul class="hot_game_list">
+                                <li><a href="#">游戏名称</a></li>
+                            </ul>
+                        </div>
+                        <script type="text/javascript" charset="utf-8"
+                                src="http://images001.5173cdn.com/js/my5173/v4/1m/allgame.js"></script>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="aske">
+                    <div class="line_in bore_bottom">
+                        <div class="font_left"><span class="open_font">是否开启机器收货:</span> <span class="open_yo">
+              <input value="1" type="radio" name="layout" >
+              开启</span> <span class="open_yo">
+              <input value="2" type="radio" name="layout" >
+              关闭</span></div>
+                        <!--<div class="font_right"><span class="open_bei">注：开启手工收货时，请您务必保持在线！</span></div>-->
+                    </div>
+                    <div class="line_in">
+                        <div class="font_left"  id="deli_type"><span class="open_font">收货模式:</span> <span class="open_yo">
+              <input value="邮寄" type="checkbox" name="modele" >
+              邮寄</span> <span class="open_yo">
+              <input value="当面" type="checkbox" name="modele" >
+              当面</span> <span class="open_yo">
+              <input value="附魔" type="checkbox" name="modele">
+              附魔</span></div>
+                        <div class="font_right"><span class="open_bei">注：请务必开通一种收货模式！</span></div>
+                    </div>
+                </div>
+
+
+                <link href="http://images001.5173cdn.com/css/my5173/v3/module/message_foco.css" rel="Stylesheet"
+                      type="text/css"/>
+                <div id="messages_table_frame" style="border-top:0">
+                    <table id="orderList" cellpadding="0" cellspacing="0" width="100%" class="letterbox">
+                        <tbody>
+                        <tr class="titt" style="border-top:#c8e1ff 1px solid">
+                            <td colspan="7"><input type="checkbox" class="vam" onclick="SelectAllMsg(this)"><span
+                                    class="vam" style="margin:0 30px 0 10px">全选</span><a href="javascript:void(0)"
+                                                                                         class="btn_gray"><span>批量上架</span></a><a
+                                    href="javascript:void(0)" class="btn_gray"><span>批量下架</span></a></td>
+                        </tr>
+                        <tr class="tith">
+                            <td width="25"></td>
+                            <td width="200" align="center">游戏区服</td>
+                            <td width="120" align="center">收货数量</td>
+                            <td width="120" align="center">单价(万金币)</td>
+                            <td width="50" align="center">总价</td>
+                            <td width="50" align="center">状态</td>
+                            <td width="110" align="center">操作</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <script>
+                        $(function () {
+
+
+                        });
+                    </script>
+                </div>
+                <div id="page" class="money_list">
+                    <ul class="pagination" id="pagination1"></ul>
+                    <div class="totalPage">共0笔</div>
+                </div>
+            </div>
+        </div>
+        <span class="rc-bt"><span></span></span></div>
+    <!--right end -->
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,850 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.GameAccount">
+    <resultMap id="BaseResultMap"
+               type="com.wzitech.gamegold.shorder.entity.GameAccount">
+        <result column="id" property="id" jdbcType="NUMERIC" javaType="long"/>
+        <result column="buyer_account" property="buyerAccount" jdbcType="VARCHAR"/>
+        <result column="buyer_uid" property="buyerUid" jdbcType="VARCHAR"/>
+        <result column="game_name" property="gameName" jdbcType="VARCHAR"/>
+        <result column="region" property="region" jdbcType="VARCHAR"/>
+        <result column="server" property="server" jdbcType="VARCHAR"/>
+        <result column="game_race" property="gameRace" jdbcType="VARCHAR"/>
+        <result column="game_account" property="gameAccount" jdbcType="VARCHAR"/>
+        <result column="game_pwd" property="gamePwd" jdbcType="VARCHAR"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="second_pwd" property="secondPwd" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="NUMERIC" javaType="int"/>
+        <result column="count" property="count" jdbcType="NUMERIC" javaType="long"/>
+        <result column="price" property="price" jdbcType="NUMERIC"/>
+        <result column="repository_count" property="repositoryCount" jdbcType="NUMERIC" javaType="long"/>
+        <result column="is_sh_role" property="isShRole" jdbcType="BOOLEAN"/>
+        <result column="is_pack_full" property="isPackFull" jdbcType="BOOLEAN"/>
+        <result column="status" property="status" jdbcType="NUMERIC" javaType="int"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="stock_time" property="stockTime" jdbcType="TIMESTAMP"/>
+        <result column="tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="repository_id" property="repositoryId" javaType="long"/>
+        <result column="today_sale_count" property="todaySaleCount" javaType="long" jdbcType="BIGINT"/>
+        <result column="freeze_need_count" property="freezeNeedCount" javaType="long" jdbcType="BIGINT"/>
+        <result column="is_sale" property="isSale" javaType="Boolean"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.GameAccount"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sh_game_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account,
+            </if>
+            <if test="buyerUid != null and buyerUid != ''">
+                buyer_uid,
+            </if>
+            <if test="gameName != null and gameName != ''">
+                game_name,
+            </if>
+            <if test="region != null and region != ''">
+                region,
+            </if>
+            <if test="server != null and server != ''">
+                server,
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                game_race,
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                game_account,
+            </if>
+            <if test="gamePwd != null and gamePwd != ''">
+                game_pwd,
+            </if>
+            <if test="roleName != null and roleName != ''">
+                role_name,
+            </if>
+            <if test="secondPwd != null">
+                second_pwd,
+            </if>
+            <if test="level != null">
+                level,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="repositoryCount != null">
+                repository_count,
+            </if>
+            <if test="isShRole != null">
+                is_sh_role,
+            </if>
+            <if test="isPackFull != null">
+                is_pack_full,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="tel != null and tel !=''">
+                tel,
+            </if>
+            <if test="todaySaleCount != null">
+                today_sale_count,
+            </if>
+            <if test="freezeNeedCount != null">
+                freeze_need_count,
+            </if>
+            <if test="isSale != null">
+                is_sale,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="buyerAccount != null and buyerAccount != ''">
+                #{buyerAccount},
+            </if>
+            <if test="buyerUid != null and buyerUid != ''">
+                #{buyerUid},
+            </if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+            <if test="region != null and region != ''">
+                #{region},
+            </if>
+            <if test="server != null and server != ''">
+                #{server},
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                #{gameRace},
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                #{gameAccount},
+            </if>
+            <if test="gamePwd != null and gamePwd != ''">
+                #{gamePwd},
+            </if>
+            <if test="roleName != null and roleName != ''">
+                #{roleName},
+            </if>
+            <if test="secondPwd != null">
+                #{secondPwd},
+            </if>
+            <if test="level != null">
+                #{level},
+            </if>
+            <if test="count != null">
+                #{count},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="repositoryCount != null">
+                #{repositoryCount},
+            </if>
+            <if test="isShRole != null">
+                #{isShRole},
+            </if>
+            <if test="isPackFull != null">
+                #{isPackFull},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="tel != null and tel !=''">
+                #{tel},
+            </if>
+            <if test="todaySaleCount != null">
+                #{todaySaleCount},
+            </if>
+            <if test="freezeNeedCount != null">
+                #{freezeNeedCount},
+            </if>
+            <if test="isSale != null">
+                #{isSale}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.GameAccount">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE t_sh_game_account
+            <set>
+                <if test="item.buyerAccount != null and item.buyerAccount != ''">
+                    buyer_account= #{item.buyerAccount},
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    game_name= #{item.gameName},
+                </if>
+                <if test="item.region != null and item.region != ''">
+                    region= #{item.region},
+                </if>
+                <if test="item.server != null and item.server != ''">
+                    server= #{item.server},
+                </if>
+                <if test="item.gameRace != null and item.gameRace != ''">
+                    game_race= #{item.gameRace},
+                </if>
+                <if test="item.gameAccount != null and item.gameAccount != ''">
+                    game_account= #{item.gameAccount},
+                </if>
+                <if test="item.gamePwd != null and item.gamePwd != ''">
+                    game_pwd = #{item.gamePwd},
+                </if>
+                <if test="item.secondPwd != null">
+                    second_pwd = #{item.secondPwd},
+                </if>
+                <if test="item.level != null">
+                    level= #{item.level},
+                </if>
+                <if test="item.count != null">
+                    count= #{item.count},
+                </if>
+                <if test="item.price != null">
+                    price= #{item.price},
+                </if>
+                <if test="item.repositoryCount != null">
+                    repository_count= #{item.repositoryCount},
+                </if>
+                <if test="item.isShRole != null">
+                    is_sh_role= #{item.isShRole},
+                </if>
+                <if test="item.isPackFull != null">
+                    is_pack_full= #{item.isPackFull},
+                </if>
+                <if test="item.status != null">
+                    status= #{item.status},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time= #{item.updateTime},
+                </if>
+                <if test="item.tel != null and item.tel!=''">
+                    tel= #{item.tel},
+                </if>
+                <if test="item.todaySaleCount != null">
+                    today_sale_count=#{item.todaySaleCount},
+                </if>
+                <if test="item.freezeNeedCount != null">
+                    freeze_need_count=#{item.freezeNeedCount},
+                </if>
+                <if test="item.isSale != null">
+                    is_sale = #{item.isSale}
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+                <if test="item.buyerAccount != null and item.buyerAccount != ''">
+                    AND buyer_account = #{item.buyerAccount}
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    AND game_name = #{item.gameName}
+                </if>
+                <if test="item.region != null and item.region != ''">
+                    AND region = #{item.region}
+                </if>
+                <if test="item.server != null and item.server != ''">
+                    AND server = #{item.server}
+                </if>
+                <if test="item.gameRace != null and item.gameRace != ''">
+                    AND game_race = #{item.gameRace}
+                </if>
+                <if test="item.gameAccount != null and item.gameAccount != ''">
+                    AND game_account = #{item.gameAccount}
+                </if>
+                <if test="item.roleName != null and item.roleName != ''">
+                    AND role_name = #{item.roleName}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <update id="batchAddGameAccountFreezeCount" parameterType="com.wzitech.gamegold.shorder.entity.GameAccount">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE  t_sh_game_account
+            <set>
+              <if test="item.freezeNeedCount!=null">
+                  freeze_need_count=COALESCE (freeze_need_count,0)+#{item.freezeNeedCount}
+              </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+                <if test="item.buyerAccount != null and item.buyerAccount != ''">
+                    AND buyer_account = #{item.buyerAccount}
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    AND game_name = #{item.gameName}
+                </if>
+                <if test="item.region != null and item.region != ''">
+                    AND region = #{item.region}
+                </if>
+                <if test="item.server != null and item.server != ''">
+                    AND server = #{item.server}
+                </if>
+                <if test="item.gameRace != null and item.gameRace != ''">
+                    AND game_race = #{item.gameRace}
+                </if>
+                <if test="item.gameAccount != null and item.gameAccount != ''">
+                    AND game_account = #{item.gameAccount}
+                </if>
+                <if test="item.roleName != null and item.roleName != ''">
+                    AND role_name = #{item.roleName}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <!-- 更新记录 -->
+    <update id="updateStatus" parameterType="map">
+        UPDATE t_sh_game_account
+        <set>
+            <if test="status!=null">
+                status= #{status},
+            </if>
+            <if test="addCount!=null">
+                <![CDATA[
+				    count = (CASE WHEN  COALESCE(count,0)+#{addCount} < 0 THEN 0 else COALESCE(count,0)+#{addCount} end)
+				]]>
+                ,
+            </if>
+            <if test="addRepositoryCount!=null">
+                <![CDATA[
+				    repository_count = (CASE WHEN  COALESCE(repository_count,0)+#{addRepositoryCount} < 0 THEN 0 else COALESCE(repository_count,0)+#{addRepositoryCount} end)
+				]]>
+                ,
+            </if>
+            <if test="todaySaleCount!=null">
+                today_sale_count=#{todaySaleCount},
+            </if>
+            <if test="freezeNeedCount!=null">
+                freeze_need_count=#{freezeNeedCount},
+            </if>
+            <if test="addTodaySaleCount!=null and todaySaleCount==null">
+                today_sale_count=COALESCE(today_sale_count,0)+#{addTodaySaleCount}
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="id != null">
+                AND id = #{item.id}
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                AND buyer_account = #{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                AND game_account = #{gameAccount}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                AND role_name = #{roleName}
+            </if>
+        </trim>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="createStartTime != null">
+                and update_time >= #{createStartTime}
+            </if>
+            <if test="createEndTime != null">
+                <![CDATA[
+                and update_time <= #{createEndTime}
+                ]]>
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                and buyer_account = #{buyerAccount}
+            </if>
+            <if test="buyerUid != null and buyerUid != ''">
+                AND buyer_uid = #{buyerUid}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                AND game_account = #{gameAccount}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                AND role_name = #{roleName}
+            </if>
+            <if test="id != null">
+                AND id= #{id}
+            </if>
+            <if test="isShRole != null">
+                AND is_sh_role =#{isShRole}
+            </if>
+            <if test="isPackFull != null">
+                AND is_pack_full = #{isPackFull}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="tel != null and tel !=''">
+                AND tel=#{tel}
+            </if>
+            <if test="isSale!=null">
+                <if test="isSale == true">
+                    AND is_sale = #{isSale}
+                </if>
+                <if test="isSale == false">
+                    AND (is_sale = #{isSale} OR is_sale is null)
+                </if>
+            </if>
+            <if test="needStoreCheck != null">
+                <![CDATA[
+                AND date_part('day', now()::timestamp - stock_time::timestamp)>=3
+            ]]>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.GameAccount">
+        SELECT * FROM t_sh_game_account
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="lockMode != null">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM t_sh_game_account
+        <include refid="selectSql"/>
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_game_account WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 通过主键单独删除记录 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from t_sh_game_account
+        where id = #{id}
+    </delete>
+
+    <!-- 通过map批量删除记录 -->
+    <delete id="batchDeleteByMap" parameterType="map">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            delete from t_sh_game_account
+            <trim prefix="WHERE">
+                <if test="item.buyerAccount != null and item.gameName != ''">
+                    buyer_account = #{item.buyerAccount}
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    AND game_name = #{item.gameName}
+                </if>
+                <if test="item.region != null and item.region != ''">
+                    AND region = #{item.region}
+                </if>
+                <if test="item.server != null and item.server != ''">
+                    AND server = #{item.server}
+                </if>
+                <if test="item.gameRace != null and item.gameRace != ''">
+                    AND game_race = #{item.gameRace}
+                </if>
+            </trim>
+        </foreach>
+    </delete>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="queryGameAccount" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_game_account
+        <where>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account = #{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                AND game_account = #{gameAccount}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                AND role_name = #{roleName}
+            </if>
+            <if test="tel !=null and tel !=''">
+                AND tel =# {tel}
+            </if>
+            <if test="isShRole != null">
+                AND is_sh_role =#{isShRole}
+            </if>
+        </where>
+    </select>
+
+    <!--更新采购单表中的采购单价，通过统计账号角色表-->
+    <update id="updateGameAcountPrice" parameterType="Map">
+        update t_sh_game_account set price=#{price} where buyer_account=#{buyerAccount} and game_name=#{gameName} and region=#{region} and server=#{server}
+    </update>
+
+    <!--增加采购单表中的采购数量-->
+    <update id="addGameAcountCount" parameterType="Map">
+        update t_sh_game_account set
+        <if test="status != null">
+            status=#{status},
+        </if>
+        count=(case when COALESCE(count,0)+#{count}> 999999999 then 999999999 else
+        COALESCE(count,0)+#{count} end)
+        where buyer_account=#{buyerAccount} and game_name=#{gameName} and region=#{region} and server=#{server} and
+        game_account=#{gameAccount} and role_name=#{roleName}
+    </update>
+
+    <!--扣除采购单表中的采购数量-->
+    <update id="reduceGameAcountCount" parameterType="Map">
+        update t_sh_game_account set
+        <if test="status != null">
+            status=#{status},
+        </if>
+        count=COALESCE(count,0)-#{count} where buyer_account=#{buyerAccount} and game_name=#{gameName} and
+        region=#{region} and server=#{server} and game_account=#{gameAccount} and role_name=#{roleName} and
+        COALESCE(count,0)-#{count}>=0
+    </update>
+
+    <!--新增帐号角色库存-->
+    <update id="addRepositoryCount" parameterType="Map">
+        update t_sh_game_account set repository_count=COALESCE(repository_count,0)+#{repositoryCount},stock_time= #{stockTime} where buyer_account=#{buyerAccount} and game_name=#{gameName} and region=#{region} and server=#{server} and game_account=#{gameAccount} and role_name=#{roleName}
+    </update>
+
+    <!--减去帐号角色库存-->
+    <update id="reduceRepositoryCount" parameterType="Map">
+        update t_sh_game_account set <![CDATA[repository_count = (CASE WHEN  COALESCE(repository_count,0)-#{repositoryCount} < 0 THEN 0 else COALESCE(repository_count,0)-#{repositoryCount} end)]]>,stock_time= #{stockTime} where buyer_account=#{buyerAccount} and game_name=#{gameName} and region=#{region} and server=#{server} and game_account=#{gameAccount} and role_name=#{roleName}
+    </update>
+
+    <!--设置帐号角色库存-->
+    <update id="setRepositoryCount" parameterType="Map">
+        update t_sh_game_account set repository_count=#{repositoryCount},stock_time= #{updateTime},update_time= #{updateTime} where buyer_account=#{buyerAccount} and game_name=#{gameName} and region=#{region} and server=#{server} and game_account=#{gameAccount} and role_name=#{roleName}
+    </update>
+
+    <!-- 可以收货的账号角色 -->
+    <select id="queryGameAccountCanSh" parameterType="map" resultMap="BaseResultMap">
+        select * from t_sh_game_account t1
+        <where>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account = #{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            <if test="status != null">
+                AND status=#{status}
+            </if>
+            and count >0
+            and not EXISTS (SELECT 1 FROM (SELECT game_account FROM t_sh_game_account where status in (2,3) GROUP BY
+            game_account) t2 where t1.game_account =t2.game_account )
+        </where>
+        <if test="orderBy != null and orderBy != ''">
+            order by ${orderBy}
+        </if>
+        <if test="isLock != null and isLock == true">
+            for update
+        </if>
+    </select>
+
+    <!-- 可以收货的账号角色总数 -->
+    <select id="queryGameAccountCanShCountSum" parameterType="map" resultType="long">
+        select sum(count) from t_sh_game_account t1
+        <where>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account = #{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            <if test="status != null">
+                AND status=#{status}
+            </if>
+            and count >0
+            and not EXISTS (SELECT 1 FROM (SELECT game_account FROM t_sh_game_account where status in (2,3) GROUP BY
+            game_account) t2 where t1.game_account =t2.game_account )
+        </where>
+    </select>
+
+
+    <!-- 可以收货的账号角色总数 -->
+    <select id="queryOnlyGameAccountCanSh" parameterType="map" resultType="long">
+        select count(*) from t_sh_game_account
+        <where>
+            <if test="gameAccount != null and gameAccount != ''">
+                game_account = #{gameAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            AND status in (2,3)
+        </where>
+    </select>
+
+    <!-- 正在机器收货交易中的账号角色 -->
+    <select id="queryGameAccountByReceiving" parameterType="map" resultMap="BaseResultMap">
+        select * from t_sh_game_account
+        <where>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account = #{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            /* AND is_sh_role=true*/ AND is_pack_full=false AND status=2
+        </where>
+        <if test="orderBy != null and orderBy != ''">
+            order by ${orderBy}
+        </if>
+        <if test="isLock != null and isLock == true">
+            for update
+        </if>
+    </select>
+
+    <!-- 可以收货的账号角色  仅机器收货使用 -->
+    <select id="queryGameAccountCanShByAutomete" parameterType="map" resultMap="BaseResultMap">
+        select * from t_sh_game_account
+        <where>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                buyer_account = #{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND game_name = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND region = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND server = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND game_race = #{gameRace}
+            </if>
+            AND COUNT>0 /*AND is_sh_role=true*/ AND is_pack_full=false AND status in (1,2)
+        </where>
+        <if test="orderBy != null and orderBy != ''">
+            order by ${orderBy}
+        </if>
+        <if test="isLock != null and isLock == true">
+            for update
+        </if>
+    </select>
+
+    <!-- 根据id更新价格和采购数 -->
+    <update id="updateCountAndPriceById" parameterType="Map">
+        update t_sh_game_account
+        <set>
+            <if test="count != null">
+                count= #{count},
+            </if>
+            <if test="price != null">
+                price= #{price},
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+        </trim>
+    </update>
+
+    <update id="updateAccountByMap" parameterType="map">
+        update t_sh_game_account
+        <set>
+            <if test="modifyRepositoryCount != null">
+                repository_count=repository_count+#{modifyRepositoryCount},
+            </if>
+
+            <if test="repositoryCount != null">
+                repository_count=#{repositoryCount},
+            </if>
+            <if test="level != null">
+                level=#{level},
+            </if>
+            <if test="isPackFull != null">
+                is_pack_full=#{isPackFull},
+            </if>
+            <if test="isShRole != null">
+                is_sh_role=#{isShRole},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="stockTime != null">
+                stock_time= #{stockTime},
+            </if>
+            <if test="updateTime != null">
+                update_time= #{updateTime},
+            </if>
+            <if test="isSale != null">
+                is_sale= #{isSale},
+            </if>
+            <if test="reduceFreezeCount!=null">
+                freeze_need_count=freeze_need_count-#{reduceFreezeCount}
+            </if>
+            <if test="freezeNeedCount!=null">
+                freeze_need_count=#{freezeNeedCount}
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="buyerAccount != null and buyerAccount != ''">
+                and buyer_account=#{buyerAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                and game_name=#{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                and region=#{region}
+            </if>
+            <if test="server != null and server != ''">
+                and server=#{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                and game_race=#{gameRace}
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                and game_account=#{gameAccount}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and role_name=#{roleName}
+            </if>
+        </trim>
+    </update>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_game_account WHERE id = #{id}
+    </select>
+
+    <update id="emptyTodaySaleCount">
+        update t_sh_game_account set today_sale_count = 0
+    </update>
+
+    <update id="incrGameAccountRepositoryCount" parameterType="Map">
+        UPDATE t_sh_game_account set repository_count = repository_count + #{repositoryCount} where id = #{id}
+    </update>
+
+    <update id="incrGameAccountRepositoryCountByRepositoryId" parameterType="Map">
+        UPDATE t_sh_game_account set repository_count = repository_count + #{repositoryCount} where repository_id = #{id}
+    </update>
+
+    <!--<update id="reduceFreezeCount" parameterType="map">-->
+    <!--UPDATE t_sh_game_account-->
+    <!--<set>-->
+    <!--<if test="modifyRepositoryCount != null">-->
+    <!--repository_count=repository_count+#{modifyRepositoryCount},-->
+    <!--</if>-->
+    <!--<if test="reduceFreezeCount!=null">-->
+    <!--freeze_need_count=freeze_need_count-#{reduceFreezeCount}-->
+    <!--</if>-->
+    <!--<if test="freezeNeedCount!=null">-->
+    <!--freeze_need_count=#{freezeNeedCount}-->
+    <!--</if>-->
+    <!--</set>-->
+    <!--<trim prefix="WHERE" prefixOverrides="AND|OR">-->
+    <!--<if test="buyerAccount != null and buyerAccount != ''">-->
+    <!--and buyer_account=#{buyerAccount}-->
+    <!--</if>-->
+    <!--<if test="gameName != null and gameName != ''">-->
+    <!--and game_name=#{gameName}-->
+    <!--</if>-->
+    <!--<if test="region != null and region != ''">-->
+    <!--and region=#{region}-->
+    <!--</if>-->
+    <!--<if test="server != null and server != ''">-->
+    <!--and server=#{server}-->
+    <!--</if>-->
+    <!--<if test="gameRace != null and gameRace != ''">-->
+    <!--and game_race=#{gameRace}-->
+    <!--</if>-->
+    <!--<if test="gameAccount != null and gameAccount != ''">-->
+    <!--and game_account=#{gameAccount}-->
+    <!--</if>-->
+    <!--<if test="roleName != null and roleName != ''">-->
+    <!--and role_name=#{roleName}-->
+    <!--</if>-->
+    <!--</trim>-->
+    <!--</update>-->
+</mapper>

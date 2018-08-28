@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="http://images001.5173cdn.com/images/common/1y/ico.ico">
+    <title>5173游戏币商城大卖家库存上传</title>
+    <link href="./css/ui-lightness/jquery-ui-1.8.14.custom.css" rel="stylesheet" type="text/css"/>
+    <link href="./css/fileUploader.css" rel="stylesheet" type="text/css"/>
+    <script src="./js/jquery.js" type="text/javascript"></script>
+    <script src="./js/jquery-migrate-1.2.1.js"></script>
+    <script src="./js/jquery.cookie.js" type="text/javascript"></script>
+    <script src="./js/jquery.json-2.4.min.js" type="text/javascript"></script>
+    <script src="./js/jquery-ui-1.8.14.custom.min.js" type="text/javascript"></script>
+    <script src="./js/jquery.fileUploader.js" type="text/javascript"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/business/repositoryUpload.js" type="text/javascript"></script>
+
+</head>
+<body>
+<br/><br/><br/><br/>
+<form method="post" action="services/seller/repository/upload" enctype="multipart/form-data">
+    <input type="file" name="excelFile" id="excelUpload" class="fileUpload" multiple>
+    <input type="hidden" name="gameName" id="gameName" value="疾风之刃" />
+    <input type="hidden" name="serviceId" id="serviceId" value="100001" />
+</form>
+</body>
+</html>

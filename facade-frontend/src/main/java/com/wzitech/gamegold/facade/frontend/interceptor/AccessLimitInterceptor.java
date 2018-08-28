@@ -1,0 +1,116 @@
+package com.wzitech.gamegold.facade.frontend.interceptor;
+
+import com.wzitech.chaos.framework.server.common.CommonServiceResponse;
+import com.wzitech.chaos.framework.server.common.IServiceResponse;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.chaos.framework.server.common.utils.JsonMapper;
+import com.wzitech.gamegold.common.context.CurrentUserContext;
+import com.wzitech.gamegold.common.entity.IUser;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.common.enums.SystemConfigEnum;
+import com.wzitech.gamegold.common.redis.IRedisCommon;
+import com.wzitech.gamegold.common.redis.impl.RedisKeyHelper;
+import com.wzitech.gamegold.common.utils.SysContent;
+import com.wzitech.gamegold.facade.frontend.accessLimit.AccessLimit;
+import com.wzitech.gamegold.shorder.business.ISystemConfigManager;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * Created by 汪俊杰 on 2018/4/19.
+ */
+@Aspect
+@Component
+public class AccessLimitInterceptor {
+    @Autowired
+    private IRedisCommon redisCommon;
+    @Autowired
+    ISystemConfigManager systemConfigManager;
+
+    /**
+     * 日志输出
+     */
+    private static final Logger logger = LoggerFactory.getLogger(AccessLimitInterceptor.class);
+
+    @Before("execution(* com.wzitech.gamegold.facade.frontend.service..*.*(..)) && @annotation(accessLimit)")
+    public void beforeInit(final JoinPoint joinPoint, AccessLimit accessLimit) throws Exception {
+        try {
+            HttpServletRequest request = SysContent.getRequest();
+            HttpServletResponse response = SysContent.getResponse();
+
+            if (request == null) {
+                throw new SystemException(ResponseCodes.EmptyParams.getCode(), ResponseCodes.EmptyParams.getMessage());
+            }
+
+            int time = accessLimit.time();
+            int maxCount = accessLimit.maxCount();
+            boolean isNeedLogin = accessLimit.isNeedLogin();
+            boolean isConfig = accessLimit.isConfig();
+
+            //读取后台配置的访问频率
+            if (isConfig) {
+                Long limitCount = systemConfigManager.getValueByKey(SystemConfigEnum.ACCESS_LIMIT_COUNT.getKey());
+                if (limitCount == 0) {
+                    //当后台配置
+                    return;
+                }
+                if (limitCount != null) {
+                    maxCount = limitCount.intValue();
+                }
+            }
+
+            //uri组成redis缓存key
+            String key = RedisKeyHelper.getAccessLimitKey(request.getRequestURI());
+            String keyDay = RedisKeyHelper.getAccessLimitDayKey();
+            if (isNeedLogin) {
+                IUser user = CurrentUserContext.getUser();
+                if (user == null) {
+                    render(response, ResponseCodes.InvalidAuthkey);
+                    throw new SystemException(ResponseCodes.InvalidAuthkey.getCode(), ResponseCodes.InvalidAuthkey.getMessage());
+                }
+
+                //如果需要登录，则key中需要拼接当前登录的账号
+                key = key + ":" + user.getLoginAccount();
+                keyDay = keyDay + ":" + user.getLoginAccount();
+            }
+
+            Long count = redisCommon.incr(key, time);
+            if (count > maxCount) {
+                logger.info("访问地址[" + key + "]访问次数[" + count + "]超过了限定的次数[" + maxCount + "]");
+                render(response, ResponseCodes.AccessLimit);
+                throw new SystemException(ResponseCodes.AccessLimit.getCode(), ResponseCodes.AccessLimit.getMessage());
+            }
+            redisCommon.incrInDay(keyDay, request.getRequestURI());
+        } catch (Exception e) {
+            logger.error("访问频率拦截发生异常：{}", e);
+            throw e;
+        }
+    }
+
+    private void render(HttpServletResponse response, ResponseCodes responseCodes) throws IOException {
+        ServletOutputStream outputStream = null;
+        try {
+            // 返回Json类型的错误信息
+            IServiceResponse jsonResp = new CommonServiceResponse(responseCodes.getCode(), responseCodes.getMessage());
+            outputStream = response.getOutputStream();
+            outputStream.write(JsonMapper.nonEmptyMapper().toJson(jsonResp).getBytes("utf-8"));
+        } catch (Exception e) {
+            logger.error("AccessLimitInterceptor返回响应时发生异常:{}", e);
+        } finally {
+            if (outputStream != null) {
+                outputStream.flush();
+                outputStream.close();
+            }
+        }
+    }
+}

@@ -1,0 +1,391 @@
+package com.wzitech.gamegold.order.dto;
+
+import com.wzitech.chaos.framework.server.dataaccess.BaseEntity;
+import com.wzitech.gamegold.common.dto.GameInfoDTO;
+import com.wzitech.gamegold.usermgmt.dto.CustomerServiceDTO;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 子订单DTO
+ *
+ * @author yemq
+ */
+public class SubOrderDetailDTO extends BaseEntity {
+    /**
+     * 订单号
+     */
+    private String orderId;
+    /**
+     * 商品所属栏目
+     */
+    private Integer goodsCat;
+    /**
+     * 标题
+     */
+    private String title;
+    /**
+     * 交易方式
+     */
+    private Integer tradeType;
+    /**
+     * 游戏属性
+     */
+    private GameInfoDTO gameInfo;
+    /**
+     * 买家信息
+     */
+    private BuyerInfoDTO buyerInfo;
+    /**
+     * 卖家信息
+     */
+    private SellerInfoDTO sellerInfo;
+    /**
+     * 客服信息
+     */
+    private CustomerServiceDTO serviceInfo;
+    /**
+     * 购买的游戏币数量
+     */
+    private Long goldCount;
+    /**
+     * 订单单价
+     */
+    private BigDecimal orderUnitPrice;
+    /**
+     * 库存单价
+     */
+    private BigDecimal repositoryUnitPrice;
+    /**
+     * 游戏币单位
+     */
+    private String goldUnit;
+    /**
+     * 总金额
+     */
+    private BigDecimal totalPrice;
+    /**
+     * 交易员ID
+     */
+    private Long traderId;
+    /**
+     * 卖家收入
+     */
+    private BigDecimal income;
+    /**
+     * 佣金
+     */
+    private BigDecimal commission;
+    /**
+     * 差价
+     */
+    private BigDecimal balance;
+    /**
+     * 是否删除
+     */
+    private Boolean isDeleted;
+    /**
+     * 子订单状态
+     */
+    private Integer state;
+    /**
+     * 是否寄售
+     */
+    private Boolean isConsignment;
+    /**
+     * 配单时间
+     */
+    private Date configTime;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    /**
+     * 付款时间
+     */
+    private Date payTime;
+    /**
+     * 结单时间
+     */
+    private Date endTime;
+
+    /**
+     * 交易地点
+     */
+    private String placeName;
+
+    /**
+     * 商品类型
+     */
+    private String goodsTypeName;
+
+    /**
+     * json 格式的字符串保存动态属性 及值
+     */
+    private String field;
+    /**
+     * 发货区
+     */
+    private String sendRegion;
+    /**
+     * 发货服
+     */
+    private String sendServer;
+
+    /**
+     * 发货阵营
+     */
+    private String sendRace;
+
+    public String getSendRace() {
+        return sendRace;
+    }
+
+    public void setSendRace(String sendRace) {
+        this.sendRace = sendRace;
+    }
+
+    public String getSendRegion() {
+        return sendRegion;
+    }
+
+    public void setSendRegion(String sendRegion) {
+        this.sendRegion = sendRegion;
+    }
+
+    public String getSendServer() {
+        return sendServer;
+    }
+
+    public void setSendServer(String sendServer) {
+        this.sendServer = sendServer;
+    }
+
+    public String getGoodsTypeName() {
+        return goodsTypeName;
+    }
+
+    public void setGoodsTypeName(String goodsTypeName) {
+        this.goodsTypeName = goodsTypeName;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public SubOrderDetailDTO() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public Integer getGoodsCat() {
+        return goodsCat;
+    }
+
+    public void setGoodsCat(Integer goodsCat) {
+        this.goodsCat = goodsCat;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Integer getTradeType() {
+        return tradeType;
+    }
+
+    public void setTradeType(Integer tradeType) {
+        this.tradeType = tradeType;
+    }
+
+    public GameInfoDTO getGameInfo() {
+        return gameInfo;
+    }
+
+    public void setGameInfo(GameInfoDTO gameInfo) {
+        this.gameInfo = gameInfo;
+    }
+
+    public BuyerInfoDTO getBuyerInfo() {
+        return buyerInfo;
+    }
+
+    public void setBuyerInfo(BuyerInfoDTO buyerInfo) {
+        this.buyerInfo = buyerInfo;
+    }
+
+    public SellerInfoDTO getSellerInfo() {
+        return sellerInfo;
+    }
+
+    public void setSellerInfo(SellerInfoDTO sellerInfo) {
+        this.sellerInfo = sellerInfo;
+    }
+
+    public CustomerServiceDTO getServiceInfo() {
+        return serviceInfo;
+    }
+
+    public void setServiceInfo(CustomerServiceDTO serviceInfo) {
+        this.serviceInfo = serviceInfo;
+    }
+
+    public Long getGoldCount() {
+        return goldCount;
+    }
+
+    public void setGoldCount(Long goldCount) {
+        this.goldCount = goldCount;
+    }
+
+    public BigDecimal getOrderUnitPrice() {
+        return orderUnitPrice;
+    }
+
+    public void setOrderUnitPrice(BigDecimal orderUnitPrice) {
+        this.orderUnitPrice = orderUnitPrice;
+    }
+
+    public BigDecimal getRepositoryUnitPrice() {
+        return repositoryUnitPrice;
+    }
+
+    public void setRepositoryUnitPrice(BigDecimal repositoryUnitPrice) {
+        this.repositoryUnitPrice = repositoryUnitPrice;
+    }
+
+    public String getGoldUnit() {
+        return goldUnit;
+    }
+
+    public void setGoldUnit(String goldUnit) {
+        this.goldUnit = goldUnit;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Long getTraderId() {
+        return traderId;
+    }
+
+    public void setTraderId(Long traderId) {
+        this.traderId = traderId;
+    }
+
+    public BigDecimal getIncome() {
+        return income;
+    }
+
+    public void setIncome(BigDecimal income) {
+        this.income = income;
+    }
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Date getConfigTime() {
+        return configTime;
+    }
+
+    public void setConfigTime(Date configTime) {
+        this.configTime = configTime;
+    }
+
+    public Boolean getIsConsignment() {
+        return isConsignment;
+    }
+
+    public void setIsConsignment(Boolean isConsignment) {
+        this.isConsignment = isConsignment;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+}

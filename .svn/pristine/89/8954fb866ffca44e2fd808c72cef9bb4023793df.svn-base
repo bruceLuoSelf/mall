@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+
+	<resultMap id="BaseResultMap" type="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="MAIN_ACCOUNT_ID" property="mainAccountId" jdbcType="VARCHAR" />
+		<result column="USER_TYPE" property="userType" jdbcType="NUMERIC" javaType="int"/>
+		<result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="FUNDS_ACCOUNT" property="fundsAccount" jdbcType="VARCHAR" />
+		<result column="FUNDS_ACCOUNT_ID" property="fundsAccountId" jdbcType="VARCHAR" />
+		<result column="REAL_NAME" property="realName" jdbcType="VARCHAR" />
+		<result column="NICK_NAME" property="nickName" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="VARCHAR" />
+		<result column="QQ" property="qq" jdbcType="VARCHAR" />
+		<result column="WEI_XIN" property="weiXin" jdbcType="VARCHAR" />
+		<result column="PHONE_NUMBER" property="phoneNumber" jdbcType="VARCHAR" />
+		<result column="SIGN" property="sign" jdbcType="VARCHAR"/>
+		<result column="AVATAR_URL" property="avatarUrl" jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN" />
+		<result column="VOTE" property="vote" jdbcType="INTEGER" />
+		<result column="YY" property="yy" jdbcType="VARCHAR" />
+		<result column="SERVICE_CHARGE" property="serviceCharge" jdbcType="INTEGER" />
+		<result column="STAR" property="star" jdbcType="INTEGER" />
+		<result column="HX_ACCOUNT" property="hxAccount" jdbcType="VARCHAR"/>
+		<result column="HX_PWD"	property="hxPwd" jdbcType="VARCHAR"/>
+        <result column="HX_APP_ACCOUNT" property="hxAppAccount" jdbcType="VARCHAR"/>
+        <result column="HX_APP_PWD" property="hxAppPwd" jdbcType="VARCHAR"/>
+		<result column="YX_ACCOUNT" property="yxAccount" jdbcType="VARCHAR"/>
+        <result column="YX_PWD" property="yxPwd" jdbcType="VARCHAR"/>
+		<result column="QQ_PWD" property="qqPwd" jdbcType="VARCHAR"/>
+        <!--<result column="COMMUNICATION_TOOLS" property="communicationTools" jdbcType="VARCHAR"/>-->
+	</resultMap>
+	<!-- 通过主键列表查找记录 -->
+    <select id="selectByIds" parameterType="java.util.List" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+		SELECT * FROM "TBL_GAMEGOLD_USERS" WHERE "ID" IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 通过主键列表查找记录 -->
+	<select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+		SELECT * FROM "TBL_GAMEGOLD_USERS" WHERE "ID" = #{id}
+	</select>
+
+	<!-- 通过主键批量删除记录 -->
+	<delete id="batchDeleteByIds" parameterType="java.util.List">
+		DELETE FROM "TBL_GAMEGOLD_USERS" WHERE "ID" IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 新增记录 -->
+    <insert id="insert" parameterType="com.wzitech.gamegold.usermgmt.entity.UserInfoEO" useGeneratedKeys="true"
+            keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_USERS"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mainAccountId != null">
+				"MAIN_ACCOUNT_ID",
+			</if>
+			<if test="userType != null">
+				"USER_TYPE",
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				"LOGIN_ACCOUNT",
+			</if>
+			<if test="password != null and password != ''">
+				"PASSWORD",
+			</if>
+			<if test="fundsAccount != null and fundsAccount != ''">
+				"FUNDS_ACCOUNT",
+			</if>
+			<if test="fundsAccountId != null">
+				"FUNDS_ACCOUNT_ID",
+			</if>
+			<if test="realName != null and realName != ''">
+				"REAL_NAME",
+			</if>
+			<if test="nickName != null and nickName != ''">
+				"NICK_NAME",
+			</if>
+			<if test="sex != null and sex != ''">
+				"SEX",
+			</if>
+			<if test="qq != null and qq != ''">
+				"QQ",
+			</if>
+			<if test="weiXin != null and weiXin != ''">
+				"WEI_XIN",
+			</if>
+			<if test="phoneNumber != null and phoneNumber != ''">
+				"PHONE_NUMBER",
+			</if>
+			<if test="sign != null and sign != ''">
+				"SIGN",
+			</if>
+			<if test="avatarUrl != null and avatarUrl != ''">
+				"AVATAR_URL",
+			</if>
+			<if test="lastUpdateTime != null">
+				"LAST_UPDATE_TIME",
+			</if>
+			<if test="createTime != null">
+				"CREATE_TIME",
+			</if>
+			<if test="yy != null and yy != ''">
+				"YY",
+			</if>
+			<if test="serviceCharge != null and serviceCharge != ''">
+				"SERVICE_CHARGE",
+			</if>
+			<if test="star != null and star != ''">
+				"STAR",
+			</if>
+			<if test="hxAccount != null">
+                "HX_ACCOUNT",
+			</if>
+			<if test="hxPwd != null">
+                "HX_PWD",
+			</if>
+            <if test="hxAppAccount != null">
+                "HX_APP_ACCOUNT",
+            </if>
+            <if test="hxAppPwd != null">
+                "HX_APP_PWD",
+            </if>
+			<if test="yxAccount != null">
+                "YX_ACCOUNT",
+            </if>
+			<if test="yxPwd != null">
+				"YX_PWD",
+            </if>
+			<if test="qqPwd != null">
+				"QQ_PWD",
+			</if>
+			<!--<if test="communicationTools != null">
+                "COMMUNICATION_TOOLS",
+            </if>-->
+				"IS_DELETED"
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mainAccountId != null">
+				#{mainAccountId},
+			</if>
+			<if test="userType != null">
+				#{userType},
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				#{loginAccount},
+			</if>
+			<if test="password != null and password != ''">
+				#{password},
+			</if>
+			<if test="fundsAccount != null and fundsAccount != ''">
+				#{fundsAccount},
+			</if>
+			<if test="fundsAccountId != null">
+				#{fundsAccountId},
+			</if>
+			<if test="realName != null and realName != ''">
+				#{realName},
+			</if>
+			<if test="nickName != null and nickName != ''">
+				#{nickName},
+			</if>
+			<if test="sex != null and sex != ''">
+				#{sex},
+			</if>
+			<if test="qq != null and qq != ''">
+				#{qq},
+			</if>
+			<if test="weiXin != null and weiXin != ''">
+				#{weiXin},
+			</if>
+			<if test="phoneNumber != null and phoneNumber != ''">
+				#{phoneNumber},
+			</if>
+			<if test="sign != null and sign != ''">
+				#{sign},
+			</if>
+			<if test="avatarUrl != null and avatarUrl != ''">
+				#{avatarUrl},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="yy != null and yy != ''">
+				#{yy},
+			</if>
+			<if test="serviceCharge != null and serviceCharge != ''">
+				#{serviceCharge},
+			</if>
+			<if test="star != null and star != ''">
+				#{star},
+			</if>
+			<if test="hxAccount != null">
+                #{hxAccount},
+			</if>
+			<if test="hxPwd != null">
+                #{hxPwd},
+			</if>
+            <if test="hxAppAccount != null">
+                #{hxAppAccount},
+            </if>
+            <if test="hxAppPwd != null">
+                #{hxAppPwd},
+            </if>
+			<if test="yxAccount != null">
+                #{yxAccount},
+            </if>
+            <if test="yxPwd != null">
+                #{yxPwd},
+            </if>
+			<if test="qqPwd != null">
+				#{qqPwd},
+			</if>
+			<!--<if test="communicationTools != null">
+                #{communicationTools},
+            </if>-->
+				#{isDeleted}
+		</trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate" parameterType="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+		<foreach collection="list" item="item" index="index" separator="OR">
+		UPDATE "TBL_GAMEGOLD_USERS"
+		<set>
+			<if test="item.mainAccountId">
+				"MAIN_ACCOUNT_ID" = #{item.mainAccountId},
+			</if>
+			<if test="item.userType != null">
+				"USER_TYPE" = #{item.userType},
+			</if>
+			<if test="item.password != null and item.password != ''">
+				"PASSWORD" = #{item.password},
+			</if>
+			<if test="item.fundsAccount != null and item.fundsAccount != ''">
+				"FUNDS_ACCOUNT" = #{item.fundsAccount},
+			</if>
+			<if test="item.fundsAccountId != null and item.fundsAccountId != ''">
+				"FUNDS_ACCOUNT_ID" = #{item.fundsAccountId},
+			</if>
+			<if test="item.realName != null and item.realName != ''">
+				"REAL_NAME" = #{item.realName},
+			</if>
+			<if test="item.nickName != null and item.nickName != ''">
+				"NICK_NAME" = #{item.nickName},
+			</if>
+			<if test="item.sex != null and item.sex != ''">
+				"SEX" = #{item.sex},
+			</if>
+			<if test="item.qq != null and item.qq != ''">
+				"QQ" = #{item.qq},
+			</if>
+			<if test="item.weiXin != null and item.weiXin != ''">
+				"WEI_XIN" = #{item.weiXin},
+			</if>
+			<if test="item.phoneNumber != null and item.phoneNumber != ''">
+				"PHONE_NUMBER" = #{item.phoneNumber},
+			</if>
+			<if test="item.sign !=null and item.sign != ''">
+				"SIGN" = #{item.sign},
+			</if>
+			<if test="item.avatarUrl != null and item.avatarUrl != ''">
+				"AVATAR_URL" = #{item.avatarUrl},
+			</if>
+			<if test="item.lastUpdateTime != null">
+				"LAST_UPDATE_TIME" = #{item.lastUpdateTime},
+			</if>
+			<if test="item.createTime != null">
+				"CREATE_TIME" = #{item.createTime},
+			</if>
+			<if test="item.serviceCharge != null">
+				"SERVICE_CHARGE" = #{item.serviceCharge},
+			</if>
+			<if test="item.star != null">
+				"STAR" = #{item.star},
+			</if>
+			<if test="item.hxAccount != null">
+				"HX_ACCOUNT" = #{item.hxAccount},
+			</if>
+			<if test="item.hxPwd != null">
+				"HX_PWD" = #{item.hxPwd},
+			</if>
+			<if test="item.hxAppAccount != null">
+				"HX_APP_ACCOUNT" = #{item.hxAppAccount},
+			</if>
+			<if test="item.hxAppPwd != null">
+				"HX_APP_PWD" = #{item.hxAppPwd},
+			</if>
+			<if test="item.yxAccount != null">
+				"YX_ACCOUNT" = #{item.yxAccount},
+			</if>
+			<if test="item.yxPwd != null">
+				"YX_PWD" = #{item.yxPwd},
+			</if>
+			<if test="item.qqPwd != null">
+				"QQ_PWD" = #{item.qqPwd},
+			</if>
+			<!--<if test="item.communicationTools != null">
+				"COMMUNICATION_TOOLS" = #{item.communicationTools},
+			</if>-->
+			"YY" = #{item.yy},
+			"IS_DELETED" = #{item.isDeleted}
+		</set>
+		<where>
+				"ID" = #{item.id}
+		</where>
+		</foreach>
+	</update>
+
+	<sql id="selectSql">
+		<where>
+			<if test="userType != null">
+				"USER_TYPE" = #{userType}
+			</if>
+			<if test="mainAccountIdNotNull == null">
+				<if test="mainAccountId != null">
+					AND "MAIN_ACCOUNT_ID" = #{mainAccountId}
+				</if>
+				<if test="mainAccountId == null">
+					AND "MAIN_ACCOUNT_ID" IS NULL
+				</if>
+			</if>
+			<if test="mainAccountIdNotNull != null">
+				AND "MAIN_ACCOUNT_ID" NOTNULL
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				AND "LOGIN_ACCOUNT" LIKE '%'||#{loginAccount}||'%'
+			</if>
+			<if test="realName != null and realName != ''">
+				AND "REAL_NAME" LIKE '%'||#{realName}||'%'
+			</if>
+			<if test="nickName != null and nickName != ''">
+				AND "NICK_NAME" LIKE '%'||#{nickName}||'%'
+			</if>
+			<if test="isDeleted != null">
+				AND "IS_DELETED" = #{isDeleted}
+			</if>
+			<if test="id != null">
+				AND "ID"= #{id}
+			</if>
+			<if test="date != null">
+				${value}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="selectUserSql">
+		<where>
+			<if test="userType != null">
+				"USER_TYPE" = #{userType}
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				AND "LOGIN_ACCOUNT" LIKE '%'||#{loginAccount}||'%'
+			</if>
+			<if test="realName != null and realName != ''">
+				AND "REAL_NAME" LIKE '%'||#{realName}||'%'
+			</if>
+			<if test="nickName != null and nickName != ''">
+				AND "NICK_NAME" LIKE '%'||#{nickName}||'%'
+			</if>
+			<if test="isDeleted != null">
+				AND "IS_DELETED" = #{isDeleted}
+			</if>
+			<if test="id != null">
+				AND "ID"= #{id}
+			</if>
+			<if test="date != null">
+				${value}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+		SELECT * FROM "TBL_GAMEGOLD_USERS"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 统计符合条件的实体对象个数 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_USERS"
+		<include refid="selectSql"/>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+    <select id="selectUserByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+		SELECT * FROM "TBL_GAMEGOLD_USERS"
+		<include refid="selectUserSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 统计符合条件的实体对象个数 -->
+	<select id="countUserByMap" parameterType="map" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_USERS"
+		<include refid="selectUserSql"/>
+	</select>
+
+	  <!-- 统计客服当前处理订单数-->
+	<select id="queryOrederNum" parameterType="map" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_ORDERS" WHERE 
+		 "SERVICER_ID" = #{ID}
+		 AND "ORDER_STATE"  IN (#{isPaid},#{isWaitDelivery})
+	</select>
+
+    <!-- 统计寄售客服当前处理订单数 -->
+    <select id="queryConsignmentOrederNum" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_CONFIGRESULT" WHERE
+        "OPTION_ID" = #{ID}
+        AND "STATE" = #{isWaitDelivery} AND "IS_DELETED"=FALSE
+    </select>
+
+	<!-- 统计客服当前还有多少卖家入驻需要审核 -->
+	<select id="querySellerEnterNum" parameterType="Long" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_SELLER" WHERE "SERVICER_ID"= #{servicerId} AND "CHECK_STATE"=0
+	</select>
+
+	<!-- 查询符合条件的唯一记录 -->
+    <select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+		SELECT * FROM "TBL_GAMEGOLD_USERS"
+		<where>
+			<if test="id != null">
+				"ID" = #{id}
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				"LOGIN_ACCOUNT" = #{loginAccount}
+			</if>
+			<if test="realName != null and realName != ''">
+				"REAL_NAME" = #{realName}
+			</if>
+			<if test="nickName != null and nickName != ''">
+				"NICK_NAME" = #{nickName}
+			</if>
+			<if test="phoneNumber != null and phoneNumber != ''">
+				"PHONE_NUMBER" = #{phoneNumber}
+			</if>
+		</where>
+	</select>
+
+	<!-- 根据原生Sql查询记录 -->
+    <select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.usermgmt.entity.UserInfoEO">
+		 ${value}
+	</select>
+
+	<!--查询指定游戏担保客服列表，待发货订单数量少的客服靠前排序-->
+	<select id="queryAssureServiceByGame" parameterType="map" resultMap="BaseResultMap">
+		<![CDATA[
+
+		SELECT  distinct A.*,
+		(SELECT count(1) FROM "TBL_GAMEGOLD_ORDERS" "ORDERS" WHERE ("ORDER_STATE"=2 OR "ORDER_STATE"=3) AND "SERVICER_ID"=A."ID") "WAIT_DELIVERY",
+		(SELECT MAX("CREATE_TIME") FROM "TBL_GAMEGOLD_ORDERS" WHERE ("ORDER_STATE"<>1 AND "ORDER_STATE"<>7) AND "SERVICER_ID"=A."ID") "LAST_ORDER_TIME"
+		FROM "TBL_GAMEGOLD_USERS" A JOIN "TBL_GAMEGOLD_USERS_GAME" B ON A."ID"=B."USER_ID"
+		WHERE "IS_DELETED"=FALSE AND A."USER_TYPE"=1 AND B."GAME_NAME"=#{gameName}
+		ORDER BY "WAIT_DELIVERY" ASC,"LAST_ORDER_TIME" ASC
+
+		]]>
+	</select>
+
+	<select id="randomQuery"  resultMap="BaseResultMap">
+		SELECT * from "TBL_GAMEGOLD_USERS" where "HX_ACCOUNT" is not null ORDER BY random() LIMIT 1;
+	</select>
+
+	<select id="selectUserById" parameterType="long" resultMap="BaseResultMap">
+		SELECT * from "TBL_GAMEGOLD_USERS" where ID = #{id}
+	</select>
+	<!-- 查询待发货订单数量少的寄售客服(订单状态为等待交易、待分配角色、交易中、待发货、待确认收货的机器订单)-->
+	<select id="queryFreeDistributionService" resultMap="BaseResultMap">
+         <![CDATA[
+		 SELECT d.* FROM "TBL_GAMEGOLD_USERS" d,(SELECT c."LOGIN_ACCOUNT",count(c.takeover_subject_id) FROM
+         (SELECT a.*,b.* FROM (SELECT * FROM t_sh_delivery_sub_order WHERE status =3 AND delivery_type =1) a RIGHT JOIN
+         (SELECT * from "TBL_GAMEGOLD_USERS" WHERE "USER_TYPE"=8 AND "IS_DELETED" = FALSE) b
+         ON a.takeover_subject_id = b."LOGIN_ACCOUNT")c GROUP BY c."LOGIN_ACCOUNT" )e WHERE d."LOGIN_ACCOUNT"=e."LOGIN_ACCOUNT" ORDER BY count ASC, random() limit 1
+		 ]]>
+	</select>
+</mapper>

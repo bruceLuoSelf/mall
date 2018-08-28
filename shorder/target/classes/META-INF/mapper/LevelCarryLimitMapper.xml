@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.LevelCarryLimitEO">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.LevelCarryLimitEO">
+        <result column="id" property="id" javaType="long" />
+        <result column="min_level" property="minLevel" javaType="Integer" />
+        <result column="max_level" property="maxLevel" javaType="Integer"/>
+        <result column="carry_upper_limit" property="carryUpperLimit" javaType="Long"/>
+        <result column="game_name" property="gameName" javaType="String"/>
+        <result column="goods_type_name" property="goodsTypeName" javaType="String"/>
+        <result column="goods_type_id" property="goodsTypeId" javaType="Long"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.wzitech.gamegold.shorder.entity.LevelCarryLimitEO"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_level_carry_limit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="minLevel != null">
+                min_level,
+            </if>
+            <if test="maxLevel != null">
+                max_level,
+            </if>
+            <if test="carryUpperLimit != null">
+                carry_upper_limit,
+            </if>
+            <if test="gameName != null and gameName != ''">
+                game_name,
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                goods_type_name,
+            </if>
+            <if test="goodsTypeId != null ">
+                goods_type_id
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="minLevel != null">
+                #{minLevel},
+            </if>
+            <if test="maxLevel != null">
+                #{maxLevel},
+            </if>
+            <if test="carryUpperLimit != null">
+                #{carryUpperLimit},
+            </if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                #{goodsTypeName},
+            </if>
+            <if test="goodsTypeId != null ">
+                #{goodsTypeId}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="batchUpdate" parameterType="com.wzitech.gamegold.shorder.entity.LevelCarryLimitEO">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_sh_level_carry_limit
+            <set>
+                <if test="item.minLevel != null">
+                    min_level = #{item.minLevel},
+                </if>
+                <if test="item.maxLevel != null">
+                    max_level = #{item.maxLevel},
+                </if>
+                <if test="item.carryUpperLimit != null">
+                    carry_upper_limit = #{item.carryUpperLimit},
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    game_name = #{item.gameName},
+                </if>
+                <if test="item.goodsTypeName != null and item.goodsTypeName != ''">
+                    goods_type_name = #{item.goodsTypeName},
+                </if>
+                <if test="item.goodsTypeId != null">
+                    goods_type_id = #{item.goodsTypeId},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="minLevel != null">
+                and min_level = #{minLevel}
+            </if>
+            <if test="maxLevel != null">
+                and max_level = #{maxLevel}
+            </if>
+            <if test="carryUpperLimit != null">
+                and  carry_upper_limit = #{carryUpperLimit}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                and game_name = #{gameName}
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                and goods_type_name = #{goodsTypeName}
+            </if>
+            <if test="goodsTypeId != null">
+                and goods_type_id = #{goodsTypeId}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap">
+        select * from t_sh_level_carry_limit
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+        <if test="isLocked">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_level_carry_limit WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="countByMap" parameterType="map" resultType="int">
+        select count(1) from t_sh_level_carry_limit
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        select * from t_sh_level_carry_limit where id = #{id}
+    </select>
+
+    <select id="selectCarryUpperLimit" parameterType="map" resultMap="BaseResultMap">
+        select * from t_sh_level_carry_limit
+        where min_level &lt;= #{level} and max_level &gt;= #{level}
+        and game_name = #{gameName} and goods_type_id = #{goodsTypeId}
+    </select>
+
+
+</mapper>

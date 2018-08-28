@@ -1,0 +1,40 @@
+/*
+ *  付款详细
+ */
+Ext.define('MyApp.model.PayOrderModel',{
+    extend:'Ext.data.Model',
+    fields:[{
+        name:'id',
+        type:'int'
+    },{
+        name:'orderId' 
+    },{
+        name:'uid'  
+    },{
+        name:'account' 
+    },{
+        name:'amount',  
+        type:'float'
+    },{
+        name:'usedAmount', 
+        type:'float'
+    },{
+        name:'balance', 
+        type:'float'
+    },{
+        name:'status',  
+        type:'int'
+    },{
+        name:'createTime',
+        type:'date',
+        dateReadFormat:'Y-m-dTH:i:s'
+    },{
+        name:'payTime',
+        type:'date',
+        dateReadFormat:'Y-m-dTH:i:s'
+    },{
+        name:'lastUpdateTime',
+        type:'date',
+        dateReadFormat:'Y-m-dTH:i:s'
+    }]
+});

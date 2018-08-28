@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.ServiceSort">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.order.entity.ServiceSort">
+        <result column="ID" property="id" />
+        <result column="WAIT_DELIVERY" property="waitDelivery" jdbcType="NUMERIC"/>
+        <result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+        <association column="SERVICE_ID" property="service" select="selectServiceById"/>
+    </resultMap>
+
+    <select id="selectServiceById" parameterType="Long" resultMap="com.wzitech.gamegold.usermgmt.entity.UserInfoEO.BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_USERS" WHERE "ID"=#{serviceId}
+    </select>
+
+    <insert id="insert" parameterType="com.wzitech.gamegold.order.entity.ServiceSort"
+            useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO "TBL_GAMEGOLD_SERVICE_SORT"("SERVICE_ID", "WAIT_DELIVERY", "LAST_UPDATE_TIME")
+      VALUES(#{service.id}, #{waitDelivery}, #{lastUpdateTime})
+    </insert>
+
+    <update id="batchUpdate" parameterType="com.wzitech.gamegold.order.entity.ServiceSort" >
+        <foreach collection="list" item="item" separator=";">
+            UPDATE "TBL_GAMEGOLD_SERVICE_SORT"
+            SET
+            "WAIT_DELIVERY"=#{item.waitDelivery},
+            "LAST_UPDATE_TIME"=#{item.lastUpdateTime}
+            WHERE "SERVICE_ID"=#{item.service.id}
+        </foreach>
+    </update>
+
+    <select id="selectByServiceId" parameterType="Map" resultMap="BaseResultMap">
+        SELECT *
+        FROM "TBL_GAMEGOLD_SERVICE_SORT"
+        WHERE "SERVICE_ID"=#{serviceId}
+        <if test="lockMode">
+            FOR UPDATE
+        </if>
+    </select>
+    <!--<sql id="selectSql" >
+        <where>
+            <if test="service != null and service.id != null">
+                AND "SERVICE_ID" = #{service.id}
+            </if>
+        </where>
+    </sql>
+
+    &lt;!&ndash; 查询符合条件的实体对象 &ndash;&gt;
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.order.entity.ServiceSort">
+        SELECT * FROM "TBL_GAMEGOLD_SERVICE_SORT"
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="lockMode != null">
+            FOR UPDATE
+        </if>
+    </select>
+
+    &lt;!&ndash; 查询符合条件的实体对象 &ndash;&gt;
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_SERVICE_SORT"
+        <include refid="selectSql"/>
+    </select>-->
+
+    <!-- 根据待发货订单数由少到多，获取已排序的客服数据 -->
+    <select id="selectSortedServiceList" parameterType="Map" resultMap="BaseResultMap">
+        SELECT *
+        FROM "TBL_GAMEGOLD_SERVICE_SORT" A
+          JOIN "TBL_GAMEGOLD_USERS" B ON B."ID"=A."SERVICE_ID"
+          <if test="gameName != null and gameName != ''">
+              JOIN "TBL_GAMEGOLD_USERS_GAME" C ON B."ID"=C."USER_ID"
+          </if>
+        WHERE B."USER_TYPE"=#{userType} AND B."IS_DELETED"=FALSE
+          <if test="gameName != null and gameName != ''">
+              AND C."GAME_NAME"=#{gameName}
+          </if>
+        ORDER BY "WAIT_DELIVERY" ASC, A."LAST_UPDATE_TIME" ASC
+    </select>
+
+    <!-- 获取下一个该分配的客服ID -->
+    <select id="selectNextServiceId" parameterType="Map" resultType="Long">
+        SELECT A."SERVICE_ID"
+        FROM "TBL_GAMEGOLD_SERVICE_SORT" A
+            JOIN "TBL_GAMEGOLD_USERS" B ON B."ID"=A."SERVICE_ID"
+            <if test="gameName != null and gameName != ''">
+                JOIN "TBL_GAMEGOLD_USERS_GAME" C ON B."ID"=C."USER_ID"
+            </if>
+        WHERE B."USER_TYPE"=#{userType} AND B."IS_DELETED"=FALSE
+            <if test="gameName != null and gameName != ''">
+                AND C."GAME_NAME"=#{gameName}
+            </if>
+            AND B."SERVICE_CHARGE"=0
+        ORDER BY "WAIT_DELIVERY" ASC, A."LAST_UPDATE_TIME" ASC
+        LIMIT 1
+    </select>
+
+    <!-- 客服待发货订单数量+1 -->
+    <update id="incOrderCount" parameterType="Long">
+        UPDATE "TBL_GAMEGOLD_SERVICE_SORT"
+        SET "WAIT_DELIVERY"="WAIT_DELIVERY"+1, "LAST_UPDATE_TIME"=now()
+        WHERE "SERVICE_ID"=#{serviceId}
+    </update>
+
+    <!-- 客服待发货订单数量-1 -->
+    <update id="decOrderCount" parameterType="Long">
+        UPDATE "TBL_GAMEGOLD_SERVICE_SORT"
+        SET "WAIT_DELIVERY"="WAIT_DELIVERY"-1
+        WHERE "SERVICE_ID"=#{serviceId}
+    </update>
+
+</mapper>

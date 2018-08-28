@@ -1,0 +1,460 @@
+/************************************************************************************
+ *  Copyright 2013 WZITech Corporation. All rights reserved.
+ *	
+ *	模	块：		OrderInfoEO
+ *	包	名：		com.wzitech.gamegold.order.entity
+ *	项目名称：	gamegold-order
+ *	作	者：		SunChengfei
+ *	创建时间：	2014-1-13
+ *	描	述：		
+ *	更新纪录：	1. SunChengfei 创建于 2014-1-13 下午1:18:44
+ * 				
+ ************************************************************************************/
+package com.wzitech.gamegold.order.entity;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import com.wzitech.chaos.framework.server.dataaccess.BaseEntity;
+import com.wzitech.gamegold.common.constants.ServicesContants;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import com.wzitech.gamegold.usermgmt.entity.UserInfoEO;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * 订单配置结果信息
+ * @author ztjie
+ *
+ */
+public class ConfigResultInfoEO extends BaseEntity {
+	private static final long serialVersionUID = 3887607936419795860L;
+
+	/**
+	 * 订单号
+	 */
+	private String orderId;
+	
+	/**
+	 * 订单号关联订单详情
+	 */
+	private OrderInfoEO orderInfoEO;
+	
+	/**
+	 * 库存ID
+	 */
+	private Long repositoryId;
+	
+	/**
+	 * 库存id关联库存详情
+	 */
+	private RepositoryInfo repositoryInfo;
+	
+	/**
+	 * 交易方式
+	 */
+	private Integer tradeType;
+	
+	/**
+	 * 所属客服id
+	 */
+	private Long servicerId;
+	
+	/**
+	 * 操作客服Id
+	 */
+	private Long optionId;
+	
+	/**
+	 * 操作客服
+	 */
+	private UserInfoEO optionUser;
+	
+	/**
+	 * 卖家登录5173账号
+	 */
+	private String loginAccount;
+	
+	/**
+	 * 卖家登录5173账号uid
+	 */
+	private String accountUid;
+	
+	/**
+	 * 游戏币配置数目
+	 */
+	private Long configGoldCount;
+	
+	/**
+	 * 订单单价(1游戏币兑换多少元)
+	 */
+	private BigDecimal orderUnitPrice;
+	
+	/**
+	 * 库存单价(1游戏币兑换多少元)
+	 */
+	private BigDecimal repositoryUnitPrice;
+	
+	/**
+	 * 总费用
+	 */
+	private BigDecimal totalPrice;
+	
+	/**
+	 * 订单配置信息的状态
+	 */
+	private Integer state;
+	
+	/**
+	 * 最后更新时间
+	 */
+	private Date lastUpdateTime;
+	
+	/**
+	 * 创建时间
+	 */
+	private Date createTime;
+	
+	/**
+	 * 是否删除
+	 */
+	private Boolean isDeleted;
+
+    /**
+     * 卖家收益
+     */
+    private BigDecimal income;
+
+    /**
+     * 卖家佣金
+     * @return
+     */
+    private BigDecimal commission;
+
+    /**
+     * 差额
+     * @return
+     */
+    private BigDecimal balance;
+
+    /**
+     * 是否寄售交易
+     */
+    private Boolean isConsignment;
+
+	/**
+	 * 是否寄售全自动机器人发货
+	 * @return
+	 */
+	private Boolean isJsRobot;
+
+	/**
+	 * 是否小助手
+	 */
+	private Boolean isHelper;
+
+	/**
+	 * 是否从寄售全自动机器人退回
+	 */
+	private Boolean isSendBackFromRobot;
+
+	/**
+	 * 退回原因
+	 */
+	private String reason;
+
+	/**
+	 * 红包金额
+	 */
+	private Double redEnvelope;
+
+	/**
+	 * 店铺券金额
+	 */
+	private Double shopCoupon;
+
+	/**
+	 * 配单操作员ID
+	 * @return
+	 */
+	private Long creatorId;
+
+	/**
+	 * 通货类型ID
+	 * hyl 5.16新增
+	 */
+	private Long goodsTypeId;
+
+	/**
+	 * 通货类型名称
+	 * hyl 5.16新增
+	 */
+	private String goodsTypeName;
+
+	public Long getGoodsTypeId() {
+		return goodsTypeId;
+	}
+
+	public void setGoodsTypeId(Long goodsTypeId) {
+		this.goodsTypeId = goodsTypeId;
+	}
+
+	/**
+	 *通货类型名称
+	 * hyl 5.16新增
+	 * @return
+	 */
+	public String getGoodsTypeName() {
+		if (StringUtils.isBlank(goodsTypeName)) {
+			goodsTypeName = ServicesContants.GOODS_TYPE_GOLD;
+		}
+		return goodsTypeName;
+	}
+
+	public void setGoodsTypeName(String goodsTypeName) {
+		this.goodsTypeName = goodsTypeName;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public OrderInfoEO getOrderInfoEO() {
+		return orderInfoEO;
+	}
+
+	public void setOrderInfoEO(OrderInfoEO orderInfoEO) {
+		this.orderInfoEO = orderInfoEO;
+	}
+
+	public Long getRepositoryId() {
+		return repositoryId;
+	}
+
+	public void setRepositoryId(Long repositoryId) {
+		this.repositoryId = repositoryId;
+	}
+
+	public RepositoryInfo getRepositoryInfo() {
+		return repositoryInfo;
+	}
+
+	public void setRepositoryInfo(RepositoryInfo repositoryInfo) {
+		this.repositoryInfo = repositoryInfo;
+	}
+
+	public Integer getTradeType() {
+		return tradeType;
+	}
+
+	public void setTradeType(Integer tradeType) {
+		this.tradeType = tradeType;
+	}
+
+	public Long getServicerId() {
+		return servicerId;
+	}
+
+	public void setServicerId(Long servicerId) {
+		this.servicerId = servicerId;
+	}
+
+	/**
+	 * @return the optionId
+	 */
+	public Long getOptionId() {
+		return optionId;
+	}
+
+	/**
+	 * @param optionId the optionId to set
+	 */
+	public void setOptionId(Long optionId) {
+		this.optionId = optionId;
+	}
+
+	/**
+	 * @return the optionUser
+	 */
+	public UserInfoEO getOptionUser() {
+		return optionUser;
+	}
+
+	/**
+	 * @param optionUser the optionUser to set
+	 */
+	public void setOptionUser(UserInfoEO optionUser) {
+		this.optionUser = optionUser;
+	}
+
+	public String getLoginAccount() {
+		return loginAccount;
+	}
+
+	public void setLoginAccount(String loginAccount) {
+		this.loginAccount = loginAccount;
+	}
+
+	public String getAccountUid() {
+		return accountUid;
+	}
+
+	public void setAccountUid(String accountUid) {
+		this.accountUid = accountUid;
+	}
+
+	public Long getConfigGoldCount() {
+		return configGoldCount;
+	}
+
+	public void setConfigGoldCount(Long configGoldCount) {
+		this.configGoldCount = configGoldCount;
+	}
+
+	public BigDecimal getOrderUnitPrice() {
+		return orderUnitPrice;
+	}
+
+	public void setOrderUnitPrice(BigDecimal orderUnitPrice) {
+		this.orderUnitPrice = orderUnitPrice;
+	}
+
+	public BigDecimal getRepositoryUnitPrice() {
+		return repositoryUnitPrice;
+	}
+
+	public void setRepositoryUnitPrice(BigDecimal repositoryUnitPrice) {
+		this.repositoryUnitPrice = repositoryUnitPrice;
+	}
+
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public Date getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(Date lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+    public BigDecimal getIncome() {
+        return income;
+    }
+
+    public void setIncome(BigDecimal income) {
+        this.income = income;
+    }
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public Boolean getIsConsignment() {
+        return isConsignment;
+    }
+
+    public void setIsConsignment(Boolean isConsignment) {
+        this.isConsignment = isConsignment;
+    }
+
+	public Boolean getIsJsRobot() {
+		return isJsRobot;
+	}
+
+	public void setIsJsRobot(Boolean isJsRobot) {
+		this.isJsRobot = isJsRobot;
+	}
+
+	public Boolean getIsHelper() {
+		return isHelper;
+	}
+
+	public void setIsHelper(Boolean helper) {
+		isHelper = helper;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public Boolean getIsSendBackFromRobot() {
+		return isSendBackFromRobot;
+	}
+
+	public void setIsSendBackFromRobot(Boolean isSendBackFromRobot) {
+		this.isSendBackFromRobot = isSendBackFromRobot;
+	}
+
+	public Double getShopCoupon() {
+		return shopCoupon;
+	}
+
+	public void setShopCoupon(Double shopCoupon) {
+		this.shopCoupon = shopCoupon;
+	}
+
+	public Double getRedEnvelope() {
+		return redEnvelope;
+	}
+
+	public void setRedEnvelope(Double redEnvelope) {
+		this.redEnvelope = redEnvelope;
+	}
+
+	public Long getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
+	}
+}

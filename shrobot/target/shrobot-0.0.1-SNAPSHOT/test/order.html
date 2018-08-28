@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>订单完成接口</title>
+    <script src="jquery.js"></script>
+    <script src="jquery.json-2.4.min.js"></script>
+</head>
+<body>
+<script>
+    var request = {
+        order_id: "SH1603280000100",
+        type: 100,
+        receive_count: 50000,
+        remark: "交易成功",
+        sign: "87467471b7f8606f5ff67cb17bbab3c3"
+    };
+    $.ajax({
+        type: "post",
+        url: "../services/order/finish",
+        data: $.toJSON(request),
+        contentType: "application/json;charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        },
+        error: function (resp) {
+            console.log(resp);
+        }
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>出货商下单填单</title>
+    <meta content="" name="description" />
+    <meta content="5173帐号、安全帐号、游戏帐号" name="keywords" />
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common1.6-950.css" />
+    <link rel="shortcut icon" href="http://img01.5173cdn.com/common/build/1.00/images/ico.ico" />
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link href="css/request-buy.css" rel="Stylesheet" type="text/css" />
+    <!-- 新加担保发布样式 -->
+    <link rel="stylesheet" type="text/css" href="css/new-guarantee.css">
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/jquery.json-2.4.min.js" type="text/javascript"></script>
+    <script src="./js/business/deliveryOrder.js?v=5" type="text/javascript"></script>
+    <script src="./js/headGameMenu.js?v=3" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="header header-wp1180">
+        <!-- 顶部登陆条+快捷菜单条 -->
+        <div style="display:none" id="divLoading">
+        </div>
+        <div style="display:none" id="loadingInfo">
+            <img src="img/loading.gif" /> 订单创建中，请稍后......
+        </div>
+        <div id="J_GlobalTop">
+        </div>
+        <!--网站Logo+四级联动搜索条-->
+        <div class="header_box clearfix header-wp1200">
+            <h1 class="logo">
+                <a href="http://www.5173.com" title="中国网络游戏服务网">5173</a>
+            </h1>
+            <p class="slogan">金币交易</p>
+            <!-- 四级联动游戏选择 -->
+
+            <!-- 组件_商品发布进度条 开始 -->
+            <div class="wares-box clearfix">
+                <ul class="clearfix">
+                    <li class="on">
+                        <!-- 订单的 -->
+                        <i class="new-order-img ico-num">1</i>
+                        <span class="txt">选择商品，下单</span>
+                        <s class="new-order-arrow"></s>
+                    </li>
+                    <li class="off">
+                        <i class="new-order-img ico-num">2</i>
+                        <span class="txt">出货商登录游戏发货</span>
+                        <s class="new-order-arrow"></s>
+                    </li>
+                    <li class="off">
+                        <i class="new-order-img ico-num">3</i>
+                        <span class="txt">收货商确认收货</span>
+                        <s class="new-order-arrow"></s>
+                    </li>
+                    <li class="off">
+                        <i class="new-order-img ico-num">4</i>
+                        <span class="txt">交易完成</span>
+                    </li>
+                </ul>
+            </div>
+            <!-- 组件_商品发布进度条 结束 -->
+        </div>
+        <!-- <div class="header_box clearfix">
+        <h1 class="logo">
+            <a href="http://www.5173.com/" title="中国网络游戏服务网">5173</a></h1> -->
+        <!-- 四级联动游戏选择 -->
+        <!-- <div class="game_select game_select_main clearfix" id="gameSelectV2" style="z-index:9">
+            <form id="gsForm" method="get" class="clearfix">
+                <div class="game_select_box" id="gameSelectBox">
+                    <ul class="tab_menu">
+                        <li class="current"><a href="#">
+                            普通搜索</a></li>
+                    </ul>
+                    <div class="tab_box clearfix" id="multipleSearch" style="display: block;">
+                        <div class="left_bg">
+                        </div> -->
+        <!-- 游戏选择菜单 -->
+        <!--  <ul class="gs_menu" id="gsMenu">
+                            <li id="gs_game" class="gs_name arrow" title="选择游戏名称">游戏名称</li><li id="gs_plat" class="gs_plat arrow" title="选择游戏平台" style="display: none;">平台</li>
+                            <li id="gs_area" class="gs_area arrow" title="选择游戏区">游戏区</li>
+                            <li id="gs_server" class="gs_server arrow" title="选择游戏服务器">游戏服</li> -->
+        <!--<li id="gs_type" class="gs_type arrow" title="选择分类">游戏币</li>-->
+        <!--<li class="gs_search_item">-->
+        <!--<input class="gs_search_box holderfont" id="gsSearchBox" type="text" placeholder="请输入任意关键字" autocomplete="off" style="width: 120px;">-->
+        <!--</li>-->
+        <!-- </ul>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                    <div class="tab_box clearfix tab_box_reset hide" id="simpleSearch" style="display: none;">
+                        <div class="left_bg">
+                        </div>
+                        <div class="simple_search_box">
+                            <input type="text" class="simple_search_input holderfont" id="simpleSearchInput"
+                                   placeholder="关键字找游戏、搜区服、寻商品" autocomplete="off"></div>
+                        <div class="right_bg">
+                        </div>
+                    </div>
+                </div>
+                <div class="btn_box">
+                    <input class="gs_search_btn" id="gsSearchBtn" value="搜索"></div>
+            </form> -->
+        <!-- 游戏选择列表 -->
+        <!-- <div class="gs_box" id="gsBox" style="display: block;">
+                <div class="gs_box_inner">
+                    <div class="gs_head clearfix">
+                        <dl class="gs_name" style="display: block;">
+                            <dt>
+                            <h1>
+                                请选择游戏：</h1>
+                            </dt>
+                            <dd><a id="all" flag="region" href="javascript:void(0);" style="display: none;">全部区</a></dd>
+                        </dl>
+                        <a target="_self" class="close_btn" title="关闭窗口" href="javascript:">关闭窗口</a></div>
+                    <ul id="gsList" class="gs_list gs_name">
+                    </ul>
+                </div>
+            </div>
+            <s id="searchbar_arrow" class="game_select_arrow" style="left: 50px; display: inline;
+                    top: 66px"></s>
+        </div>
+    </div> -->
+    </div>
+    <!-- head end -->
+    <div class="guarantee-container">
+        <div class="wrapper w1200">
+            <div class="position">
+                <i class="icon-home"></i>
+                <a href="http://www.5173.com/">首页</a>
+                &gt;
+                <span id="spanNav"></span>
+            </div>
+            <div class="order-container">
+                <div class="order-title clearfix">
+                    <span class="word fl">商品信息</span>
+                </div>
+                <div class="order-content">
+                    <div class="goods-info clearfix">
+                        <div class="goods-img fl">
+                            <img id="gameLogo" src="" alt="">
+                        </div>
+                        <div class="detail fl">
+                            <p class="title overflow clearfix">
+                                <span id="gameInfo"></span>
+                            </p>
+                            <p class="item">最大收货量：
+                                <span class="txt_orange" id="count">0</span>
+                                <span class="unitName"></span>
+                            </p>
+                            <p class="item">单价：
+                                <span class="txt_orange" id="price">0</span>元/
+                                <span class="unitName"></span>
+                            </p>
+                            <p class="item">商家交易时间：
+                                <span id="dealTime"></span>
+                            </p>
+                            <p class="item">最后更新时间：
+                                <span id="updateTime"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="info-tip">
+                        <p class="title">—— <span style="font-weight:700">收货商信息</span> ——</p>
+                        <div class="item clearfix">
+                            <span class="front fl">收货商名称：</span>
+                            <span class="behind fl" id="shopName">茜茜网络</span>
+                        </div>
+                        <div class="item clearfix">
+                            <span class="front fl">成交率：</span>
+                            <span class="behind fl" id="cjl">100%</span>
+                        </div>
+                        <div class="item clearfix">
+                            <span class="front fl">平均订单用时：</span>
+                            <span class="behind fl" id="pjys">6分钟</span>
+                        </div>
+                        <div class="item clearfix">
+                            <span class="front fl">成交量：</span>
+                            <span class="behind fl" id="tradingVolume">100笔</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sell-tip mt-15">
+                <div class="sell-tip-title">
+                    <span class="sell-tip-title-left" style="margin-left:20px">5173温馨提示：</span>
+                    <!-- 默认展开提示，关闭提示添加类名close -->
+                    <div class="sell-tip-arrow-box">
+                        <span class="arrow-word open-word">收起</span>
+                        <span class="arrow-word close-word">展开</span>
+                        <i class="icon-arrow"></i>
+                    </div>
+                    <div class="sell-tip-content" style="margin-left:20px">
+                        <ul>
+                            <li>1.通过邮寄将产生5%手续费，当面交易将产生3%的手续费，该手续费由出货商承担。</li>
+                            <li>2.拍卖交易出货商承担手续费为3%，（说明：拍卖行手续费有拍卖优惠券为3%，无优惠券为4%，收货方需要购买拍卖优惠券。 如果没有优惠券导致拍卖交易收取 4%手续费，则多出的1%手续费为收货方承担）。</li>
+                            <li>3.出货过程请务必录制完整交易视频，如出现交易纠纷，出货商无法提供交易视频，责任由出货商承担。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 填写订单信息 -->
+            <div class="new-publish-form account-info order-container mt-15">
+                <form action="" method="post" class="" id="formts">
+                    <div class="order-title clearfix">
+                        <span class="word fl">填写订单信息</span>
+                    </div>
+                    <div class="fed_form input-info-box">
+                        <ul>
+                            <li class="clearfix">
+                                <div class="fed_input_box">
+                                    <label class="fed_formtit fl">
+                                        <em class="new-form-title">角色名称：</em>
+                                        <em class="new-star">*</em>
+                                    </label>
+                                    <div class="right-input-box">
+                                        <div class="input-box input-info">
+                                            <label for="">
+                                                <input id="jsmc" name="1" type="text" value="" class="fed_input fl" placeholder="请输入角色名称" required>
+                                            </label>
+                                        </div>
+                                        <label id="telcode-error" class="error" for="jsmc"></label>
+                                        <!-- <div class="new-fed-tip fl"> -->
+                                        <!-- 成功的类名是icon-fed-suc(无文字) -->
+                                        <!-- <i class="icon icon-fed-suc"></i> -->
+                                        <!-- <span class="new-fed-tip-word">请填写游戏帐号</span> -->
+                                        <!-- </div> -->
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <div class="fed_input_box">
+                                    <label class="fed_formtit fl">
+                                        <em class="new-form-title">出货数量：</em>
+                                        <em class="new-star">*</em>
+                                    </label>
+                                    <div class="right-input-box">
+                                        <div class="input-box input-info">
+                                            <label for="">
+                                                <input id="chsl" name="2" type="number" value="" placeholder="输入最大值107584" class="fed_input fl">
+                                            </label>
+                                        </div>
+                                        <span class="input-unit fl">万金</span>
+                                        <span class="tip fl" id="lblCountInfo">收货商收货数量要求大于等于
+                                            <em>4000</em>,小于等于
+                                            <em>107584</em>
+                                        </span>
+                                        <!-- <div class="new-fed-tip fl">
+                                        <i class="icon icon-fed-fail"></i>
+                                        <span class="new-fed-tip-word">密码由6-16个字符组成，区分大小写</span>
+                                    </div> -->
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <div class="fed_input_box">
+                                    <label class="fed_formtit fl">
+                                        <em class="new-form-title">交易金额：</em>
+                                    </label>
+                                    <div class="right-input-box">
+                                        <div class="input-box input-info">
+                                            <label for="">
+                                                <input id="jyje" name="3" type="number" placeholder="0" value="" class="fed_input fl" maxlength="" required disabled>
+                                            </label>
+                                        </div>
+                                        <span class="input-unit fl">元</span>
+                                        <!-- <div class="new-fed-tip fl">
+                                        <i class="icon icon-fed-fail"></i>
+                                        <span class="new-fed-tip-word">首尾不能包含空格，请重新填写</span>
+                                    </div> -->
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <div class="fed_input_box">
+                                    <label class="fed_formtit fl">
+                                        <em class="new-form-title">交易方式：</em>
+                                    </label>
+                                    <div class="right-input-box">
+                                        <div class="right-input-box">
+                                            <!-- 模拟select标签 选择时model-select添加active类名-->
+                                            <div class="model-select fl" id="trmode">
+                                                <input type="text" class="select-result fed_input fl" value="请选择" id="jydz" disabled>
+                                                <ul class="model-select-box">
+                                                    <!-- <li>邮寄交易</li>
+                                                <li>邮寄交易</li>
+                                                <li>邮寄交易</li> -->
+                                                </ul>
+                                                <div class="model-select-arrow"></div>
+                                            </div>
+                                            <div class="new-fed-tip fl" style="display:none" id="trmodeTip">
+                                                <!-- 成功的类名是icon-fed-suc (无文字)-->
+                                                <i class="icon icon-fed-suc"></i>
+                                                <span class="new-fed-tip-word">选择邮寄交易，邮寄手续费由买家承担</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- <li class="clearfix">
+                            <div class="fed_input_box">
+                                <label class="fed_formtit fl"><em class="new-form-title">交易地点：</em></label>
+                                <div class="right-input-box">
+                                    <div class="right-input-box">
+                                        模拟select标签 选择时model-select添加active类名
+                                        <div class="model-select fl">
+                                            <input type="text" class="select-result fed_input" value="交易拍卖第一频道艾尔文铁匠" disabled>
+                                            <ul class="model-select-box">
+                                                <li>交易拍卖第一频道艾尔文铁匠</li>
+                                                <li>交易拍卖第一频道艾尔文铁匠</li>
+                                                <li>交易拍卖第一频道艾尔文铁匠</li>
+                                            </ul>
+                                            <div class="model-select-arrow"></div>
+                                        </div>
+                                        <span class="tip fl">注：人工收货，务必根据选择的地点交易</span> -->
+                            <!-- <div class="new-fed-tip fl">
+                                            <i class="icon icon-fed-suc"></i>
+                                            <span class="new-fed-tip-word">订单交易时工作人员会联系您，请您提供管家锁的六位数字</span>
+                                        </div> -->
+                            <!-- </div>
+                                </div>
+                            </div>
+                        </li> -->
+                            <li class="clearfix" id="trGrade" style="display: none">
+                                <div class="fed_input_box">
+                                    <label class="fed_formtit fl">
+                                        <em class="new-form-title">角色等级：</em>
+                                        <em class="new-star">*</em>
+                                    </label>
+                                    <div class="right-input-box">
+                                        <div class="input-box input-info">
+                                            <label for="">
+                                                <input id="trLevel" value="" min="35" max="90" maxlength="2" placeholder="至少35级"  required class="fed_input fl" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+                                            </label>
+                                        </div>
+                                        <label id="telcode-error" class="error" for="trLevel"></label>
+                                        <!-- <span class="tip fl" id="lblCountInfo">收货商收货数量要求大于等于<em>4000</em>,小于等于<em>107584</em></span> -->
+                                        <div class="new-fed-tip fl" id="levelErr" style="display:none">
+                                            <i class="icon icon-fed-fail"></i>
+                                            <span class="new-fed-tip-word">等级范围限定35-90级</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <div class="fed_input_box">
+                                    <label class="fed_formtit fl">
+                                        <em class="new-form-title">手机号：</em>
+                                        <em class="new-star">*</em>
+                                    </label>
+                                    <div class="right-input-box">
+                                        <div class="input-box input-info">
+                                            <label for="">
+                                                <input id="telcode" name="5" type="text" placeholder="请输入手机号码" value="" class="fed_input fl" maxlength="11" required data-rule-mobile="true"
+                                                    data-msg-required="请输入手机号" data-msg-mobile="您的手机号码有误，请输入正确的手机号码">
+                                            </label>
+                                        </div>
+                                        <label id="telcode-error" class="error" for="telcode"></label>
+                                        <div class="new-fed-tip fl" id="telErr" style="display:none">
+                                            <!-- 成功的类名是icon-fed-suc(无文字) -->
+                                            <i class="icon icon-fed-fail"></i>
+                                            <span class="new-fed-tip-word" id="tel-error">您的手机号有误，请输入正确的手机号码</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <div class="fed_input_box">
+                                    <label class="fed_formtit fl">
+                                        <em class="new-form-title">QQ号：</em>
+                                        <em class="new-star">*</em>
+                                    </label>
+                                    <div class="right-input-box">
+                                        <div class="input-box input-info">
+                                            <label for="">
+                                                <input type="text" id="qq" value="" name="6" required data-rule-qq="true" data-msg-required="请输入QQ号" data-msg-qq="您的QQ号码有误，请输入正确的QQ号码"
+                                                    placeholder="请输入QQ号码" class="fed_input fl">
+                                            </label>
+                                        </div>
+                                        <label id="telcode-error" class="error" for="qq"></label>
+                                        <div class="new-fed-tip fl" style="display: none">
+                                            <!-- 成功的类名是icon-fed-suc(无文字) -->
+                                            <i class="icon icon-fed-fail"></i>
+                                            <span class="new-fed-tip-word">您的QQ号码有误，请输入正确的QQ号码</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <!-- 人工收货提示 -->
+                        <div class="order-tip">
+                            <em>*</em>
+                            <span id="orderTip">【人工收货】仔细核对角色名/等级,主动邀请附魔,并保留交易视频</span>
+                        </div>
+
+                        <!-- 立即发货按钮 -->
+                        <div class="send-box">
+                            <span class="btn" onclick='javascript:$("#formts").submit();'>立即发货</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 回到顶部 -->
+    <div class="to-top" id="isToTop">
+        <i class="icon-toTop"></i>
+        <span>返回顶部</span>
+    </div>
+    <!-- <div class="wrap">
+    <div class="conNav"> 您的位置：<a href="http://www.5173.com/">首页</a> &gt;<span id="spanNav"></span></div>
+</div> -->
+    <!-- <div class="wrap">
+    <div class="chxd_left">
+        <ul>
+            <li><label>货源：</label><span id="gameInfo"></span></li>
+            <li><label>最大收货量：</label><span class="txt_orange" id="count">0</span> <span class="unitName"></span></li>
+            <li><label>单价：</label><span class="txt_orange" id="price">0</span>元/<span class="unitName"></span></li>
+            <li><label>商家交易时间：</label><span id="dealTime">00:00 — 24:00</span></li>
+            <li><label>最后更新时间： </label><span id="updateTime"></span></li>
+        </ul>
+    </div>
+    <div class="chxd_right">
+        <div class="sjtitle">商家信息</div>
+        <ul>
+            <li>商家：<span class="txt_blue" id="shopName"></span></li>
+            <li>成交率：<span class="txt_orange" id="cjl">100.0%</span></li>
+            <li>平均订单用时：<span class="txt_orange" id="pjys">10.0分钟</span></li>
+            <li>成交量：<span class="txt_orange" id="tradingVolume">0笔</span></li>
+        </ul>
+    </div>
+</div> -->
+    <!-- <div class="clearfix"></div>
+<div class="wrap">
+    <div class="xdtitle2">出货提示<br>
+        <div class="xdtit-p">
+            <div class="tit-list">1.</div>
+            <div class="tit-tex">务必由你邀请收货商交易并录制交易视频 ,如因接受邀请造成的损失由出货商自行承担。</div>
+        </div>
+        <div class="xdtit-p">
+            <div class="tit-list">2.</div>
+            <div class="tit-tex">单次附魔最高1000万,根据出货数量以及收货商的附魔等级准备相应的附魔材料(每附魔一次需要白色或蓝色附魔卡1张,魔力溶解剂*5-10,下级元素结晶*20,蓝卡需要上级元素结晶*10),4级以上附魔师可以使用蓝色卡片。</div>
+        </div> -->
+    <!--<p>1.务必由你邀请收货商交易并录制交易视频 ,如因接受邀请造成的损失由出货商自行承担。</p>-->
+    <!--<p>2. 自行准备附魔材料：单次附魔材料如下：低级卡片*1、魔力溶解剂*5-10、下级元素结晶*10-20</p>-->
+    <!--  </div>
+</div> -->
+    <!-- <div class="wrap">
+    <div class="formbox_table">
+        <form action="" method="post" class="" id="formts">
+            <div class="form_tr">
+                <label class="form_td_l">角色名称：</label><input id="jsmc" name="1" type="text"  required /><span class="txt_red">*</span><label id="jsmc-error" class="error" for="jsmc"></label>
+            </div>
+            <div class="form_tr">
+                <label class="form_td_l">出货数量：</label><input id="chsl" name="2" type="text" required/><span
+                    class="txt_red unit_name" id="unit_name"></span><label id="lblCountInfo">（收货商收货数量要求大于 小于
+                ）</label><label id="chsl-error" class="error" for="chsl"></label>
+            </div>
+            <div class="form_tr">
+                <label class="form_td_l">交易金额：</label><input id="jyje" name="3" type="text" value="0"  required disabled/><span class="txt_red">元</span><label id="jyje-error" class="error" for="jyje"></label>
+            </div>
+            <div class="form_tr">
+                <label class="form_td_l">交易方式：</label><select name="4" id="jydz" style="width:292px;" required >
+            </select><span class="txt_red">(注：邮寄结束后，出货后请小退或大退游戏，否则无法收到邮件)</span><label id="jydz-error" class="error" for="jydz"></label>
+            </div> -->
+    <!-- <div class="form_tr">
+                <label class="form_td_l">交易地点：</label><select name="4" id="jydz" style="width:292px;" required >
+            </select><span class="txt_red">(*注：机器自动收货，务必根据选择的地点交易*)</span><label id="jydz-error" class="error" for="jydz"></label>
+            </div> -->
+    <!--<div class="form_tr">-->
+    <!--<label class="form_td_l">密语：</label><input id="word" name="3" type="text" /><span class="txt_red"></span></label>-->
+    <!--</div>-->
+    <!-- <div class="form_tr">
+                <label class="form_td_l">手机：</label><input type="text" id="telcode" value=""  name="5" placeholder="" required data-rule-mobile="true" data-msg-required="请输入手机号" data-msg-mobile="您的手机号码有误，请输入正确的手机号码"/><span class="txt_red">*</span><label id="telcode-error" class="error" for="telcode"></label>
+            </div>
+            <div class="form_tr">
+                <label class="form_td_l">QQ：</label><input type="text" id="qq" value=""  name="6" placeholder="" required data-rule-qq="true" data-msg-required="请输入QQ号" data-msg-qq="您的QQ号码有误，请输入正确的QQ号码"/><span class="txt_red">*</span><label id="qq-error" class="error" for="qq"></label>
+            </div>
+            <div class="form_tr">
+                <label class="form_td_l">商家提醒：</label><span class="txt_red txt_machine">【机器自动收货】仔细核对角色名/等级,主动邀请附魔,并保留交易视频</span>
+            </div>
+            <div class="form_tr mt20">
+                <label class="form_td_l"></label><input type="button" class="btn" value="立刻出货" onclick='javascript:$("#formts").submit();'/>
+            </div>
+        </form>
+    </div> -->
+    </div>
+    <!--JQ基础类库-->
+    <script type="text/javascript" src="http://img01.5173cdn.com/fed/build/2.00/js/fed-min.js"></script>
+    <script type="text/javascript" src="js/validate/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/validate/validate_extend.js?v=1"></script>
+    <script type="text/javascript" src="js/validate/messages_zh.js"></script>
+</body>
+
+</html>

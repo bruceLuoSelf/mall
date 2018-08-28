@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.dto.SellerDTO">
+
+
+    <resultMap id="NewResultMap"
+               type="com.wzitech.gamegold.shorder.dto.SellerDTO">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="UID" property="uid" jdbcType="VARCHAR" />
+        <result column="LOGIN_ACCOUNT" property="loginAccount"
+                jdbcType="VARCHAR" />
+        <result column="NOTES" property="notes" jdbcType="VARCHAR" />
+        <result column="SERVICER_ID" property="servicerId" jdbcType="NUMERIC"
+                javaType="long" />
+        <result column="NAME" property="name" jdbcType="VARCHAR" />
+        <result column="PHONE_NUMBER" property="phoneNumber" jdbcType="VARCHAR" />
+        <result column="QQ" property="qq" jdbcType="VARCHAR" />
+        <result column="SELLER_TYPE" property="sellerType" jdbcType="NUMERIC" />
+        <result column="GAMES" property="games" jdbcType="VARCHAR"/>
+        <result column="CHECK_STATE" property="checkState" jdbcType="NUMERIC"
+                javaType="int" />
+        <result column="LAST_UPDATE_TIME" property="lastUpdateTime"
+                jdbcType="TIMESTAMP" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN" />
+        <result column="MESSAGE_POWER" property="messagePower" jdbcType="BOOLEAN" />
+        <result column="IS_SHIELDED" property="isShielded" jdbcType="BOOLEAN" />
+        <result column="MANUAL_STATUS" property="manualStatus" jdbcType="BOOLEAN" />
+        <result column="IS_SHIELDED_TYPE" property="isShieldedType" jdbcType="BOOLEAN" />
+        <result column="IS_HELPER" property="isHelper" jdbcType="BOOLEAN" />
+        <result column="SHOP_NAME" property="shopName" jdbcType="VARCHAR" />
+        <result column="IS_ONLINE" property="isOnline" jdbcType="BOOLEAN" />
+        <result column="OPEN_SH_STATE" property="openShState" jdbcType="NUMERIC"
+                javaType="int" />
+        <result column="IS_PRICE_ROB" property="isPriceRob" jdbcType="BOOLEAN" />
+        <result column="HX_ACCOUNT" property="hxAccount" jdbcType="VARCHAR" />
+        <result column="HX_PWD" property="hxPwd" jdbcType="VARCHAR" />
+        <result column="IS_7BAO_USER_BIND" property="isBind" jdbcType="BOOLEAN" />
+        <result column="LOGIN_ACCOUNT_7BAO" property="sevenBaoAccount" jdbcType="VARCHAR" />
+        <result column="IS_READ_AGREEMENT" property="isAgree" jdbcType="BOOLEAN" />
+        <result column="IS_NEW_FUND" property="isNewFund" jdbcType="BOOLEAN" />
+
+
+    </resultMap>
+
+    <!--查询出该笔订单的卖家信息-->
+    <select id="findSellerByAccountAndUid" parameterType="Map" resultMap="NewResultMap">
+        SELECT *
+        FROM "TBL_GAMEGOLD_SELLER"
+        WHERE "UID"=#{uid} AND "LOGIN_ACCOUNT"=#{account}
+    </select>
+
+    <select id="findSellerByAccount" parameterType="Map" resultMap="NewResultMap">
+        SELECT *
+        FROM "TBL_GAMEGOLD_SELLER"
+        WHERE  "LOGIN_ACCOUNT"=#{account}
+    </select>
+
+    <select id="findById" parameterType="Long" resultMap="NewResultMap">
+        SELECT *
+        FROM "TBL_GAMEGOLD_SELLER"
+        WHERE "ID"=#{id}
+    </select>
+</mapper>

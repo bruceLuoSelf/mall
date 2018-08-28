@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>收货分仓列表</title>
+    <link href="http://images.5173cdn.com/5173/css/public_v30.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common-950.css" />
+    <link rel="stylesheet" type="text/css" href="css/page.css">
+    <link href="http://images001.5173cdn.com/css/my5173/v3/1m/myinfo_v30.css" rel="Stylesheet" type="text/css" />
+    <link href="css/request-buy.css" rel="Stylesheet" type="text/css" />
+    <script src="./js/jquery-1.8.3.min.js" type="text/javascript"></script>
+    <script src="./js/business/common1.js" type="text/javascript"></script>
+    <script src="./js/jquery.json-2.4.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://images001.5173cdn.com/js/my5173/v3/1m/left_menu.js" charset="utf-8"></script>
+    <script type="text/javascript" src="http://images001.5173cdn.com/js/my5173/v3/1m/my5173.js" charset="utf-8"></script>
+    <script type="text/javascript" src="http://images001.5173cdn.com/js/my5173/v3/1m/newbietask.js" charset="utf-8"></script>
+    <script src="./js/business/fcIndex.js" type="text/javascript"></script>
+    <script src="./js/jqPaginator.js" type="text/javascript"></script>
+    <script src="./js/gameMenu.js" type="text/javascript"></script>
+    <script src="./js/jquery.leanModal.min.js" type="text/javascript"></script>
+    <link href="http://yxbmall.5173.com/js/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">
+    <script src="./js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+    <!-- 新增分仓 -->
+    <link rel="stylesheet" type="text/css" href="css/new-fc.css">
+    <style>
+    #page .pagination>li>a{
+        height: 20px;
+        line-height: 20px;
+    }
+    </style>
+</head>
+<body>
+<!--head start -->
+<div class="header">
+    <!-- 顶部登陆条+快捷菜单条 -->
+    <div class="top">
+        <div class="top_box clearfix">
+
+            <!-- 未登录状态 -->
+            <ul class="top_left" id="loginList">
+                <li>您好！</li>
+                <li><a href="https://passport.5173.com/?returnUrl=http://www.5173.com">请登录</a></li>
+                <li><a href="https://passport.5173.com/Partner/LoginFrom?appNo=qq&returnUrl=http://www.5173.com" class="qq_login f_666">QQ登录</a></li>
+                <li><a href="https://passport.5173.com/user/register">免费注册</a></li>
+            </ul>
+
+            <ul class="top_right" id="topRight">
+                <li><a href="http://user.5173.com/default.aspx">买家中心<s class="like_arrow_down black_arrow"></s><em class="line">|</em></a>
+                    <div class="sub_box">
+                        <ul class="user_list">
+                            <li><a href="http://trading.5173.com/list/viewmyorderlist.aspx">我购买的商品</a></li>
+                            <li><a href="http://mall.5173.com/MyInfo/MallOrderList.aspx">我的商城订单</a></li>
+                            <li><a href="http://trading.5173.com">购买</a></li>
+                            <li><a href="https://mypay.ebatong.com/charge/chargeebank.aspx?flag=1">充值</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="http://user.5173.com/default.aspx">卖家中心<s class="like_arrow_down black_arrow"></s><em class="line">|</em></a>
+                    <div class="sub_box">
+                        <ul class="user_list">
+                            <li><a href="http://trading.5173.com/list/myorder_manage.aspx">我的订单管理</a></li>
+                            <li><a href="http://trading.5173.com/list/viewmybizofferslist2.aspx">出售中的商品</a></li>
+                            <li><a href="http://trading.5173.com/list/viewpausedbizofferslist.aspx">仓库中的商品</a></li>
+                            <li><a href="http://trading.5173.com/list/ViewLastestDealList.aspx">最新成交价格</a></li>
+                            <li><a href="http://trading.5173.com/auction/newpublish.aspx">出售</a></li>
+                            <li><a href="https://mypay.ebatong.com/charge/userwithdrawal.aspx">提现</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mark_cart" id="markCart"><a href="http://trading.5173.com/list/viewmyshoppingcart.aspx" target="_blank"><s class="icon_cart"></s>购物车&nbsp;<b class="num">0</b>&nbsp;件<em class="line">|</em></a></li>
+                <li><a href="http://kf.5173.com/" target="_blank">客服中心<s class="like_arrow_down black_arrow"></s><em class="line">|</em></a>
+                    <div class="sub_box">
+                        <ul class="support_list">
+                            <li><a href="http://sc.5173.com" target="_blank">咨询中心</a></li>
+                            <li><a href="http://safe.5173.com" target="_blank">安全中心</a></li>
+                            <li><a href="http://aid.5173.com/" target="_blank">帮助中心</a></li>
+                            <li><a href="http://ask.5173.com/question.aspx" target="_blank">我要提问</a></li>
+                            <li><a href="http://bar.5173.com/showforum-357.aspx" target="_blank">投诉建议</a></li>
+                        </ul>
+                        <div class="support_qq">
+                            <p><strong>7×24小时QQ咨询</strong></p>
+                            <a href="http://wpa.qq.com/msgrd?v=3&uin=4002885173&site=qq&menu=yes" target="_blank" class="btn_qq">立即咨询</a>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="#">网站导航<s class="like_arrow_down black_arrow"></s><em class="line">|</em></a>
+                    <div class="sub_box map_box">
+                        <dl class="map_list">
+                            <dt>商品类</dt>
+                            <dd><a href="http://yxb.5173.com/default.aspx">游戏币</a></dd>
+                            <dd><a href="http://gameid.5173.com/index.aspx">帐号</a></dd>
+                            <dd><a href="http://dkjy.5173.com/IndexV3.aspx">点卡</a></dd>
+                            <dd><a href="http://zb.5173.com">装备</a></dd>
+                            <dd><a href="http://dlc2c.5173.com">代练</a></dd>
+                            <dd><a href="http://webgame.5173.com/ChannelHome.aspx">网页游戏</a></dd>
+                            <dd><a href="http://zzjy.5173.com">棋牌游戏</a></dd>
+                            <dd><a href="http://quan.5173.com">消费券</a></dd>
+                        </dl>
+                        <dl class="map_list">
+                            <dt>服务类</dt>
+                            <dd><a href="http://51tao.5173.com">51淘</a></dd>
+                        </dl>
+                        <dl class="map_list last_dl">
+                            <dt>其他</dt>
+                            <dd><a href="http://html.5173.com/operation/201106/0630sj/index.html" target="_blank">手机5173</a></dd>
+                            <dd><a href="http://news.5173.com/" target="_blank">游戏资讯</a></dd>
+                            <dd><a href="http://bar.5173.com/" target="_blank">论坛</a></dd>
+                        </dl>
+                    </div>
+                </li>
+                <li><span>官方微博<s class="like_arrow_down black_arrow"></s></span>
+                    <div class="sub_box sns_box">
+                        <ul class="sns_list">
+                            <li><a href="http://weibo.com/baodao5173" class="icon_sina" target="_blank">新浪微博</a></li>
+                            <li><a href="http://t.qq.com/sh5173" class="icon_tx" target="_blank">腾讯微博</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--网站Logo+四级联动搜索条-->
+<div class="header_box clearfix">
+    <h1 class="logo"><a href="http://www.5173.com" title="中国网络游戏服务网">5173</a></h1>
+</div>
+
+<div class="flow_v_service" style="display: none;">
+    <ul>
+        <li><a href="http://sc.5173.com/index.php?question/complain/19.html?ts_type_id=12" class="button_tousu" target="_blank">我要投诉</a></li>
+        <li><a href="http://sc.5173.com/index.php?question/ask/19.html" class="button_zixun" target="_blank">我要咨询</a></li>
+        <li><a href="http://sc.5173.com/index.php?question/suggest/19.html" class="button_jianyi" target="_blank">有奖建议</a></li>
+    </ul>
+</div>
+<!--head end -->
+<div class="conNav"> 您的位置：<a href="http://www.5173.com/">首页</a> &gt; <a href="http://user.5173.com/Default.aspx">我的5173</a> &gt; 库存明细</div>
+<div id="main">
+    <!--left start -->
+    <div id="leftbox">
+        <iframe src="http://user.5173.com/UserleftLoginFrameV1.aspx" frameborder="0" height="180" width="218" scrolling="no" id="_userIframe"></iframe>
+        <div id="leftMenu">
+            <script type="text/javascript">leftMenu();</script>
+        </div>
+    </div>
+    <!--left end -->
+    <!--right start -->
+    <div id="rightbox" class="box"> <span class="rc-tp"><span></span></span>
+        <div class="r-c">
+            <div class="listbox">
+                <ul class="titlebg" style="margin-left:-15px">
+                    <li><span class="i"></span>&nbsp;&nbsp;分仓订单查询</li>
+                    <!-- QQ交谈 -->
+                    <li class="contact-qq"><a href="http://wpa.qq.com/msgrd?v=3&uin=1820235695&site=qq&menu=yes"></a></li>
+                </ul>
+                <div class="searchbox">
+                    <div id="_searchbox">
+                        <div class="game_select clearfix ma5173_dao f_left" id="gameSelect" style="margin-left:0">
+                            <div class="game_select_box" id="gameSelectBox">
+                                <div class="tab_box clearfix" id="multipleSearch" style="width:700px;color: #000">
+                                    <div class="left_bg"></div>
+                                    <div class="condition" style="margin-top: 0;padding-right: 0">
+                                        <span class="" style="display: inline-block">创建时间：</span>
+                                        <input id="startTime" class="Wdate" readonly="readonly" type="text" onfocus="WdatePicker({isShowClear:false,dateFmt: 'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'endTime\')}'})" />
+                                        <!-- <input id="startTime" class="Wdate m-letf3" readonly="readonly" type="text" onFocus="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'endTime\',{d:-7})}'})"/> -->
+                                        <span style="margin: 0 2px">-</span>
+                                        <input id="endTime" class="Wdate" readonly="readonly" type="text" onfocus="WdatePicker({isShowClear:false,dateFmt: 'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'startTime\')}'})" />
+                                        <!-- <input id="endTime" class="Wdate" readonly="readonly" type="text" onFocus="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' ,minDate:'#F{$dp.$D(\'startTime\')}',maxDate:'#F{$dp.$D(\'startTime\',{d:7})}'})"/> -->
+                                    </div>
+                                    <div class="condition clearfix" style="margin-top: 0;padding-right: 0">
+                                        <div class="fl">
+                                            <span class="title">游戏区服：</span>
+                                            <ul class="sel">
+                                                <li id="game" onclick="select($(this))">请选择游戏</li>
+                                                <li id="region" onclick="select($(this))">请选择区</li>
+                                                <li id="server" onclick="select($(this))">请选择服</li>
+                                            </ul>
+                                            <div class="clear"></div>
+                                            <div class="gs_box" id="gsBox" style="display: none;">
+                                                <div class="gs_box_inner">
+                                                    <div class="gs_head clearfix">
+                                                        <dl class="gs_name" style="display: block;">
+                                                            <dt><h1>请选择游戏：</h1></dt>
+                                                            <dd><a id="all" flag="region" href="javascript:void(0);" style="display: none;">全部区</a></dd>
+                                                        </dl>
+                                                        <a target="_self" class="close_btn" title="关闭窗口" href="javascript:">关闭窗口</a></div>
+                                                        <ul id="gsList" class="gs_list gs_name"></ul>
+                                                    </div>
+                                                </div>
+                                            <s id="searchbar_arrow" class="game_select_arrow"  style="display: none;"></s>
+                                        </div>
+                                        <div class="fl">
+                                            <span class="title">状态：</span>
+                                            <select class="sel" id="fcSel">
+                                                <option style="width: 70px;margin-right: 0">不限</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="condition" style="margin-top: 0">
+                                        <span class="" style="display:inline-block">分仓订单：</span>
+                                        <span><input type="text" id="fcOrder"  value="" class="input_jssx m-letf3" id=""/></span>
+                                        <span class="ml-12" style="display:inline-block">关联收货订单：</span>
+                                        <span><input type="text" id="relationOr"  value="" class="input_jssx m-letf3" style="width: 116px" id=""/></span>
+                                        <span class="ml-12" style="display:inline-block">分仓游戏帐号：</span>
+                                        <span><input type="text" id="fcAccount"  value="" class="input_jssx m-letf3" style="width: 116px" id=""/></span>       
+                                    </div>
+
+                                    <div class="new-search">
+                                        <span class="" style="display:inline-block">分仓角色：</span>
+                                        <span><input type="text" id="deliveryAccount"  value="" class="input_jssx m-letf3" id=""/></span>
+                                        <span class="ml-12" style="display:inline-block">被分仓角色：</span>
+                                        <span><input type="text" id="fcRole"  value="" class="input_jssx m-letf3" id=""/></span>     
+                                        <span class=""> 
+                                            <a id="btnSearch" class="btn_g ml-12" href="javascript:void(0)">
+                                                <span>查 询</span>
+                                            </a>
+                                        </span>
+                                        <span>
+                                            <a id="downloadexcel" class=" btn_g ml-12" href="javascript:void(0)">
+                                                <span>导出</span>                                                
+                                            </a> 
+                                        </span>
+                                    </div>
+                                    <div class="right_bg"></div>
+                                </div>
+                            </div>
+                            <!-- 游戏选择列表 -->
+                            <!--<div class="gs_box" id="gsBox"> </div>-->
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="" style="border-top:0;">
+                    <table cellpadding="0" cellspacing="0" width="100%" class="table_fc" id="">
+                        <thead>
+                        <tr>
+                            <td width="150"><p>创建时间</p></td>
+                            <td class="spc" width="200"><p>分仓订单编号</p></td>
+                            <td width="100"><p>状态</p></td>
+                            <td width="120"><p>分仓数量<em class="u-unit">(万金)</em></p></td>
+                            <td width="150"><p>关联收货订单</p></td>
+                            <td width="120"><p>操作</p></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr>
+                                <td width="150">
+                                    <p>2018-04-20</p>
+                                    <p>13:28:50</p>
+                                </td>
+                                <td class="spc" width="200">
+                                    <p>FC20180420123456</p>
+                                    <p class="color-999">地下城与勇士/浙江区/浙江3区</p>
+                                </td>
+                                <td width="100">
+                                    <p>分仓中</p>
+                                </td>
+                                <td width="120">
+                                    <p>13000</p>
+                                </td>
+                                <td width="150">
+                                    <p>SH20180420123456</p>
+                                </td>
+                                <td width="120">
+                                    <a class="fc-check" href="">查看</a>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="page" class="money_list">
+                    <ul class="pagination" id="pagination1"></ul>
+                    <div class="totalPage">共0笔</div>
+                </div>
+            </div>
+        </div>
+        <span class="rc-bt"><span></span></span> </div>
+    <!--right end -->
+</div>
+
+<script type="text/javascript" src="http://img01.5173cdn.com/fed/build/1.00/js/jquery.cookie.js"></script>
+<!--游戏联动选择 -->
+<script type="text/javascript" src="http://images001.5173cdn.com/js/my5173/v3/1m/fed-950-1.js"></script>
+<!--foot -->
+</body>
+</html>

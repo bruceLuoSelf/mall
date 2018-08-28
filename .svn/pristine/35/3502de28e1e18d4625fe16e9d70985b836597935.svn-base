@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.Config">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.Config">
+        <result column="id" property="id" javaType="long" />
+        <result column="game_name" property="gameName" jdbcType="VARCHAR" />
+        <result column="trade_address" property="tradeAddress" jdbcType="VARCHAR"/>
+        <result column="enabled" property="enabled" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.Config"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="gameName != null and gameName!=''">
+                game_name,
+            </if>
+            <if test="tradeAddress != null and tradeAddress!=''">
+                trade_address,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="gameName != null">
+                #{gameName},
+            </if>
+            <if test="tradeAddress != null">
+                #{tradeAddress},
+            </if>
+            <if test="enabled != null">
+                #{enabled},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.Config">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_config
+            <set>
+                <if test="item.gameName != null">
+                    game_name= #{item.gameName},
+                </if>
+                <if test="item.tradeAddress != null">
+                    trade_address=#{item.tradeAddress},
+                </if>
+                <if test="item.enabled != null">
+                    enabled= #{item.enabled},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql" >
+        <where>
+            <if test="gameNameLike != null">
+                game_name LIKE '%'||#{gameNameLike}||'%'
+            </if>
+            <if test="gameName != null">
+                game_name= #{gameName}
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.Config">
+        SELECT * FROM t_sh_config
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+        <if test="isLocked">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_config WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_config
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_config WHERE id = #{id}
+    </select>
+
+</mapper>

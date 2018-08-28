@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.repository.entity.SellerInfo">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.repository.entity.SellerInfo">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="UID" property="uid" jdbcType="VARCHAR" />
+		<result column="LOGIN_ACCOUNT" property="loginAccount"
+			jdbcType="VARCHAR" />
+		<result column="NOTES" property="notes" jdbcType="VARCHAR" />
+		<result column="SERVICER_ID" property="servicerId" jdbcType="NUMERIC"
+			javaType="long" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="PHONE_NUMBER" property="phoneNumber" jdbcType="VARCHAR" />
+		<result column="QQ" property="qq" jdbcType="VARCHAR" />
+		<result column="SELLER_TYPE" property="sellerType" jdbcType="NUMERIC" />
+        <result column="GAMES" property="games" jdbcType="VARCHAR"/>
+		<result column="CHECK_STATE" property="checkState" jdbcType="NUMERIC"
+			javaType="int" />
+		<result column="LAST_UPDATE_TIME" property="lastUpdateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN" />
+		<result column="MESSAGE_POWER" property="messagePower" jdbcType="BOOLEAN" />
+		<result column="IS_SHIELDED" property="isShielded" jdbcType="BOOLEAN" />
+		<result column="MANUAL_STATUS" property="manualStatus" jdbcType="BOOLEAN" />
+		<result column="IS_SHIELDED_TYPE" property="isShieldedType" jdbcType="BOOLEAN" />
+		<result column="IS_HELPER" property="isHelper" jdbcType="BOOLEAN" />
+		<result column="SHOP_NAME" property="shopName" jdbcType="VARCHAR" />
+		<result column="IS_ONLINE" property="isOnline" jdbcType="BOOLEAN" />
+		<result column="OPEN_SH_STATE" property="openShState" jdbcType="NUMERIC"
+				javaType="int" />
+		<result column="IS_PRICE_ROB" property="isPriceRob" jdbcType="BOOLEAN" />
+		<result column="HX_ACCOUNT" property="hxAccount" jdbcType="VARCHAR" />
+		<result column="HX_PWD" property="hxPwd" jdbcType="VARCHAR" />
+		<result column="IS_7BAO_USER_BIND" property="isBind" jdbcType="BOOLEAN" />
+		<result column="LOGIN_ACCOUNT_7BAO" property="sevenBaoAccount" jdbcType="VARCHAR" />
+		<result column="IS_READ_AGREEMENT" property="isAgree" jdbcType="BOOLEAN" />
+		<result column="IS_NEW_FUND" property="isNewFund" jdbcType="BOOLEAN" />
+		<!--区服互通新增字段-->
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+		<result column="REGION" property="region" jdbcType="VARCHAR" />
+		<result column="SERVER" property="server" jdbcType="VARCHAR" />
+		<result column="IS_CROSS" property="isCross" jdbcType="BOOLEAN" />
+		<result column="GAME_RACE" property="gameRace" jdbcType="VARCHAR" />
+		<association property="servicerInfo" select="selectServicer"
+			column="SERVICER_ID" javaType="long" />
+	</resultMap>
+
+	<!-- 查询客服信息 -->
+	<select id="selectServicer" parameterType="long"
+		resultMap="com.wzitech.gamegold.usermgmt.entity.UserInfoEO.BaseResultMap">
+		SELECT * FROM "TBL_GAMEGOLD_USERS" WHERE "ID" = #{id}
+	</select>
+
+	<!-- 新增记录 -->
+	<insert id="insert" parameterType="com.wzitech.gamegold.repository.entity.SellerInfo"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_SELLER"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="uid != null">
+				"UID",
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				"LOGIN_ACCOUNT",
+			</if>
+			<if test="servicerId != null">
+				"SERVICER_ID",
+			</if>
+			<if test="name != null and name != ''">
+				"NAME",
+			</if>
+			<if test="phoneNumber != null and phoneNumber != ''">
+				"PHONE_NUMBER",
+			</if>
+			<if test="qq != null and qq != ''">
+				"QQ",
+			</if>
+			<if test="sellerType != null and sellerType != ''">
+				"SELLER_TYPE",
+			</if>
+            <if test="games != null and games != ''">
+                "GAMES",
+            </if>
+			<if test="checkState != null ">
+				"CHECK_STATE",
+			</if>
+			<if test="lastUpdateTime != null">
+				"LAST_UPDATE_TIME",
+			</if>
+			<if test="createTime != null">
+				"CREATE_TIME",
+			</if>
+			<if test="isDeleted != null">
+				"IS_DELETED",
+			</if>
+			<if test="messagePower != null">
+				"MESSAGE_POWER",
+			</if>
+			<if test="isShielded != null">
+				"IS_SHIELDED",
+			</if>
+			<if test="manualStatus != null">
+				"MANUAL_STATUS",
+			</if>
+			<if test="isShieldedType != null">
+				"IS_SHIELDED_TYPE",
+			</if>
+			<if test="isHelper != null">
+				"IS_HELPER",
+			</if>
+			<if test="shopName != null">
+				"SHOP_NAME",
+			</if>
+			<if test="openShState != null">
+				"OPEN_SH_STATE",
+			</if>
+			<if test="isPriceRob != null">
+				"IS_PRICE_ROB",
+			</if>
+			<if test="hxAccount != null">
+				"HX_ACCOUNT",
+			</if>
+			<if test="hxPwd != null">
+				"HX_PWD",
+			</if>
+			<if test="isNewFund != null">
+				"IS_NEW_FUND"
+			</if>
+			<if test="isCross != null">
+				"IS_CROSS"
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="uid != null">
+				#{uid},
+			</if>
+			<if test="loginAccount != null and loginAccount != ''">
+				#{loginAccount},
+			</if>
+			<if test="servicerId != null">
+				#{servicerId},
+			</if>
+			<if test="name != null and name != ''">
+				#{name},
+			</if>
+			<if test="phoneNumber != null and phoneNumber != ''">
+				#{phoneNumber},
+			</if>
+			<if test="qq != null and qq != ''">
+				#{qq},
+			</if>
+			<if test="sellerType != null and sellerType != ''">
+				#{sellerType},
+			</if>
+            <if test="games != null and games != ''">
+                #{games},
+            </if>
+			<if test="checkState != null">
+				#{checkState},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="isDeleted != null">
+				#{isDeleted},
+			</if>
+			<if test="messagePower != null">
+				#{messagePower},
+			</if>
+			<if test="isShielded != null">
+				#{isShielded},
+			</if>
+			<if test="manualStatus != null">
+				#{manualStatus},
+			</if>
+			<if test="isShieldedType != null">
+				#{isShieldedType},
+			</if>
+			<if test="isHelper != null">
+				#{isHelper},
+			</if>
+			<if test="shopName != null">
+				#{shopName},
+			</if>
+			<if test="openShState != null">
+				#{openShState},
+			</if>
+			<if test="isPriceRob != null">
+				#{isPriceRob},
+			</if>
+			<if test="hxAccount != null">
+				#{hxAccount},
+			</if>
+			<if test="hxPwd != null">
+				#{hxPwd},
+			</if>
+			<if test="isNewFund != null">
+				#{isNewFund}
+			</if>
+			<if test="isCross != null">
+				#{isCross}
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate" parameterType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE "TBL_GAMEGOLD_SELLER"
+			<set>
+				<if test="item.uid != null">
+					"UID"= #{item.uid},
+				</if>
+				<if test="item.loginAccount != null">
+					"LOGIN_ACCOUNT"= #{item.loginAccount},
+				</if>
+				<if test="item.notes != null">
+					"NOTES"= #{item.notes},
+				</if>
+				<if test="item.servicerId != null">
+					"SERVICER_ID"= #{item.servicerId},
+				</if>
+				<if test="item.name != null">
+					"NAME"= #{item.name},
+				</if>
+				<if test="item.phoneNumber != null">
+					"PHONE_NUMBER"= #{item.phoneNumber},
+				</if>
+				<if test="item.qq != null">
+					"QQ"= #{item.qq},
+				</if>
+				<if test="item.sellerType != null">
+					"SELLER_TYPE"= #{item.sellerType},
+				</if>
+                <if test="item.games != null">
+                    "GAMES"= #{item.games},
+                </if>
+				<if test="item.checkState != null">
+					"CHECK_STATE"= #{item.checkState},
+				</if>
+				<if test="item.lastUpdateTime != null">
+					"LAST_UPDATE_TIME"= #{item.lastUpdateTime},
+				</if>
+				<if test="item.createTime != null">
+					"CREATE_TIME"= #{item.createTime},
+				</if>
+				<if test="item.isDeleted != null">
+					"IS_DELETED"= #{item.isDeleted},    
+				</if>
+				<if test="item.messagePower != null">
+					"MESSAGE_POWER"= #{item.messagePower},
+				</if>
+				<if test="item.isShielded != null">
+					"IS_SHIELDED"= #{item.isShielded},
+				</if>
+				<if test="item.manualStatus != null">
+					"MANUAL_STATUS"= #{item.manualStatus},
+				</if>
+				<if test="item.isShieldedType != null">
+					"IS_SHIELDED_TYPE"= #{item.isShieldedType},
+				</if>
+				<if test="item.shopName != null">
+					"SHOP_NAME"= #{item.shopName},
+				</if>
+				<if test="item.openShState != null">
+					"OPEN_SH_STATE"= #{item.openShState},
+				</if>
+				<if test="item.isPriceRob != null">
+					"IS_PRICE_ROB"= #{item.isPriceRob},
+				</if>
+				<if test="item.hxAccount != null">
+					"HX_ACCOUNT"= #{item.hxAccount},
+				</if>
+				<if test="item.isOnline != null">
+					"IS_ONLINE"= #{item.isOnline},
+				</if>
+				<if test="item.hxPwd != null">
+					"HX_PWD"= #{item.hxPwd},
+				</if>
+				<if test="item.isAgree != null">
+					"IS_READ_AGREEMENT"= #{item.isAgree},
+				</if>
+				<if test="item.isBind != null">
+					"IS_7BAO_USER_BIND"= #{item.isBind},
+				</if>
+				<if test="item.sevenBaoAccount != null">
+					"LOGIN_ACCOUNT_7BAO"= #{item.sevenBaoAccount},
+				</if>
+				<if test="item.isNewFund != null">
+					"IS_NEW_FUND"= #{item.isNewFund},
+				</if>
+				<if test="item.isCross != null">
+					"IS_CROSS"= #{item.isCross},
+				</if>
+				"IS_HELPER"= #{item.isHelper}
+			</set>
+			<where>
+				"ID" = #{item.id}
+			</where>
+		</foreach>
+	</update>
+
+	<!--&lt;!&ndash; 初始化老用户更新记录 &ndash;&gt;-->
+	<!--<update id="updateAgreeInit" parameterType="com.wzitech.gamegold.repository.entity.SellerInfo">-->
+		<!--<foreach collection="list" item="item" index="index"-->
+				 <!--separator=";">-->
+			<!--UPDATE "TBL_GAMEGOLD_SELLER"-->
+			<!--<set>-->
+				<!--<if test="item.uid != null">-->
+					<!--"UID"= #{item.uid},-->
+				<!--</if>-->
+				<!--<if test="item.loginAccount != null">-->
+					<!--"LOGIN_ACCOUNT"= #{item.loginAccount},-->
+				<!--</if>-->
+				<!--<if test="item.isAgree != null">-->
+					<!--"IS_READ_AGREEMENT"= #{item.isAgree},-->
+				<!--</if>-->
+				<!--<if test="item.isBind != null">-->
+					<!--"IS_7BAO_USER_BIND"= #{item.isBind},-->
+				<!--</if>-->
+				<!--"IS_HELPER"= #{item.isHelper}-->
+			<!--</set>-->
+			<!--<where>-->
+				<!--"ID" = #{item.id}-->
+			<!--</where>-->
+		<!--</foreach>-->
+	<!--</update>-->
+
+	<sql id="selectSql">
+		<where>
+			<if test="loginAccount != null and loginAccount != ''">
+				"LOGIN_ACCOUNT" LIKE '%'||#{loginAccount}||'%'
+			</if>
+			<if test="name != null and name != ''">
+				AND "NAME" LIKE '%'||#{name}||'%'
+			</if>
+			<if test="phoneNumber != null and phoneNumber != ''">
+				AND "PHONE_NUMBER" LIKE '%'||#{phoneNumber}||'%'
+			</if>
+			<if test="qq != null and qq != ''">
+				AND "QQ" LIKE '%'||#{qq}||'%'
+			</if>
+			<if test="uid != null">
+				AND "UID" = #{uid}
+			</if>
+			<if test="servicerId != null">
+				AND "SERVICER_ID" = #{servicerId}
+			</if>
+			<if test="isDeleted != null">
+				AND "IS_DELETED" = #{isDeleted}
+			</if>
+			<if test="messagePower != null">
+				AND "MESSAGE_POWER" = #{messagePower}
+			</if>
+			<if test="isShielded != null">
+				AND "IS_SHIELDED" = #{isShielded}
+			</if>
+			<if test="manualStatus != null">
+				AND "MANUAL_STATUS" = #{manualStatus}
+			</if>
+			<if test="id != null">
+				AND "ID"= #{id}
+			</if>
+			<if test="checkState != null">
+				AND "CHECK_STATE"= #{checkState}
+			</if>
+			<if test="shopName != null">
+				AND "SHOP_NAME"= #{shopName}
+			</if>
+			<if test="openShState != null">
+				AND "OPEN_SH_STATE"= #{openShState}
+			</if>
+			<if test="createStartTime != null">
+			<![CDATA[
+				AND "CREATE_TIME" >= #{createStartTime}
+			]]>
+			</if>
+			<if test="createEndTime != null">
+			<![CDATA[
+				AND "CREATE_TIME" <= #{createEndTime}
+			]]>
+			</if>
+			<if test="isAgree != null ">
+				AND "IS_READ_AGREEMENT"= #{isAgree}
+			</if>
+			<if test="isNewFund != null ">
+				AND "IS_NEW_FUND"= #{isNewFund}
+			</if>
+			<if test="isCross != null ">
+				AND "IS_CROSS"= #{isCross}
+			</if>
+
+			<if  test="loginAccountNotLike != null and loginAccountNotLike != ''">
+				"LOGIN_ACCOUNT" =#{loginAccountNotLike}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 查询所有的实体对象 -->
+	<select id="selectSellerInfoAll" resultMap="BaseResultMap"
+			resultType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		SELECT * from "TBL_GAMEGOLD_SELLER"
+	</select>
+
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectOpenSellerByMap" parameterType="map" resultMap="BaseResultMap"
+			resultType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		SELECT * FROM "TBL_GAMEGOLD_SELLER"
+		<include refid="selectSql" />
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		SELECT * FROM "TBL_GAMEGOLD_SELLER"
+		<include refid="selectSql" />
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<select id="querySellerInfo" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM "TBL_GAMEGOLD_SELLER" WHERE "LOGIN_ACCOUNT" = #{loginAccount}
+	</select>
+
+	<sql id="selectByOrderIdSql">
+		<if test="orderId != null and orderId != ''">
+			AND "CONFIGRESULT"."ORDER_ID" = #{orderId}
+		</if>
+		<if test="servicerId != null">
+			AND "SELLER"."SERVICER_ID" = #{servicerId}
+		</if>
+	</sql>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByOrderId" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		SELECT
+		"SELLER"."ID" "ID",
+		"SELLER"."NAME" "NAME",
+		"SELLER"."UID" "UID",
+		"SELLER"."LOGIN_ACCOUNT" "LOGIN_ACCOUNT",
+		"SELLER"."NOTES" "NOTES",
+		"SELLER"."LAST_UPDATE_TIME" "LAST_UPDATE_TIME",
+		"SELLER"."CREATE_TIME" "CREATE_TIME",
+		"SELLER"."IS_DELETED" "IS_DELETED",
+		"SELLER"."CHECK_STATE" "CHECK_STATE",
+		"SELLER"."PHONE_NUMBER" "PHONE_NUMBER",
+		"SELLER"."SERVICER_ID" "SERVICER_ID",
+		"CONFIGRESULT"."GAME_NAME",
+		"CONFIGRESULT"."REGION",
+		"CONFIGRESULT"."SERVER",
+		"CONFIGRESULT"."GAME_RACE"
+
+		FROM "TBL_GAMEGOLD_CONFIGRESULT" "CONFIGRESULT"
+		LEFT JOIN
+		"TBL_GAMEGOLD_REPOSITORY" "REPOSITORY" ON "REPOSITORY"."ID" =
+		"CONFIGRESULT"."REPOSITORY_ID"
+		LEFT JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON "SELLER"."LOGIN_ACCOUNT" =
+		"REPOSITORY"."LOGIN_ACCOUNT"
+		<where>
+			<!--"REPOSITORY"."IS_DELETED" = #{repositoryIsDel} -->
+			AND "SELLER"."IS_DELETED" = #{sellerIsDel}
+			AND "CONFIGRESULT"."IS_DELETED" = #{configResultIsDel}
+			<include refid="selectByOrderIdSql" />
+		</where>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_SELLER"
+		<include refid="selectSql" />
+	</select>
+
+	<!-- 查询符合条件的唯一记录 -->
+	<select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		SELECT * FROM "TBL_GAMEGOLD_SELLER"
+		<where>
+			<if test="loginAccount != null and loginAccount != ''">
+				"LOGIN_ACCOUNT" = #{loginAccount}
+			</if>
+		</where>
+	</select>
+
+	<!-- 通过用户的ID，获得卖家信息 -->
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		SELECT * FROM "TBL_GAMEGOLD_SELLER"
+		<where>
+			"ID" = #{id}
+		</where>
+	</select>
+	
+	<!-- 查询得到所有具有短信权限的卖家信息 -->
+	<select id="selectByPower"  resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		SELECT * FROM "TBL_GAMEGOLD_SELLER" WHERE "MESSAGE_POWER" = TRUE
+	</select>
+
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.repository.entity.SellerInfo">
+		${value}
+	</select>
+
+	<select id="findByAccountAndUid" parameterType="Map" resultMap="BaseResultMap">
+		SELECT *
+		FROM "TBL_GAMEGOLD_SELLER"
+		WHERE "UID"=#{uid} AND "LOGIN_ACCOUNT"=#{account}
+	</select>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdateService"  parameterType="Map" >
+		UPDATE "TBL_GAMEGOLD_SELLER"
+		<set>
+				"SERVICER_ID"= #{servicerIdNew}
+		</set>
+		<where>
+			"SERVICER_ID" = #{servicerId}
+		</where>
+	</update>
+
+	<!--设置为上线-->
+	<update id="online" parameterType="Map">
+		UPDATE "TBL_GAMEGOLD_SELLER"
+		SET "IS_ONLINE"=TRUE
+		WHERE "LOGIN_ACCOUNT"=#{account} AND "UID"=#{uid}
+	</update>
+
+	<!--设置为下线-->
+	<update id="offline" parameterType="Map">
+		UPDATE "TBL_GAMEGOLD_SELLER"
+		SET "IS_ONLINE"=FALSE
+		WHERE "LOGIN_ACCOUNT"=#{account} AND "UID"=#{uid}
+	</update>
+
+	<!--设置收货审核状态-->
+	<update id="checkSh" parameterType="Map">
+		UPDATE "TBL_GAMEGOLD_SELLER"
+		SET "OPEN_SH_STATE"=#{openShState}
+		WHERE "LOGIN_ACCOUNT"=#{account} AND "UID"=#{uid}
+	</update>
+
+	<!--添加7bao账号  ZW_C_JB_00021  340096-->
+	<update id="updateSevenBaoAccount" parameterType="Map">
+		UPDATE "TBL_GAMEGOLD_SELLER"
+		SET "IS_7BAO_USER_BIND"=#{isUserBind}
+		WHERE "LOGIN_ACCOUNT"=#{account} AND "UID"=#{uid}
+	</update>
+
+	<!--开启/关闭自动更新价格-->
+	<update id="enablePriceRob" parameterType="Map">
+		UPDATE "TBL_GAMEGOLD_SELLER"
+		SET "IS_PRICE_ROB"=#{isPriceRob}
+		WHERE "LOGIN_ACCOUNT"=#{account} AND "UID"=#{uid}
+	</update>
+	<select id="selectHxAccountById" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM "TBL_GAMEGOLD_SELLER"
+		WHERE
+		"UID"=#{id}
+	</select>
+
+	<select id="findSellerDetailByLoginAccount" parameterType="Map" resultMap="BaseResultMap">
+		SELECT *
+		FROM "TBL_GAMEGOLD_SELLER"
+		WHERE  "LOGIN_ACCOUNT"=#{account}
+	</select>
+</mapper>

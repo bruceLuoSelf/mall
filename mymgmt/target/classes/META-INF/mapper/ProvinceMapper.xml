@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.mymgmt.entity.ProvinceEO">
+	<resultMap id="BaseResultMap" type="com.wzitech.gamegold.mymgmt.entity.ProvinceEO">
+		<result column="ProID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="ProName" property="proName" jdbcType="VARCHAR" />
+		<result column="FARE" property="fare" jdbcType="DECIMAL" />
+		<result column="ProSort" property="proSort" jdbcType="NUMERIC" javaType="int"/>
+		<result column="ProRemark" property="proRemark" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.mymgmt.entity.ProvinceEO">
+		SELECT * FROM "TBL_PROVINCE"
+		<where>
+			<if test="proName != null and proName != ''">
+				"ProName" LIKE '%'||#{proName}||'%'
+			</if>
+		</where>
+		ORDER BY "ProSort"
+	</select>
+	
+	<!-- 统计符合条件的实体对象个数 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		SELECT COUNT(1) FROM "TBL_PROVINCE"
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.mymgmt.entity.ProvinceEO">
+		 ${value}
+	</select>
+	
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate" parameterType="com.wzitech.gamegold.mymgmt.entity.ProvinceEO">
+		<foreach collection="list" item="item" index="index" separator="OR">
+		UPDATE "TBL_PROVINCE"
+		<set>
+			<if test="item.proName != null and item.proName != ''">
+				"ProName" = #{item.proName},
+			</if>
+			<if test="item.fare != null">
+				"FARE" = #{item.fare}
+			</if>
+		</set>
+		<where>
+			"ProID" = #{item.id}
+		</where>
+		</foreach>
+	</update>
+</mapper>

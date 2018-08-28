@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.CurrencyConfigEO">
+
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.CurrencyConfigEO">
+		<result column="ID" property="id"  />
+        <result column="GAME_NAME" property="gameName"  />
+		<result column="GOODS_TYPE" property="goodsType"  />
+		<result column="FIELD" property="field"  />
+		<result column="FIELD_MEANING" property="fieldMeaning"  />
+		<result column="FIELD_TYPE" property="fieldType"  />
+		<result column="MIN_VALUE" property="minValue"  />
+		<result column="MAX_VALUE" property="maxValue"  />
+		<result column="ENABLED" property="enabled"  />
+		<result column="VALE" property="value"   />
+		<result column="UNIT_NAME" property="unitName"  />
+		<!--<result column="MIN_LENGTH" property="minLength"  />-->
+		<!--<result column="MAX_LENGTH" property="maxLength"  />-->
+		<result column="SORT" property="sort"  />
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.order.entity.CurrencyConfigEO"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_CURRENCY_CONFIG"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">
+				"ID",
+			</if>
+            <if test="gameName != null and gameName != ''">
+                "GAME_NAME",
+            </if>
+			<if test="goodsType != null and goodsType != ''">
+				"GOODS_TYPE",
+			</if>
+			<if test="field != null and field != ''">
+				"FIELD",
+			</if>
+			<if test="fieldMeaning != null and fieldMeaning != ''">
+				"FIELD_MEANING",
+			</if>
+			<if test="fieldType != null and fieldType != ''">
+				"FIELD_TYPE",
+			</if>
+			<if test="minValue != null and minValue != ''">
+				"MIN_VALUE",
+			</if>
+			<if test="maxValue != null and maxValue != ''">
+				"MAX_VALUE",
+			</if>
+			<if test="enabled != null">
+				"ENABLED",
+			</if>
+			<if test="value != null and value !=''">
+				"VALUE",
+			</if>
+			<if test="unitName != null and unitName !=''">
+				"UNIT_NAME",
+			</if>
+			<!--<if test="minLength != null and minLength !=''">-->
+				<!--"MIN_LENGTH",-->
+			<!--</if>-->
+			<!--<if test="maxLength != null and maxLength !=''">-->
+				<!--"MAX_LENGTH",-->
+			<!--</if>-->
+			<if test="sort != null and sort !=''">
+			"SORT",
+		</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">
+				#{id},
+			</if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+			<if test="goodsType != null and goodsType != ''">
+				#{goodsType},
+			</if>
+			<if test="field != null and field != ''">
+				#{field},
+			</if>
+			<if test="fieldMeaning != null and fieldMeaning != ''">
+				#{fieldMeaning},
+			</if>
+			<if test="fieldType != null and fieldType != ''">
+				#{fieldType},
+			</if>
+			<if test="minValue != null and minValue != ''">
+				#{minValue},
+			</if>
+			<if test="maxValue != null and maxValue != ''">
+				#{maxValue},
+			</if>
+			<if test="enabled != null">
+				#{enabled},
+			</if>
+			<if test="value != null and value !=''">
+				#{value},
+			</if>
+			<if test="unitName != null and unitName !=''">
+				#{unitName},
+			</if>
+			<!--<if test="minLength != null and minLength !=''">-->
+				<!--#{minLength},-->
+			<!--</if>-->
+			<!--<if test="maxLength != null and maxLength !=''">-->
+			<!--#{maxLength},-->
+			<!--</if>-->
+			<if test="sort != null and sort !=''">
+				#{sort},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate"
+		parameterType="com.wzitech.gamegold.order.entity.CurrencyConfigEO">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE "TBL_CURRENCY_CONFIG"
+			<set>
+                <if test="item.goodsType != null and item.goodsType != ''">
+                    "GOODS_TYPE"= #{item.goodsType},
+                </if>
+				<if test="item.gameName != null and item.gameName != ''">
+					"GAME_NAME"= #{item.gameName},
+				</if>
+				<if test="item.field != null and item.field != ''">
+					"FIELD"= #{item.field},
+				</if>
+				<if test="item.fieldMeaning != null and item.fieldMeaning != ''">
+					"FIELD_MEANING"= #{item.fieldMeaning},
+				</if>
+				<if test="item.fieldType != null and item.fieldType !=''">
+					"FIELD_TYPE"= #{item.fieldType},
+				</if>
+				<if test="item.minValue != null and item.minValue !=''">
+					"MIN_VALUE"= #{item.minValue},
+				</if>
+				<if test="item.maxValue != null and item.maxValue !=''">
+					"MAX_VALUE"= #{item.maxValue},
+				</if>
+				<if test="item.enabled != null">
+					"ENABLED"= #{item.enabled},
+				</if>
+				<if test="item.value != null and item.value !=''">
+					"VALUE"= #{item.value},
+				</if>
+				<if test="item.unitName != null and item.unitName !=''">
+					"UNIT_NAME"= #{item.unitName},
+				</if>
+				<!--<if test="item.minLength != null and item.minLength !=''">-->
+					<!--"MIN_LENGTH"= #{item.minLength},-->
+				<!--</if>-->
+				<if test="item.sort != null and item.sort !=''">
+					"SORT"= #{item.sort}
+				</if>
+				<!--<if test="item.maxLength != null and item.maxLength !=''">-->
+					<!--"MAX_LENGTH"= #{item.maxLength}-->
+				<!--</if>-->
+			</set>
+			<where>
+				"ID" = #{item.id}
+			</where>
+		</foreach>
+	</update>
+
+	<sql id="selectSql">
+		<where>
+			<if test="gameName != null and gameName != ''">
+				"GAME_NAME" = #{gameName}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.CurrencyConfigEO">
+		 SELECT * FROM "TBL_CURRENCY_CONFIG"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		 SELECT COUNT(1) FROM "TBL_CURRENCY_CONFIG"
+		<include refid="selectSql"/>
+	</select>
+
+	<!--根据订单号删除评价记录-->
+	<delete id="removeByOrderId" parameterType="Map">
+		DELETE FROM "TBL_CURRENCY_CONFIG"
+		WHERE "ID"=#{id}
+	</delete>
+	<!--根据游戏名称查询该游戏的通货配置-->
+	<select id="queryCurrencyConfig" parameterType="map" resultMap="BaseResultMap"
+			resultType="com.wzitech.gamegold.order.entity.CurrencyConfigEO">
+		SELECT * FROM "TBL_CURRENCY_CONFIG" WHERE "GAME_NAME" = #{gameName} AND "GOODS_TYPE" = #{goodsType}
+	</select>
+
+
+	<select id="selectConfig" parameterType="com.wzitech.gamegold.order.entity.CurrencyConfigEO" resultMap="BaseResultMap">
+		SELECT * FROM "TBL_CURRENCY_CONFIG" WHERE  "ID"=#{id}
+		<!--<trim prefixOverrides="AND">-->
+			<!--<if test="gameName != null and gameName!=''">-->
+				<!--GAME_NAME = #{gameName}-->
+			<!--</if>-->
+			<!--<if test="goodsTypeName != null and goodsTypeName!=''">-->
+				<!--AND GOODS_TYPE = #{goodsType}-->
+			<!--</if>-->
+			<!--<if test="enableRobot != null and enableRobot!=''">-->
+				<!--AND FIELD = #{field}-->
+			<!--</if>-->
+		<!--</trim>-->
+	</select>
+
+	<select id="selectCurrency" parameterType="com.wzitech.gamegold.order.entity.CurrencyConfigEO" resultMap="BaseResultMap">
+		SELECT * FROM "TBL_CURRENCY_CONFIG" WHERE "GAME_NAME"=#{gameName} AND "GOODS_TYPE"=#{goodsType} AND "FIELD"=#{field}
+	</select>
+	<!--&lt;!&ndash; 通过商品的ID，获得商品信息 &ndash;&gt;-->
+	<!--<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.CurrencyConfigEO">-->
+		 <!--SELECT * FROM "TBL_GAMEGOLD_TRADE_PLACE"-->
+		 <!--<where>-->
+		 	<!--"ID" = #{id}-->
+		 <!--</where>-->
+	<!--</select>-->
+
+	<!--&lt;!&ndash; 根据原生Sql查询记录 &ndash;&gt;-->
+	<!--<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"-->
+		<!--resultType="com.wzitech.gamegold.order.entity.CurrencyConfigEO">-->
+		<!--${value}-->
+	<!--</select>-->
+
+    <!--&lt;!&ndash; 获取商城的所有游戏名称和ID &ndash;&gt;-->
+    <!--<select id="queryGameNameIdList" resultMap="BaseResultMap">-->
+        <!--SELECT "ID","GAME_ID","GAME_NAME" FROM "TBL_GAMEGOLD_TRADE_PLACE" WHERE "IS_DELETED"=false-->
+    <!--</select>-->
+</mapper>

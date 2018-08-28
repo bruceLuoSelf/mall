@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date [%-5level] %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>log/frontend.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>log/frontend-%d{yyyyMMdd}.%i.log</fileNamePattern>
+            <maxHistory>20</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%date [%-5level] %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter>
+		<File>log/frontend-err.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>log/frontend-err.%i.log</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>5</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>100MB</MaxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%date [%-5level] %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!--
+	myBatis3.0.6左右的版本时
+	打印sql的时候只需要配置如下属性：
+	<logger name="java.sql.Connection" level="DEBUG" />
+	<logger name="java.sql.Statement" level="DEBUG" />
+	<logger name="java.sql.PreparedStatement" level="DEBUG" />
+	在myBatis3.2.7左右版本
+	更改了打印Sql的模式，它将sql打印细化到了每一个mapperStatement的每一个方法上。
+	如果你打算有一个全局配置打印所有的sql，则需要如下配置
+	在mybatis的configuration中增加setting配置
+	<settings>
+		<setting name="logPrefix" value="dao."/>
+	</settings>
+	然后增加配置
+	<logger name="dao" level="DEBUG"/>
+	-->
+
+	<appender name="catAppender" class="com.wzitech.gamegold.common.log.business.CatLogbackAppender"></appender>
+
+	<root level="DEBUG">
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+		<appender-ref ref="FILE-ERROR"/>
+		<appender-ref ref="catAppender" />
+	</root>
+</configuration>

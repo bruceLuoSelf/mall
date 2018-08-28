@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.GoodsType">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.GoodsType">
+        <result column="id" property="id" javaType="long" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="is_enabled" property="enabled" jdbcType="BOOLEAN"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.GoodsType"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_goods_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null and name!=''">
+                name,
+            </if>
+            <if test="enabled != null and enabled!=''">
+                is_enabled,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="enabled != null">
+                #{enabled},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.GoodsType">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_goods_type
+            <set>
+                <if test="item.name != null">
+                    name= #{item.name},
+                </if>
+                <if test="item.enabled != null">
+                    is_enabled=#{item.enabled},
+                </if>
+                <if test="item.createTime != null">
+                    create_time= #{item.createTime},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time= #{item.updateTime},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql" >
+        <where>
+            <if test="createStartTime != null">
+                and update_time >= #{createStartTime}
+            </if>
+            <if test="createEndTime != null">
+                <![CDATA[
+                and update_time <= #{createEndTime}
+                ]]>
+            </if>
+            <if test="name != null and name!=''">
+                  AND name = #{name}
+            </if>
+            <if test="enabled != null">
+                is_enabled = #{enabled}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.GoodsType">
+        SELECT * FROM t_sh_goods_type
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+        <if test="isLocked">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_goods_type WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_goods_type
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_goods_type WHERE id = #{id}
+    </select>
+    <!-- 查询全部 -->
+     <select id="queryGoodsTypeNameIdList" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_goods_type WHERE is_enabled = TRUE
+    </select>
+
+    <select id="queryGoodsTypeIdByName" parameterType="string" resultType="long">
+        SELECT id FROM t_sh_goods_type WHERE name = #{name}
+    </select>
+</mapper>

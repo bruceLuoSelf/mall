@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="jsrobot:war">
+    <output-path>$PROJECT_DIR$/jsrobot/target</output-path>
+    <root id="archive" name="jsrobot.war">
+      <element id="artifact" artifact-name="jsrobot:war exploded" />
+    </root>
+  </artifact>
+</component>

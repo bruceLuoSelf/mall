@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.usermgmt.entity.ServicerVoteRecordEO">
+	<resultMap id="BaseResultMap" type="com.wzitech.gamegold.usermgmt.entity.ServicerVoteRecordEO">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="SERVICER_ID" property="servicerId" javaType="Long"/>
+		<result column="IP" property="ip" jdbcType="VARCHAR" javaType="String"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!-- 增加客服投票数 -->
+	<update id="incrVote" parameterType="Long">
+		UPDATE "TBL_GAMEGOLD_USERS" SET "VOTE"="VOTE"+1 WHERE "ID"=#{uid}
+	</update>
+
+	<!-- 查询客服投票数 -->
+	<select id="queryServicerVote" parameterType="Long" resultType="Integer">
+		SELECT "VOTE" FROM "TBL_GAMEGOLD_USERS" WHERE "ID"=#{uid}
+	</select>
+
+	<!-- 新增投票记录 -->
+	<insert id="insert" parameterType="com.wzitech.gamegold.usermgmt.entity.ServicerVoteRecordEO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_SERVICER_VOTE_RECORD"("SERVICER_ID","OPERATOR_ID","OPERATOR_NAME","IP","CREATE_TIME") VALUES(#{servicerId},#{operatorId},#{operatorName}, #{ip}, #{createTime})
+	</insert>
+
+	<!-- 查询是否已经投票 -->
+	<select id="hasVoted" parameterType="map" resultType="Integer">
+		SELECT count(1) FROM "TBL_GAMEGOLD_SERVICER_VOTE_RECORD" WHERE "OPERATOR_ID"=#{operatorId} OR "IP"=#{ip}
+	</select>
+
+</mapper>

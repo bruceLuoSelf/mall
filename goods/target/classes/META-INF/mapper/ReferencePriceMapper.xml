@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wzitech.gamegold.goods.entity.ReferencePrice">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.goods.entity.ReferencePrice" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="game_name" property="gameName" jdbcType="VARCHAR" />
+        <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+        <result column="server_name" property="serverName" jdbcType="VARCHAR" />
+        <result column="race_name" property="raceName" jdbcType="VARCHAR" />
+        <result column="unit_price" property="unitPrice" />
+        <result column="total_account" property="totalAccount" />
+        <result column="money_name" property="moneyName" />
+        <result column="goods_type_name" property="goodsTypeName" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <!-- 通过主键查找记录 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.goods.entity.ReferencePrice">
+        select * from "TBL_GAMEGOLD_REFERENCE_PRICE" where id =#{id}
+    </select>
+
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="list">
+        delete from "TBL_GAMEGOLD_REFERENCE_PRICE" where id IN
+        <foreach collection="list" item="item" open="(" separator=","
+                 close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.goods.entity.ReferencePrice"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into "TBL_GAMEGOLD_REFERENCE_PRICE"
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="gameName != null and gameName != ''">
+                game_name,
+            </if>
+            <if test="regionName != null and regionName != ''">
+                region_name,
+            </if>
+            <if test="serverName != null and serverName != ''">
+                server_name,
+            </if>
+            <if test="raceName != null and raceName != ''">
+                race_name,
+            </if>
+            <if test="unitPrice != null and unitPrice != ''">
+                unit_price,
+            </if>
+            <if test="totalAccount != null and totalAccount != ''">
+                total_account,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="moneyName != null and moneyName != ''">
+                money_name,
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                goods_type_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+            <if test="regionName != null and regionName != ''">
+                #{regionName},
+            </if>
+            <if test="serverName != null and serverName != ''">
+                #{serverName},
+            </if>
+            <if test="raceName != null and raceName != ''">
+                #{raceName},
+            </if>
+            <if test="unitPrice != null and unitPrice != ''">
+                #{unitPrice},
+            </if>
+            <if test="totalAccount != null and totalAccount != ''">
+                #{totalAccount},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="moneyName != null and moneyName != ''">
+                #{moneyName},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                #{goodsTypeName},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.goods.entity.ReferencePrice">
+        <foreach collection="list" item="item" index="index"
+                 separator="OR">
+            update "TBL_GAMEGOLD_REFERENCE_PRICE"
+            <set>
+                <if test="item.gameName != null and item.gameName != ''">
+                    game_name = #{item.gameName},
+                </if>
+                <if test="item.regionName != null and item.regionName != ''">
+                    region_name = #{item.regionName},
+                </if>
+                <if test="item.serverName != null and item.serverName != ''">
+                    server_name = #{item.serverName},
+                </if>
+                <if test="item.raceName != null and item.raceName != ''">
+                    race_name = #{item.raceName},
+                </if>
+                <if test="item.unitPrice != null">
+                    unit_price = #{item.unitPrice},
+                </if>
+                <if test="item.totalAccount != null">
+                    total_account = #{item.totalAccount},
+                </if>
+                <if test="item.createTime != null">
+                    create_time = #{item.createTime},
+                </if>
+                <if test="item.updateTime != null">
+                    update_time = #{item.updateTime},
+                </if>
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <trim prefixOverrides="AND">
+                <if test="gameName != null and gameName != ''">
+                    AND game_name = #{gameName}
+                </if>
+                <if test="regionName != null and regionName != ''">
+                    AND region_name = #{regionName}
+                </if>
+                <if test="serverName != null and serverName != ''">
+                    AND server_name = #{serverName}
+                </if>
+                <if test="raceName != null and raceName != ''">
+                    AND race_name = #{raceName}
+                </if>
+                <if test="unitPrice != null">
+                    AND unit_price = #{unitPrice}
+                </if>
+                <if test="totalAccount != null">
+                    AND total_account = #{totalAccount}
+                </if>
+                <if test="goodsTypeName != null and goodsTypeName != ''and goodsTypeName != '全部'">
+                    AND goods_type_name = #{goodsTypeName}
+                </if>
+            </trim>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.goods.entity.ReferencePrice">
+        select * from "TBL_GAMEGOLD_REFERENCE_PRICE"
+        <include refid="selectSql" />
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <!-- 统计符合条件的实体对象个数 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_REFERENCE_PRICE"
+        <include refid="selectSql" />
+    </select>
+</mapper>

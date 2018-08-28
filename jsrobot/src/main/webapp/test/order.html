@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>订单详情查询</title>
+    <script src="jquery.js"></script>
+    <script src="jquery.json-2.4.min.js"></script>
+</head>
+<body>
+<script>
+    var request = {
+        orderId: "YX1510080000532",
+        subOrderId: "3103442",
+        sign: "912445e3fa00909de054745660047d93"
+    };
+    $.ajax({
+        type: "GET",
+        url: "../services/order/detail",
+        data: request,
+        contentType: "application/json;charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        },
+        error: function (resp) {
+            console.log(resp);
+        }
+    });
+
+</script>
+</body>
+</html>

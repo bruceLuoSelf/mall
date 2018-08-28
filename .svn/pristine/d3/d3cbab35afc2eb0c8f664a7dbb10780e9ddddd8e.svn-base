@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.goods.entity.HotRecommendConfig">
+
+	<resultMap id="BaseResultMap" type="com.wzitech.gamegold.goods.entity.HotRecommendConfig">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="GAME_ID" property="gameId" javaType="long" />
+        <result column="GAME_NAME" property="gameName" javaType="String" />
+		<result column="GOLD_COUNTS" property="goldCounts" javaType="String" />
+        <result column="CATEGORY_ICON_1" property="categoryIcon1" javaType="String" />
+        <result column="CATEGORY_ICON_2" property="categoryIcon2" javaType="String" />
+        <result column="CATEGORY_ICON_3" property="categoryIcon3" javaType="String" />
+        <result column="IS_SHOW_CATEGORY23" property="isShowCategory23" javaType="Boolean" />
+        <result column="IS_CONSIGNMENT_MODE" property="isConsignmentMode" javaType="Boolean" />
+        <result column="CONSIGNMENT_START_TIME" property="consignmentStartTime" javaType="String" />
+        <result column="CONSIGNMENT_END_TIME" property="consignmentEndTime" javaType="String" />
+        <result column="OPERATOR_ID" property="operatorId" jdbcType="NUMERIC" javaType="long"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+        <result column="GOODS_TYPE_NAME" property="goodsTypeName"  />
+        <result column="GOODS_TYPE_ID" property="goodsTypeId"  />
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.goods.entity.HotRecommendConfig" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_HOT_RECOMMEND_CONFIG"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gameId != null">
+				"GAME_ID",
+			</if>
+            <if test="gameName != null and gameName != ''">
+                "GAME_NAME",
+            </if>
+			<if test="goldCounts != null and goldCounts != ''">
+				"GOLD_COUNTS",
+			</if>
+            <if test="categoryIcon1 != null and categoryIcon1 != ''">
+                "CATEGORY_ICON_1",
+            </if>
+            <if test="categoryIcon2 != null and categoryIcon2 != ''">
+                "CATEGORY_ICON_2",
+            </if>
+            <if test="categoryIcon3 != null and categoryIcon3 != ''">
+                "CATEGORY_ICON_3",
+            </if>
+            <if test="showCategory23 != null">
+                "IS_SHOW_CATEGORY23",
+            </if>
+            <if test="isConsignmentMode != null">
+                "IS_CONSIGNMENT_MODE",
+            </if>
+            <if test="consignmentStartTime != null">
+                "CONSIGNMENT_START_TIME",
+            </if>
+            <if test="consignmentEndTime != null">
+                "CONSIGNMENT_END_TIME",
+            </if>
+            <if test="operatorId != null">
+                "OPERATOR_ID",
+            </if>
+            <if test="createTime != null">
+                "CREATE_TIME",
+            </if>
+            <if test="lastUpdateTime != null">
+                "LAST_UPDATE_TIME",
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName !=''">
+                "GOODS_TYPE_NAME",
+            </if>
+            <if test="goodsTypeId != null">
+                "GOODS_TYPE_ID"
+            </if>
+        </trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gameId != null">
+				#{gameId},
+			</if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+			<if test="goldCounts != null">
+				#{goldCounts},
+			</if>
+            <if test="categoryIcon1 != null and categoryIcon1 != ''">
+                #{categoryIcon1},
+            </if>
+            <if test="categoryIcon2 != null and categoryIcon2 != ''">
+                #{categoryIcon2},
+            </if>
+            <if test="categoryIcon3 != null and categoryIcon3 != ''">
+                #{categoryIcon3},
+            </if>
+            <if test="showCategory23 != null">
+                #{showCategory23},
+            </if>
+            <if test="isConsignmentMode != null">
+                #{isConsignmentMode},
+            </if>
+            <if test="consignmentStartTime != null">
+                #{consignmentStartTime},
+            </if>
+            <if test="consignmentEndTime != null">
+                #{consignmentEndTime},
+            </if>
+            <if test="operatorId != null">
+                #{operatorId},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="lastUpdateTime != null">
+                #{lastUpdateTime},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName !=''">
+                #{goodsTypeName},
+            </if>
+            <if test="goodsTypeId != null">
+                #{goodsTypeId}
+            </if>
+        </trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate"
+		parameterType="com.wzitech.gamegold.goods.entity.HotRecommendConfig">
+		<foreach collection="list" item="item" index="index" separator=";">
+			UPDATE "TBL_GAMEGOLD_HOT_RECOMMEND_CONFIG"
+			<set>
+                <if test="item.gameId != null">
+                    "GAME_ID" = #{item.gameId},
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    "GAME_NAME" = #{item.gameName},
+                </if>
+				<if test="item.goldCounts != null and item.goldCounts != ''">
+					"GOLD_COUNTS"= #{item.goldCounts},
+				</if>
+                <if test="item.categoryIcon1 != null">
+                    "CATEGORY_ICON_1" = #{item.categoryIcon1},
+                </if>
+                <if test="item.categoryIcon2 != null">
+                    "CATEGORY_ICON_2" = #{item.categoryIcon2},
+                </if>
+                <if test="item.categoryIcon3 != null">
+                    "CATEGORY_ICON_3" = #{item.categoryIcon3},
+                </if>
+                <if test="item.showCategory23 != null">
+                    "IS_SHOW_CATEGORY23" = #{item.showCategory23},
+                </if>
+                <if test="item.isConsignmentMode != null">
+                    "IS_CONSIGNMENT_MODE" = #{item.isConsignmentMode},
+                </if>
+                <if test="item.consignmentStartTime != null">
+                    "CONSIGNMENT_START_TIME" = #{item.consignmentStartTime},
+                </if>
+                <if test="item.consignmentEndTime != null">
+                    "CONSIGNMENT_END_TIME" = #{item.consignmentEndTime},
+                </if>
+                <if test="item.operatorId != null">
+                    "OPERATOR_ID" = #{item.operatorId},
+                </if>
+                <if test="item.lastUpdateTime != null">
+                    "LAST_UPDATE_TIME" = #{item.lastUpdateTime},
+                </if>
+                <if test="item.goodsTypeName != null and item.goodsTypeName != ''">
+                    "GOODS_TYPE_NAME" = #{item.goodsTypeName},
+                </if>
+                <if test="item.goodsTypeId != null">
+                    "GOODS_TYPE_ID" = #{item.goodsTypeId},
+                </if>
+            </set>
+			<where>
+				"ID" = #{item.id}
+			</where>
+		</foreach>
+	</update>
+    
+    <sql id="selectSql">
+        <where>
+            <if test="id != null">
+                AND	"ID"= #{id}
+            </if>
+			<if test="gameId != null">
+				AND "GAME_ID" = #{gameId}
+			</if>
+            <if test="goodsTypeName != null and goodsTypeName !=''">
+                AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND "GAME_NAME" = #{gameName}
+            </if>
+        </where>
+	</sql>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.goods.entity.HotRecommendConfig">
+		SELECT * FROM "TBL_GAMEGOLD_HOT_RECOMMEND_CONFIG"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		 SELECT COUNT(1) FROM "TBL_GAMEGOLD_HOT_RECOMMEND_CONFIG"
+		<include refid="selectSql"/>
+	</select>
+	
+	<!-- 通过ID获得对象信息 -->
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.goods.entity.HotRecommendConfig">
+		 SELECT * FROM "TBL_GAMEGOLD_HOT_RECOMMEND_CONFIG"
+		 <where>
+		 	"ID" = #{id}
+		 </where>
+	</select>
+
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.goods.entity.HotRecommendConfig">
+		${value}
+	</select>
+
+	<!-- 根据ID删除 -->
+	<delete id="batchDeleteByIds" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            DELETE FROM "TBL_GAMEGOLD_HOT_RECOMMEND_CONFIG" WHERE "ID" = #{item}
+        </foreach>
+	</delete>
+
+    <!-- 根据游戏名与商品类型查询单条 -->
+    <select id="selectByProp" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_HOT_RECOMMEND_CONFIG"
+        <include refid="selectSql"/>
+    </select>
+</mapper>

@@ -1,0 +1,172 @@
+/************************************************************************************
+ *  Copyright 2013 WZITech Corporation. All rights reserved.
+ *	
+ *	模	块：		IGoodsInfoDBDAO
+ *	包	名：		com.wzitech.gamegold.goodsmgmt.dao
+ *	项目名称：	gamegold-goods
+ *	作	者：		SunChengfei
+ *	创建时间：	2014-2-15
+ *	描	述：		
+ *	更新纪录：	1. SunChengfei 创建于 2014-2-15 上午11:40:09
+ * 				
+ ************************************************************************************/
+package com.wzitech.gamegold.repository.dao;
+
+import com.wzitech.chaos.framework.server.dataaccess.mybatis.IMyBatisBaseDAO;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.entity.SortField;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 商品DB
+ * @author SunChengfei
+ *
+ */
+public interface IRepositoryDBDAO extends IMyBatisBaseDAO<RepositoryInfo, Long>{
+	/**
+	 * 查询符合条件的实体对象
+	 * @param loginAccount
+	 * @param uid
+	 * @return
+	 */
+	List<RepositoryInfo> queryGameInfo(String loginAccount, String uid);
+	
+	/**
+	 * 根据条件查询库存中金币总数
+	 * @param queryMap
+	 * @return
+	 */
+	long selectGoldCount(Map<String, Object> queryMap);
+
+    /**
+     * 查询库存
+     * @param queryParam
+     * @param sortFields
+     * @return
+     */
+    List<RepositoryInfo> selectRepositoryList(Map<String, Object> queryParam, List<SortField> sortFields);
+
+    /**
+     * 查询库存
+     * @param queryParam
+     * @param sortFields
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    List<RepositoryInfo> selectRepositoryList(Map<String, Object> queryParam, List<SortField> sortFields, int start, int pageSize);
+    
+    /**
+     * 对卖家库存单价进行分组，按单价由低到高，库存由多到少排序
+     * @param queryParam
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    List<RepositoryInfo> queryGroupRepository(Map<String, Object> queryParam, int start, int pageSize);
+
+    List<RepositoryInfo> queryMinUnitPriceRepository(Map<String,Object> query,int start,int pageSize);
+
+    List<RepositoryInfo> queryLowerPriceList(Map<String, Object> queryParam);
+
+    List<RepositoryInfo> queryServerList(Map<String, Object> queryParam);
+
+    /**
+     * 删除卖家库存
+     * @param map
+     */
+    void deleteSellerRepository(Map<String, Object> map);
+
+    /**
+     * 增加库存数量
+     * @param id 库存ID
+     * @param count
+     */
+    void incrRepositoryCount(Long id, Long count , Long stockCount);
+
+    void updateStockCountById(Long id, Long stockCount);
+
+    /**
+     * 减少库存数量
+     * @param id
+     * @param count
+     */
+    void decrRepositoryCount(Long id, Long count);
+
+    /**
+     * 查询营业的店铺的库存列表信息
+     * @param queryParam
+     * @return
+     */
+    List<RepositoryInfo> querySellerRepositoryList(Map<String, Object> queryParam);
+
+    /**
+     * 营业的店铺的库存列表总数
+     * @param queryParam
+     * @return
+     */
+    int countSellerRepository(Map<String,Object> queryParam);
+
+    /**
+     * 前台最低价格列表
+     * @param queryParam
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    List<RepositoryInfo> queryPriceRepository(Map<String, Object> queryParam, List<SortField> sortFields, int start, int pageSize);
+
+    /**
+     * 更新卖家库存
+     * @param repositoryInfo
+     * @return
+     */
+    int updateSellerRepository(RepositoryInfo repositoryInfo);
+
+    /**
+     * 分页查询库存
+     * @param paramMap
+     * @param sortFields
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    GenericPage<RepositoryInfo> queryPageRepository(Map<String, Object> paramMap, List<SortField> sortFields,
+                                                           int start, int pageSize);
+
+    /**
+     * 分页获取所有区服的最低价
+     * @param queryParam
+     * @param sortFields
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    GenericPage<RepositoryInfo> selectLowestList(Map<String, Object> queryParam, List<SortField> sortFields, int start, int
+            pageSize);
+
+    /**
+     * 查询所有符合条件的店铺卖家平均价
+     * @param queryParam
+     * @return
+     */
+     List<RepositoryInfo> querySellerAvgPriceRepository(Map<String, Object> queryParam);
+
+    /**
+     * 查询所有最低参考价
+     * @param queryParam
+     * @return
+     */
+    List<RepositoryInfo> selectMINunitPriceByOtherGame(Map<String, Object> queryParam);
+
+    List<RepositoryInfo> selectMINunitPriceByOtherGameForCross(Map<String, Object> queryParam);
+
+    int updateRepositoryCountBySync(Map<String, Object> queryParam);
+
+    long selectSalableCount(Map<String, Object> queryMap);
+
+    List<RepositoryInfo> selectSalableRepository(Map<String, Object> queryParam, List<SortField> sortFields);
+}

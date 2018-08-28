@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.Settlement">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.Settlement">
+        <id column="id" property="id" />
+        <result column="ch_order_id" property="chOrderId" />
+        <result column="seller_account" property="sellerAccount" />
+        <result column="seller_uid" property="sellerUid" />
+        <result column="amount" property="amount" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="pay_time" property="payTime" />
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.Settlement"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sh_settlement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chOrderId != null and chOrderId != ''">
+                ch_order_id,
+            </if>
+            <if test="sellerAccount != null and sellerAccount != ''">
+                seller_account,
+            </if>
+            <if test="sellerUid != null and sellerUid != ''">
+                seller_uid,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="payTime != null">
+                pay_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chOrderId != null and chOrderId != ''">
+                #{chOrderId},
+            </if>
+            <if test="sellerAccount != null and sellerAccount != ''">
+                #{sellerAccount},
+            </if>
+            <if test="sellerUid != null and sellerUid != ''">
+                #{sellerUid},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="payTime != null">
+                #{payTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.Settlement">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_settlement
+            <set>
+                <if test="item.status != null">
+                    status=#{item.status},
+                </if>
+                <if test="item.payTime != null">
+                    pay_time=#{item.payTime},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    id = #{item.id}
+                </if>
+                <if test="item.chOrderId != null and item.chOrderId != ''">
+                    and ch_order_id=#{item.chOrderId}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+
+    <sql id="selectSql">
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="chOrderId != null and chOrderId != '' ">
+                and ch_order_id=#{chOrderId}
+            </if>
+            <if test="sellerAccount != null and sellerAccount != '' ">
+                and seller_account=#{sellerAccount}
+            </if>
+            <if test="status != null">
+                and status=#{status}
+            </if>
+            <if test="startCreateTime != null">
+                and create_time >= #{startCreateTime}
+            </if>
+            <if test="endCreateTime != null">
+                <![CDATA[
+                and create_time <= #{endCreateTime}
+                ]]>
+            </if>
+            <if test="startPayTime != null">
+                and pay_time >= #{startPayTime}
+            </if>
+            <if test="endPayTime != null">
+                <![CDATA[
+                and pay_time <= #{endPayTime}
+                ]]>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap" >
+        SELECT * FROM t_sh_settlement
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="isLocked != null and isLocked==true">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_settlement
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_settlement WHERE id = #{id}
+    </select>
+
+    <select id="selectByOrderId" parameterType="map" resultMap="BaseResultMap">
+        SELECT *
+        FROM t_sh_settlement
+        WHERE ch_order_id = #{chOrderId}
+        <if test="isLocked != null and isLocked==true">
+            FOR UPDATE
+        </if>
+    </select>
+</mapper>

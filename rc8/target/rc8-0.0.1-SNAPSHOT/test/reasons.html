@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>获取订单取消可选的理由列表</title>
+    <script src="jquery.js"></script>
+</head>
+<body>
+<script>
+    var request={
+        name: "test111@5173.com",
+        version: "8.0",
+        sign: "c5f17e38d94d141b57f6063c591ef1eb"
+    };
+    $.ajax({
+        type: "GET",
+        url: "../services/order/reasons",
+        data: request,
+        contentType: "application/json; charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        }
+    });
+</script>
+</body>
+</html>

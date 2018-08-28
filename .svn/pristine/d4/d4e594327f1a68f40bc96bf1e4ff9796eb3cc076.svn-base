@@ -1,0 +1,44 @@
+package com.wzitech.gamegold.facade.frontend;
+
+import com.wzitech.gamegold.order.business.IOrderInfoManager;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
+/**
+ * Created by 336335 on 2015/7/6.
+ */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@TestExecutionListeners( { DependencyInjectionTestExecutionListener.class,
+        DirtiesContextTestExecutionListener.class,
+        TransactionalTestExecutionListener.class})
+@ContextConfiguration(locations = {"classpath:/META-INF/gold-facade-frontend-context.xml"})
+@ActiveProfiles("development")
+public class OrderTest {
+    @Autowired
+    IOrderInfoManager orderInfoManager;
+
+    /**
+     * 取消配单记录
+     */
+    @Test
+    public void cancelOrderTest() {
+        orderInfoManager.cancelOrder("YX1506300006436_2518108", 1, null);
+    }
+
+    /**
+     * RC2移交测试
+     */
+    @Test
+    public void rc2TransferOrderTest() {
+        orderInfoManager.transferOrderForRC2("YX1506290000877_2507302");
+    }
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
+	default-lazy-init="true">
+
+	<description>FACADE公共配置Import文件 </description>
+
+	<!-- 扫描基于annotation的Spring Bean -->
+	<context:component-scan base-package="com.wzitech.gamegold.jsrobot" />
+	<context:component-scan base-package="com.wzitech.gamegold.common" />
+	<context:component-scan base-package="com.wzitech.gamegold.usermgmt" />
+	<context:component-scan base-package="com.wzitech.gamegold.filemgmt" />
+	<context:component-scan base-package="com.wzitech.gamegold.order" />
+	<context:component-scan base-package="com.wzitech.gamegold.goods" />
+	<context:component-scan base-package="com.wzitech.gamegold.repository" />
+	<context:component-scan base-package="com.wzitech.gamegold.shorder" />
+	<context:component-scan base-package="com.wzitech.gamegold.store" />
+
+	<!-- 导入其他配置文件 -->
+	<import resource="jsrobot-dao-context.xml" />
+	<import resource="jsrobot-business-context.xml" />
+	<import resource="jsrobot-service-context.xml" />
+</beans>

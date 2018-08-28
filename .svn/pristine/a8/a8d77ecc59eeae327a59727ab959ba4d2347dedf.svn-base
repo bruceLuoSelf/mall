@@ -1,0 +1,11 @@
+.logins {
+    width: 663px;
+    height: 509px;
+}
+.logins .title_neir {
+    width: 620px;
+    height: 387px;
+}
+.isp p {
+    font-size: 14px;
+}

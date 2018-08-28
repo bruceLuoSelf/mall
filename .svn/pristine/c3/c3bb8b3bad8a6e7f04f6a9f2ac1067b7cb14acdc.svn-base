@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.DeliveryConfig">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.DeliveryConfig">
+        <result column="id" property="id" jdbcType="NUMERIC" javaType="long" />
+        <result column="game_name" property="gameName" jdbcType="VARCHAR"/>
+        <result column="goods_type_id" property="goodsTypeId" />
+        <result column="goods_type_name" property="goodsTypeName" jdbcType="VARCHAR"/>
+        <result column="delivery_type_id" property="deliveryTypeId"  />
+        <result column="delivery_type_name" property="deliveryTypeName" jdbcType="VARCHAR"/>
+        <result column="trade_type_id" property="tradeTypeId"  />
+        <result column="trade_type_name" property="tradeTypeName" jdbcType="VARCHAR"/>
+        <result column="order_help_info" property="orderHelpInfo" jdbcType="VARCHAR"/>
+        <result column="order_tip" property="orderTip" jdbcType="VARCHAR"/>
+        <result column="helpe_url" property="helpeUrl" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.shorder.entity.DeliveryConfig"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_delivery_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="gameName != null and gameName!=''">
+                game_name,
+            </if>
+            <if test="goodsTypeId != null">
+                goods_type_id,
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName!=''">
+                goods_type_name,
+            </if>
+            <if test="deliveryTypeId != null">
+                delivery_type_id,
+            </if>
+            <if test="deliveryTypeName != null and deliveryTypeName!=''">
+                delivery_type_name,
+            </if>
+            <if test="tradeTypeId != null">
+                trade_type_id,
+            </if>
+            <if test="tradeTypeName != null and tradeTypeName!=''">
+                trade_type_name,
+            </if>
+            <if test="orderHelpInfo != null and orderHelpInfo!=''">
+                order_help_info,
+            </if>
+            <if test="orderTip != null and orderTip!=''">
+                order_tip,
+            </if>
+            <if test="helpeUrl != null and helpeUrl!=''">
+                helpe_url,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="gameName != null and gameName!=''">
+                #{gameName},
+            </if>
+            <if test="goodsTypeId != null">
+                #{goodsTypeId},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName!=''">
+                #{goodsTypeName},
+            </if>
+            <if test="deliveryTypeId != null">
+                #{deliveryTypeId},
+            </if>
+            <if test="deliveryTypeName != null and deliveryTypeName!=''">
+                #{deliveryTypeName},
+            </if>
+            <if test="tradeTypeId != null">
+                #{tradeTypeId},
+            </if>
+            <if test="tradeTypeName != null and tradeTypeName!=''">
+                #{tradeTypeName},
+            </if>
+            <if test="orderHelpInfo != null and orderHelpInfo!=''">
+                #{orderHelpInfo},
+            </if>
+            <if test="orderTip != null and orderTip!=''">
+                #{orderTip},
+            </if>
+            <if test="helpeUrl != null and helpeUrl!=''">
+                #{helpeUrl},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.shorder.entity.DeliveryConfig">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            update t_sh_delivery_config
+            <set>
+                <if test="item.gameName != null and item.gameName!=''">
+                    game_name= #{item.gameName},
+                </if>
+                <if test="item.goodsTypeId != null">
+                    goods_type_id= #{item.goodsTypeId},
+                </if>
+                <if test="item.goodsTypeName != null and item.goodsTypeName!=''">
+                    goods_type_name= #{item.goodsTypeName},
+                </if>
+                <if test="item.deliveryTypeId != null">
+                    delivery_type_id= #{item.deliveryTypeId},
+                </if>
+                <if test="item.deliveryTypeName != null and item.deliveryTypeName!=''">
+                    delivery_type_name= #{item.deliveryTypeName},
+                </if>
+                <if test="item.tradeTypeId != null">
+                    trade_type_id= #{item.tradeTypeId},
+                </if>
+                <if test="item.tradeTypeName != null and item.tradeTypeName!=''">
+                    trade_type_name= #{item.tradeTypeName},
+                </if>
+                <if test="item.orderHelpInfo != null and item.orderHelpInfo!=''">
+                    order_help_info= #{item.orderHelpInfo},
+                </if>
+                <if test="item.orderTip != null and item.orderTip!=''">
+                    order_tip= #{item.orderTip},
+                </if>
+                <if test="item.helpeUrl != null and item.helpeUrl!=''">
+                    helpe_url= #{item.helpeUrl},
+                </if>
+                <if test="item.createTime != null">
+                    create_time= #{item.createTime},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="gameName != null and gameName!=''">
+                game_name= #{gameName}
+            </if>
+            <if test="goodsTypeId != null">
+                and goods_type_id= #{goodsTypeId}
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName!=''">
+                and goods_type_name= #{goodsTypeName}
+            </if>
+            <if test="deliveryTypeId != null">
+                and delivery_type_id= #{deliveryTypeId}
+            </if>
+            <if test="deliveryTypeName != null and deliveryTypeName!=''">
+                and delivery_type_name= #{deliveryTypeName}
+            </if>
+            <if test="tradeTypeId != null">
+                and trade_type_id= #{tradeTypeId}
+            </if>
+            <if test="tradeTypeName != null and tradeTypeName!=''">
+                and trade_type_name= #{tradeTypeName}
+            </if>
+            <if test="notInId != null and notInId!=''">
+                and id != ${notInId}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.shorder.entity.DeliveryConfig">
+        SELECT * FROM t_sh_delivery_config
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+        <if test="isLocked">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_delivery_config WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM t_sh_delivery_config
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_delivery_config WHERE id = #{id}
+    </select>
+
+</mapper>

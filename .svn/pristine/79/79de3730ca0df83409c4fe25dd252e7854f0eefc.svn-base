@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.mymgmt.entity.ShippingAddressEO">
+	<resultMap id="BaseResultMap" type="com.wzitech.gamegold.mymgmt.entity.ShippingAddressEO">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="UID" property="uid" jdbcType="NUMERIC" javaType="long" />
+		<result column="IS_DEFAULT" property="isDefault" jdbcType="BOOLEAN" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+		<result column="MOBILE_NUMBER" property="mobileNumber" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="RECEIVER" property="receiver" jdbcType="VARCHAR" />
+		<result column="POST_CODE" property="postCode" jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN" />
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert" parameterType="com.wzitech.gamegold.mymgmt.entity.ShippingAddressEO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_SHUABAO_SHIPPING_ADDRESS"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="uid != null">
+				"UID",
+			</if>
+				"IS_DEFAULT",
+			<if test="province != null and province != ''">
+				"PROVINCE",
+			</if>
+			<if test="city != null and city != ''">
+				"CITY",
+			</if>
+			<if test="district != null and district != ''">
+				"DISTRICT",
+			</if>
+			<if test="mobileNumber != null and mobileNumber != ''">
+				"MOBILE_NUMBER",
+			</if>
+			<if test="address != null and address != ''">
+				"ADDRESS",
+			</if>
+			<if test="receiver != null and receiver != ''">
+				"RECEIVER",
+			</if>
+			<if test="postCode != null and postCode != ''">
+				"POST_CODE",
+			</if>
+			<if test="lastUpdateTime != null">
+				"LAST_UPDATE_TIME",
+			</if>
+			<if test="createTime != null">
+				"CREATE_TIME",
+			</if>
+				"IS_DELETED"
+				
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="uid != null">
+				#{uid},
+			</if>
+				#{isDefault},
+			<if test="province != null and province != ''">
+				#{province},
+			</if>
+			<if test="city != null and city != ''">
+				#{city},
+			</if>
+			<if test="district != null and district != ''">
+				#{district},
+			</if>
+			<if test="mobileNumber != null and mobileNumber != ''">
+				#{mobileNumber},
+			</if>
+			<if test="address != null and address != ''">
+				#{address},
+			</if>
+			<if test="receiver != null and receiver != ''">
+				#{receiver},
+			</if>
+			<if test="postCode != null and postCode != ''">
+				#{postCode},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+				#{isDeleted}
+		</trim>
+	</insert>
+	
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate" parameterType="com.wzitech.gamegold.mymgmt.entity.ShippingAddressEO">
+		<foreach collection="list" item="item" index="index" separator="OR">
+		UPDATE "TBL_SHUABAO_SHIPPING_ADDRESS"
+		<set>
+			<if test="item.province != null and item.province != ''">
+				"PROVINCE" = #{item.province},
+			</if>
+			<if test="item.city != null and item.city != ''">
+				"CITY" = #{item.city},
+			</if>
+			<if test="item.district != null and item.district != ''">
+				"DISTRICT" = #{item.district},
+			</if>
+			<if test="item.mobileNumber != null and item.mobileNumber != ''">
+				"MOBILE_NUMBER" = #{item.mobileNumber},
+			</if>
+			<if test="item.address != null and item.address != ''">
+				"ADDRESS" = #{item.address},
+			</if>
+			<if test="item.receiver != null and item.receiver != ''">
+				"RECEIVER" = #{item.receiver},
+			</if>
+			<if test="item.postCode != null and item.postCode != ''">
+				"POST_CODE" = #{item.postCode},
+			</if>
+			<if test="item.lastUpdateTime != null">
+				"LAST_UPDATE_TIME" = #{item.lastUpdateTime},
+			</if>
+				"IS_DELETED" = #{item.isDeleted}
+		</set>
+		<where>
+				"ID" = #{item.id}
+		</where>
+		</foreach>
+	</update>
+	
+	<!-- 设置默认收货地址，这里的isDefault字段不放入batchUpdate中，单独作为一个方法。
+		因为放入batchUpdate中时，当更新其他字段时，isDefault默认为false，但实际在数据库中可能为true，有可能被默认更改。
+	 -->
+	<update id="setDefalutAddress" parameterType="com.wzitech.gamegold.mymgmt.entity.ShippingAddressEO">
+		<foreach collection="list" item="item" index="index" separator=";">
+		UPDATE "TBL_SHUABAO_SHIPPING_ADDRESS"
+		<set>
+				"IS_DEFAULT" = #{item.isDefault},
+		</set>
+		<where>
+			<choose>
+				<when test="item.id != null">
+					"ID" = #{item.id}
+				</when>
+				<when test="item.uid != null">
+					"UID" = #{item.uid}
+				</when>
+			</choose>
+		</where>
+		</foreach>
+	</update>
+	
+	<!-- 统计符合条件的实体对象个数 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.mymgmt.entity.ShippingAddressEO">
+		SELECT * FROM "TBL_SHUABAO_SHIPPING_ADDRESS"
+		<where>
+			<if test="uid != null">
+				"UID" = #{uid}
+			</if>
+			<if test="isDeleted !=null">
+				AND "IS_DELETED" = #{isDeleted}
+			</if>
+			<if test="isDefault !=null">
+				AND "IS_DEFAULT" = #{isDefault}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询符合条件的唯一记录 -->
+	<select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.mymgmt.entity.ShippingAddressEO">
+		SELECT * FROM "TBL_SHUABAO_SHIPPING_ADDRESS"
+		<where>
+			<if test="id != null">
+				"ID" = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.mymgmt.entity.ShippingAddressEO">
+		 ${value}
+	</select>
+</mapper>

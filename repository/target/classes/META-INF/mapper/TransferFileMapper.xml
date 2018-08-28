@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzitech.gamegold.repository.entity.TransferFile">
+  <resultMap id="BaseResultMap"
+             type="com.wzitech.gamegold.repository.entity.TransferFile">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="game_name" jdbcType="VARCHAR" property="gameName" />
+    <result column="json_string" property="jsonString" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="selectSql">
+    <where>
+    <if test="gameName != null and gameName != ''">
+      AND "game_name" = #{gameName}
+    </if>
+    <if test="jsonString != null and jsonString != ''">
+      AND "json_string" = #{jsonString}
+    </if>
+    <if test="updateTime != null">
+      AND "update_time" = #{updateTime}
+    </if>
+    </where>
+  </sql>
+  <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+          resultType="com.wzitech.gamegold.repository.entity.TransferFile">
+    SELECT * FROM "TBL_GAMEGOLD_REPOSITORY_TRANSFER_FILE"
+    <include refid="selectSql"/>
+    <if test="ORDERBY != null and ORDERBY != ''">
+      ORDER BY "${ORDERBY}"
+    </if>
+    <if test="ORDER != null and ORDER != ''">
+      ${ORDER}
+    </if>
+    <if test="limit != null">
+      LIMIT #{limit}
+    </if>
+    <if test="start != null">
+      OFFSET #{start}
+    </if>
+  </select>
+
+  <select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.repository.entity.TransferFile">
+    SELECT * FROM "TBL_GAMEGOLD_REPOSITORY_TRANSFER_FILE"
+    <where>
+      "id" = #{id}
+    </where>
+  </select>
+
+  <select id="selectAll" parameterType="com.wzitech.gamegold.repository.entity.TransferFile"
+          resultMap="BaseResultMap"
+          resultType="com.wzitech.gamegold.repository.entity.TransferFile">
+    SELECT * FROM "TBL_GAMEGOLD_REPOSITORY_TRANSFER_FILE"
+  </select>
+  <delete id="batchDeleteByIds" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";">
+      DELETE FROM "TBL_GAMEGOLD_REPOSITORY_TRANSFER_FILE" WHERE"id" = #{item}
+    </foreach>
+  </delete>
+  <insert id="insert"
+          parameterType="com.wzitech.gamegold.repository.entity.TransferFile"
+          useGeneratedKeys="true" keyProperty="id">
+    insert into "TBL_GAMEGOLD_REPOSITORY_TRANSFER_FILE"
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gameName != null and gameName != ''">
+        "game_name",
+      </if>
+      <if test="jsonString != null and jsonString != ''">
+        "json_string",
+      </if>
+      <if test="updateTime != null">
+        "update_time"
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="gameName != null and gameName != ''">
+        #{game_name},
+      </if>
+      <if test="jsonString != null and jsonString != ''">
+        #{json_string},
+      </if>
+      <if test="updateTime != null">
+        #{update_time}
+      </if>
+    </trim>
+  </insert>
+  <!-- 查询符合条件的实体对象 -->
+  <select id="countByMap" parameterType="map" resultType="int">
+    SELECT COUNT(1) FROM "TBL_GAMEGOLD_REPOSITORY_TRANSFER_FILE"
+    <include refid="selectSql"/>
+  </select>
+  <update id="batchUpdate"
+          parameterType="com.wzitech.gamegold.repository.entity.TransferFile">
+    <foreach collection="list" item="item" index="index"
+             separator=";">
+    update "TBL_GAMEGOLD_REPOSITORY_TRANSFER_FILE"
+      <set>
+        <if test="item.gameName != null and item.gameName != ''">
+          "game_name"= #{item.gameName},
+        </if>
+        <if test="item.jsonString != null and item.jsonString != ''">
+          "json_string"= #{item.jsonString},
+        </if>
+        <if test="item.updateTime != null">
+          "update_time"= #{item.updateTime}
+        </if>
+      </set>
+      <where>
+        "id" = #{item.id}
+      </where>
+    </foreach>
+  </update>
+</mapper>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>查询所有栏目商品</title>
+    <script src="http://yxbmall.5173.com/js/jquery.js"></script>
+    <script src="http://yxbmall.5173.com/js/jquery.json-2.4.min.js"></script>
+</head>
+<body>
+<script>
+    var request = {
+        gameName:"剑侠情缘Ⅲ",
+        gameRegion:"网通三区",
+        gameServer:"鱼跃龙门",
+        gameRace:""
+    };
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8085/gamegold-app/services/goods/QueryAllCategoryGoods",
+        data: request,
+        contentType: "application/json;charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        },
+        error: function (resp) {
+            console.error("出错了");
+            console.log(resp);
+        }
+    });
+
+</script>
+</body>
+</html>

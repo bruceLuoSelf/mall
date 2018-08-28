@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>客服登录</title>
+    <script src="jquery.js"></script>
+</head>
+<body>
+<script>
+    var request={
+        //name: "test111@5173.com",
+        name: "jbkf001@5173.com",
+        pwd: "yUDhvyEbj5U=",//123456
+        movepwd: "",
+        version: "8.0",
+        sign: "bfbb3a840fb20998dd25bcd4734cdf70",
+        //_type: "xml",
+        _type: "json"
+    };
+    $.ajax({
+        type: "GET",
+        url: "../services/user/login",
+        data: request,
+        contentType: "application/json; charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        }
+    });
+</script>
+</body>
+</html>

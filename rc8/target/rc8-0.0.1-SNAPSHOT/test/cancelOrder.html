@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>取消订单</title>
+    <script src="jquery.js"></script>
+    <script src="jquery.json-2.4.min.js"></script>
+</head>
+<body>
+<script>
+    var request = {
+        name: "test111@5173.com",
+        pwd: "yUDhvyEbj5U=",//123456
+        //id: "YX1503040000542_2014024",
+        dutytype:2,
+        reasontext: "卖家商品问题",
+        reasondetail:"卖家游戏角色无货或少货",
+        reasonremark:"卖家游戏角色无货或少货",
+        version: "8.0",
+        sign: "c2d8fa1e3eb72d390ed79a9f4dd69ad6"
+    };
+    $.ajax({
+        type: "POST",
+        url: "../services/order/cancel/YX1503040000537_2014015",
+        data: $.toJSON(request),
+        //data: request,
+        contentType: "application/json;charset=UTF-8",
+        dataType: "json",
+        success: function (resp) {
+            console.log(resp);
+        },
+        error: function (resp) {
+            //console.log(resp);
+        }
+    });
+
+</script>
+</body>
+</html>

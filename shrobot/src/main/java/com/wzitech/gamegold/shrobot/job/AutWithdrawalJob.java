@@ -1,0 +1,55 @@
+package com.wzitech.gamegold.shrobot.job;
+
+import com.wzitech.gamegold.shorder.business.IDeliverySubOrderManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * Created by 340032 on 2018/8/24. Withdrawal
+ */
+@Component
+public class AutWithdrawalJob {
+    protected static final Logger logger = LoggerFactory.getLogger(AutWithdrawalJob.class);
+
+    private static final String JOB_ID = "SH_AUTO_WITHDRAWAL_SUB_DELIVERY_ORDER_JOB";
+
+    @Autowired
+    IDeliverySubOrderManager deliverySubOrderManager;
+
+    @Resource(name = "jobLock")
+    JobLockRedisImpl jobLock;
+
+
+    public void autoWithdrawalTimoutOrders() {
+        Boolean locked = jobLock.lock(JOB_ID);
+        if (!locked) {
+            //logger.info("[自动撤单JOB]上一个任务还未执行完成。");
+            return;
+        }
+        try {
+            logger.info("[自动撤单JOB]任务开始");
+            // 查询交易超时的订单
+            List<Long> ids = deliverySubOrderManager.queryWithdrawalTradeTimeoutOrders();
+
+            //logger.info("[自动撤单JOB]需要配单的数量：{}", orders == null ? 0 : orders.size());
+            if (!CollectionUtils.isEmpty(ids)) {
+                for (Long id : ids) {
+                    try {
+                        deliverySubOrderManager.robotWithdrawalOrder(id);
+                    } catch (Exception e) {
+                        logger.error("自动撤单JOB出错了", e);
+                    }
+                }
+            }
+            //logger.info("[自动撤单JOB]任务结束");
+        } finally {
+            jobLock.unlock(JOB_ID);
+        }
+    }
+}

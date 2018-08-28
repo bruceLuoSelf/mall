@@ -1,0 +1,276 @@
+package com.wzitech.gamegold.shorder.business.impl;
+
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.enums.SystemConfigEnum;
+import com.wzitech.gamegold.shorder.business.ISystemConfigManager;
+import com.wzitech.gamegold.shorder.dao.ISystemConfigDBDAO;
+import com.wzitech.gamegold.shorder.dao.ISystemConfigRedisDAO;
+import com.wzitech.gamegold.shorder.entity.SystemConfig;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.auth.KerberosCredentials;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.Map;
+
+/**
+ * 配置系统信息
+ * Created by Administrator on 2016/12/15.
+ */
+@Component
+public class SystemConfigManagerImpl implements ISystemConfigManager {
+
+    @Autowired
+    private ISystemConfigDBDAO systemConfigDBDAO;
+    @Autowired
+    private ISystemConfigRedisDAO systemConfigRedisDAO;
+
+    @Override
+    public GenericPage<SystemConfig> queryPage(Map<String, Object> paramMap, int limit, int startIndex, String orderBy, Boolean isAsc) {
+        return systemConfigDBDAO.selectByMap(paramMap, limit, startIndex, orderBy, isAsc);
+    }
+
+    /**
+     * 根据KEY查询配置
+     *
+     * @param key
+     * @return
+     */
+    @Override
+    public SystemConfig getSystemConfigByKey(String key) {
+        SystemConfig systemConfig = systemConfigRedisDAO.getByConfigKey(key);
+        if (systemConfig == null) {
+            systemConfig = systemConfigDBDAO.selectByConfigKey(key);
+            if (systemConfig != null) {
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+        if(systemConfig != null && systemConfig.getEnabled()==false){
+            return null;
+        }
+        return systemConfig;
+    }
+
+
+    @Override
+    public SystemConfig getTotalSystemConfigByKey(String key) {
+        SystemConfig systemConfig = systemConfigRedisDAO.getByConfigKey(key);
+        if (systemConfig == null) {
+            systemConfig = systemConfigDBDAO.selectByConfigKey(key);
+            if (systemConfig != null) {
+                systemConfigRedisDAO.save(systemConfig);
+            }else {
+                return null;
+            }
+        }
+        return systemConfig;
+    }
+
+    /**
+     * 删除系统配置
+     */
+    @Override
+    public void deleteConfigById(Long id) {
+        SystemConfig systemConfig = systemConfigDBDAO.selectById(id);
+        if (systemConfig != null) {
+            systemConfigRedisDAO.delete(systemConfig);
+        }
+        systemConfigDBDAO.deleteById(id);
+    }
+
+    ;
+
+    /**
+     * 增加系统配置
+     *
+     * @param systemConfig
+     */
+    @Override
+    public void add(SystemConfig systemConfig) {
+        if (systemConfig != null) {
+            //如果是 DEFAULT_IM 则enabled属性默认为true
+            if (systemConfig.getConfigKey().equals(SystemConfigEnum.DEFAULT_IM.getKey())){
+                systemConfig.setEnabled(true);
+            }
+            systemConfigDBDAO.insert(systemConfig);
+            systemConfigRedisDAO.save(systemConfig);
+        }
+    }
+
+    /**
+     * 修改系统配置
+     *
+     * @param systemConfig
+     */
+    @Override
+    public void update(SystemConfig systemConfig) {
+        if (systemConfig != null) {
+            SystemConfig systemConfig1 = systemConfigDBDAO.selectById(systemConfig.getId());
+            if (systemConfig != null) {
+                systemConfigRedisDAO.delete(systemConfig1);
+            }
+            //如果是 DEFAULT_IM 则enabled属性默认为true
+            if (systemConfig.getConfigKey().equals(SystemConfigEnum.DEFAULT_IM.getKey())){
+                systemConfig.setEnabled(true);
+            }
+            systemConfigDBDAO.update(systemConfig);
+            systemConfigRedisDAO.save(systemConfig);
+        }
+    }
+
+    @Override
+    public void disableUser(Long id) {
+        if (id != null) {
+            SystemConfig systemConfig = systemConfigDBDAO.selectById(id);
+            if (systemConfig != null&&!systemConfig.getConfigKey().equals(SystemConfigEnum.DEFAULT_IM.getKey())) {
+                systemConfig.setEnabled(false);
+                systemConfigDBDAO.update(systemConfig);
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+    }
+
+    public void qyUser(Long id) {
+        if (id != null) {
+            SystemConfig systemConfig = systemConfigDBDAO.selectById(id);
+            if (systemConfig != null) {
+                systemConfig.setEnabled(true);
+                systemConfigDBDAO.update(systemConfig);
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+    }
+
+    /**
+     * 邮寄收货误差阈值临界值
+     *
+     * @return
+     */
+    @Override
+    public BigDecimal getMailRobotCriticalValue() {
+        String key = SystemConfigEnum.MAIL_ROBOT_PURCHASE.getKey();
+        SystemConfig systemConfig = systemConfigRedisDAO.getByConfigKey(key);
+        if (systemConfig == null) {
+            systemConfig = systemConfigDBDAO.selectByConfigKey(key);
+            if (systemConfig != null) {
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+        if (systemConfig == null || !systemConfig.getEnabled()) {
+            return BigDecimal.ZERO;
+        }
+        return new BigDecimal(systemConfig.getConfigValue());
+    }
+
+    /**
+     * query overtime from backend config
+     */
+    @Override
+    public Long getOverTime() {
+        String key = SystemConfigEnum.OVER_TIME.getKey();
+        SystemConfig systemConfig = systemConfigRedisDAO.getByConfigKey(key);
+        if (systemConfig == null) {
+            systemConfig = systemConfigDBDAO.selectByConfigKey(key);
+            if (systemConfig != null) {
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+        if (systemConfig == null || !systemConfig.getEnabled()) {
+            //default value is one day
+            Long defaultOverTime = 24 * 60 * 60 * 1000L;
+            return defaultOverTime;
+        }
+        Long overTime = Long.parseLong(systemConfig.getConfigValue()) * 60 * 60 * 1000L;
+        return overTime;
+    }
+
+    /**
+     * 机器收货交易超时阈值，默认30分钟，超时转人工
+     * */
+    @Override
+    public int tradeTimeOut(){
+        String key = SystemConfigEnum.TRADE_TIMEOUT.getKey();
+        SystemConfig systemConfig = systemConfigRedisDAO.getByConfigKey(key);
+        if (systemConfig == null) {
+            systemConfig = systemConfigDBDAO.selectByConfigKey(key);
+            if (systemConfig != null) {
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+        if (systemConfig == null || !systemConfig.getEnabled()) {
+            //default value is 30 minutes
+            return 30;
+        }
+        int tradeTimeOut = Integer.parseInt(systemConfig.getConfigValue());
+        return tradeTimeOut;
+    }
+
+    /**
+     * 邮寄收货自动化响应超时时间
+     * */
+    @Override
+    public int sellerDeliveryTimeOut(){
+        String key = SystemConfigEnum.SELLER_DELIVERY_TIMEOUT.getKey();
+        SystemConfig systemConfig = systemConfigRedisDAO.getByConfigKey(key);
+        if (systemConfig == null) {
+            systemConfig = systemConfigDBDAO.selectByConfigKey(key);
+            if (systemConfig != null) {
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+        if (systemConfig == null || !systemConfig.getEnabled()) {
+            return 20;
+        }
+        int tradeTimeOut = Integer.parseInt(systemConfig.getConfigValue());
+        return tradeTimeOut;
+    }
+
+    /**
+     * 邮寄与拍卖收货自动化响应超时时间
+     * */
+    @Override
+    public int allSellerDeliveryTimeOut(){
+        String key = SystemConfigEnum.AUTOMATE_TIMEOUT.getKey();
+        SystemConfig systemConfig = systemConfigRedisDAO.getByConfigKey(key);
+        if (systemConfig == null) {
+            systemConfig = systemConfigDBDAO.selectByConfigKey(key);
+            if (systemConfig != null) {
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+        if (systemConfig == null || !systemConfig.getEnabled()) {
+            return 20;
+        }
+        int tradeTimeOut = Integer.parseInt(systemConfig.getConfigValue());
+        return tradeTimeOut;
+    }
+
+    @Override
+    public SystemConfig getSystemConfig(String key) {
+        return systemConfigDBDAO.selectByConfigKey(key);
+    }
+
+
+    /**
+     * 根据KEY查询配置
+     *
+     * @param key
+     * @return
+     */
+    @Override
+    public Long getValueByKey(String key) {
+        SystemConfig systemConfig = systemConfigRedisDAO.getByConfigKey(key);
+        if (systemConfig == null) {
+            systemConfig = systemConfigDBDAO.selectByConfigKey(key);
+            if (systemConfig != null) {
+                systemConfigRedisDAO.save(systemConfig);
+            }
+        }
+        if (systemConfig == null || !systemConfig.getEnabled()) {
+            return 0L;
+        }
+        return Long.valueOf(systemConfig.getConfigValue());
+    }
+}

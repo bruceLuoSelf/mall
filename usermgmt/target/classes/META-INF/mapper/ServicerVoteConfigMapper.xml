@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.usermgmt.entity.ServicerVoteConfigEO">
+	<resultMap id="BaseResultMap" type="com.wzitech.gamegold.usermgmt.entity.ServicerVoteConfigEO">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="START_TIME" property="startTime" jdbcType="TIMESTAMP"/>
+		<result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!-- 查询客服投票配置信息 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap">
+		SELECT * FROM "TBL_GAMEGOLD_SERVICER_VOTE_CONFIG"
+	</select>
+
+</mapper>

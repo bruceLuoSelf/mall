@@ -1,0 +1,83 @@
+#page .pagination{
+    height: 28px;
+    float: left;
+    overflow: hidden;
+    clear: both;
+}
+.totalPage{
+    float:left;
+    margin-top: 26px;
+    margin-left: 13px;
+    color:#999;
+}
+
+#page .pagination{
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+}
+#page ul{
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+#page li{
+    text-align: -webkit-match-parent;
+}
+#page .pagination>li{
+    display: inline;
+}
+#page .pagination>li:first-child>a, #page .pagination>li:first-child>span{
+    margin-left: 0;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
+#page .pagination>li>a, #page .pagination>li>span{
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    color: #428bca;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+}
+#page .pagination>.active>a, #page .pagination>.active>span, #page .pagination>.active>a:hover, #page .pagination>.active>span:hover, #page .pagination>.active>a:focus, #page .pagination>.active>span:focus{
+    z-index: 2;
+    color: #fff;
+    background-color: #428bca;
+    border-color: #428bca;
+    cursor: default;
+}
+#page .pagination>li>a, #page .pagination>li>span{
+    position: relative;
+    float: left;
+    padding: 3px 8px;
+    line-height: 1.42857143;
+    text-decoration: none;
+    color: #428bca;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-left: -1px;
+}
+#page .pagination>.disabled>span, #page .pagination>.disabled>span:hover, #page .pagination>.disabled>span:focus, #page .pagination>.disabled>a, #page .pagination>.disabled>a:hover, #page .pagination>.disabled>a:focus{
+    color: #999;
+    background-color: #fff;
+    border-color: #ddd;
+    cursor: not-allowed;
+}
+#page .page{
+    float:left;
+    width:auto;
+    margin:auto;
+}

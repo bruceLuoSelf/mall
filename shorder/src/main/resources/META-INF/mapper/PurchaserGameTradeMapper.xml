@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.shorder.entity.PurchaserGameTrade">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.shorder.entity.PurchaserGameTrade">
+        <result column="id" property="id" javaType="long"/>
+        <result column="purchaser_id" property="purchaserId" javaType="long"/>
+        <result column="trade_type_id" property="tradeTypeId" javaType="long"/>
+        <result column="trade_type_name" property="tradeTypeName" javaType="String"/>
+        <result column="trade_logo" property="tradeLogo" javaType="Integer"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.wzitech.gamegold.shorder.entity.PurchaserGameTrade" useGeneratedKeys="true" keyProperty="id">
+        insert into t_sh_purchaser_game_trade
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="purchaserId != null">
+                purchaser_id,
+            </if>
+            <if test="tradeTypeId != null">
+                trade_type_id,
+            </if>
+            <if test="tradeTypeName != null and tradeTypeName != ''">
+                trade_type_name,
+            </if>
+            <if test="tradeLogo != null">
+                trade_logo,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="purchaserId != null">
+                #{purchaserId},
+            </if>
+            <if test="tradeTypeId != null">
+                #{tradeTypeId},
+            </if>
+            <if test="tradeTypeName != null and tradeTypeName != ''">
+                #{tradeTypeName},
+            </if>
+            <if test="tradeLogo != null">
+                #{tradeLogo},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert" parameterType="com.wzitech.gamegold.shorder.entity.PurchaserGameTrade">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO t_sh_purchaser_game_trade
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+               <if test="item.id != null">
+                    id,
+               </if>
+                <if test="item.purchaserId != null">
+                    purchaser_id,
+                </if>
+                <if test="item.tradeTypeId != null">
+                    trade_type_id,
+                </if>
+                <if test="item.tradeTypeName != null and item.tradeTypeName != ''">
+                    trade_type_name,
+                </if>
+                <if test="item.tradeLogo != null">
+                    trade_logo,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.id != null">
+                    #{item.id},
+                </if>
+                <if test="item.purchaserId != null">
+                    #{item.purchaserId},
+                </if>
+                <if test="item.tradeTypeId != null">
+                    #{item.tradeTypeId},
+                </if>
+                <if test="item.tradeTypeName != null and item.tradeTypeName != ''">
+                    #{item.tradeTypeName},
+                </if>
+                <if test="item.tradeLogo != null">
+                    #{item.tradeLogo},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="batchUpdate" parameterType="com.wzitech.gamegold.shorder.entity.PurchaserGameTrade">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_sh_purchaser_game_trade
+            <set>
+                <if test="item.id != null">
+                    id = #{item.id},
+                </if>
+                <if test="item.purchaserId != null">
+                    purchaser_id = #{item.purchaserId},
+                </if>
+                <if test="item.tradeTypeId != null">
+                    trade_type_id = #{item.tradeTypeId},
+                </if>
+                <if test="item.tradeTypeName != null and item.tradeTypeName != ''">
+                    trade_type_name = #{item.tradeTypeName},
+                </if>
+                <if test="item.tradeLogo != null">
+                    trade_logo = #{item.tradeLogo},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND | OR">
+                <if test="item.id != null">
+                    AND id = #{item.id}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="id != null">
+              and id = #{id}
+            </if>
+            <if test="purchaserId != null">
+               and purchaser_id = #{purchaserId}
+            </if>
+            <if test="tradeTypeId != null">
+               and trade_type_id = #{tradeTypeId}
+            </if>
+            <if test="tradeTypeName != null and tradeTypeName != ''">
+              and trade_type_name = #{tradeTypeName}
+            </if>
+            <if test="tradeLogo != null">
+              and trade_logo = #{tradeLogo}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchaser_game_trade
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="start != null">
+            offset #{start}
+        </if>
+    </select>
+
+    <delete id="batchDeleteByIds" parameterType="java.util.List">
+        DELETE FROM t_sh_purchaser_game_trade WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM t_sh_purchaser_game_trade
+        <include refid="selectSql"/>
+    </select>
+
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM t_sh_purchaser_game_trade WHERE id = #{id}
+    </select>
+
+    <delete id="deleteByPurchaserId" parameterType="long">
+        delete from t_sh_purchaser_game_trade where purchaser_id = #{purchaserId}
+    </delete>
+
+    <select id="selectByPurchaserId" parameterType="long" resultMap="BaseResultMap">
+        select * from t_sh_purchaser_game_trade where purchaser_id = #{purchaserId}
+    </select>
+
+    <!--<select id="selectTrade" parameterType="long" resultMap="com.wzitech.gamegold.shorder.entity.Trade.BaseResultMap">-->
+        <!--select * from t_sh_trade where id = #{id}-->
+    <!--</select>-->
+
+    <delete id="deleteByGameTrade" parameterType="map" >
+         delete from t_sh_purchaser_game_trade where id in (
+             select c.id from t_sh_purchaser_game_trade c where c.purchaser_id in
+                (select b.id from t_sh_game a join t_sh_purchaser_game b on a.id = #{gameTableId}
+                  and a.game_name = b.game_name and a.goods_type_name = b.goods_type_name and b.delivery_type_id = #{deliveryTypeId} )
+             and c.trade_type_id = #{tradeTableId})
+    </delete>
+
+</mapper>

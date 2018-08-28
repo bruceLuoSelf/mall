@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>查询订单详情</title>
+    <!--<script src="http://yxbmall.5173.com/js/jquery-1.8.3.min.js"></script>-->
+    <script src="http://yxbmall.5173.com/js/jquery.js"></script>
+    <script src="http://yxbmall.5173.com/js/jquery.json-2.4.min.js"></script>
+</head>
+<body>
+
+<script>
+    var request = {
+        sign: "153a0b529c5a4cbb71199891f3888c1a",
+        orderId: "YX1702160000007",
+        userId: "US10033047353083-0555",
+        userAccount: "GeiliTest"
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8085/gamegold-app/services/order/queryorderbyid",
+        data: $.toJSON(request),
+        contentType: "application/json;charset=UTF-8",
+        dataType: "json",
+        success: function (resp) {
+            var responseStatus = resp.responseStatus;
+            var data = resp.orderInfoEO;
+
+//            $("#selGame").html(responseStatus);
+            console.log(responseStatus);
+            console.log(data);
+            alert("查询成功！");
+        }
+    });
+
+</script>
+</body>
+</html>

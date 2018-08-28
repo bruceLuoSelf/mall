@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.ConfigPowerEO">
+
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.ConfigPowerEO">
+		<id column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="GAME_NAME" property="gameName" jdbcType="VARCHAR" />
+		<result column="TRADE_TYPE" property="tradeType" jdbcType="NUMERIC" javaType="int"/>
+		<result column="CONFIG_POWER" property="configPower" javaType="Boolean" jdbcType="BOOLEAN"/>
+		<result column="CONFIG_MAX_COUNT" property="configMaxCount" jdbcType="NUMERIC"/>
+		<!--ZW_C_JB_00008_20170512 START ADD-->
+		<result column="GOODS_TYPE_ID" property="goodsTypeId"/>
+		<result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR"/>
+		<!--ZW_C_JB_00008_20170512 END-->
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.order.entity.ConfigPowerEO"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="ID" ><!--ZW_C_JB_00008_20170513 MOD-->
+		INSERT INTO "TBL_GAMEGOLD_CONFIGPOWER"
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gameName != null and gameName != ''">
+				"GAME_NAME",
+			</if>
+			<if test="configPower != null">
+				"CONFIG_POWER",
+			</if>
+			<if test="tradeType != null and tradeType != ''" >
+				"TRADE_TYPE",
+			</if>
+			<if test="configMaxCount != null and configMaxCount != ''">
+				"CONFIG_MAX_COUNT",
+			</if>
+			<!--ZW_C_JB_00008_20170512 START ADD-->
+			<if test="goodsTypeId != null and goodsTypeId != ''">
+				"GOODS_TYPE_ID",
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				"GOODS_TYPE_NAME",
+			</if>
+			<!--ZW_C_JB_00008_20170512 END-->
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gameName != null and gameName != ''">
+				#{gameName},
+			</if>
+			<if test="configPower != null">
+				#{configPower},
+			</if>
+			<if test="tradeType != null and tradeType != ''">
+				#{tradeType},
+			</if>
+			<if test="configMaxCount != null and configMaxCount != ''">
+				#{configMaxCount},
+			</if>
+			<!--ZW_C_JB_00008_20170512 START ADD-->
+			<if test="goodsTypeId != null and goodsTypeId != ''">
+				#{goodsTypeId},
+			</if>
+			<if test="goodsTypeName != null and goodsTypeName != ''">
+				#{goodsTypeName},
+			</if>
+			<!--ZW_C_JB_00008_20170512 END-->
+		</trim>
+	</insert>
+
+	<!-- 批量更新记录 -->
+	<update id="batchUpdate"
+		parameterType="com.wzitech.gamegold.order.entity.ConfigPowerEO">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			UPDATE "TBL_GAMEGOLD_CONFIGPOWER"
+			<set>
+				<if test="item.configPower != null">
+					"CONFIG_POWER" = #{item.configPower},
+				</if>
+				<if test="item.tradeType != null">
+					"TRADE_TYPE" = #{item.tradeType},
+				</if>
+				<if test="item.configMaxCount != null and item.configMaxCount != ''">
+					"CONFIG_MAX_COUNT" = #{item.configMaxCount},
+				</if>
+				<!--ZW_C_JB_00008_20170512 START ADD-->
+				<if test="item.goodsTypeName != null">
+					"GOODS_TYPE_NAME" = #{item.goodsTypeName},
+				</if>
+				<!--ZW_C_JB_00008_20170512 END-->
+			</set>
+			<where>
+				1=1
+				<if test="item.gameName !=null and item.gameName !=''">
+					AND "GAME_NAME" = #{item.gameName}
+				</if>
+				<if test="item.id !=null">
+					AND "ID" = #{item.id}
+				</if>
+			</where>
+		</foreach>
+	</update>
+	<!--ZW_C_JB_00008_20170512 START ADD-->
+	<sql id="selectSql">
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="gameName != null and gameName != ''">
+				AND "GAME_NAME"= #{gameName}
+			</if>
+			<if test="configPower != null">
+				AND "CONFIG_POWER"= #{configPower}
+			</if>
+			<if test="tradeType != null">
+				AND "TRADE_TYPE"= #{tradeType}
+			</if>
+			<if test="configMaxCount != null">
+				AND "CONFIG_MAX_COUNT"= #{configMaxCount}
+			</if>
+			<if test="goodsTypeName == null or  goodsTypeName == ''">
+				AND "GOODS_TYPE_NAME" = '游戏币'
+			</if>
+			<if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName!='全部'">
+				AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+			</if>
+		</trim>
+	</sql>
+	<!--ZW_C_JB_00008_20170512 END-->
+
+	<!--ZW_C_JB_00008_20170512 START MOD-->
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+		resultType="com.wzitech.gamegold.order.entity.ConfigPowerEO">
+		SELECT * FROM "TBL_GAMEGOLD_CONFIGPOWER"
+		<include refid="selectSql" />
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+	
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="string" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_CONFIGPOWER"
+		<include refid="selectSql" />
+	</select>
+	<!--ZW_C_JB_00008_20170512 END-->
+	<!-- 查询符合条件的唯一记录 -->
+	<!--<select id="selectUniqueByProp" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.ConfigPowerEO">-->
+		<!--SELECT * FROM "TBL_GAMEGOLD_CONFIGPOWER"-->
+		<!--<where>-->
+			<!--<if test="gameName != null and gameName != ''">-->
+				<!--"GAME_NAME" = #{gameName}-->
+			<!--</if>-->
+		<!--</where>-->
+	<!--</select>-->
+    
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.ConfigPowerEO">
+		SELECT * FROM "TBL_GAMEGOLD_CONFIGPOWER" WHERE "ID" = #{id}
+	</select>
+	
+	<!-- 通过游戏名称得到记录 -->
+	<select id="selectByGameName" parameterType="map" resultMap="BaseResultMap" resultType="com.wzitech.gamegold.order.entity.ConfigPowerEO">
+		SELECT * FROM "TBL_GAMEGOLD_CONFIGPOWER" WHERE "GAME_NAME" = #{gameName} AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+	</select>
+	
+	<!-- 根据原生Sql查询记录 -->
+	<!--<select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"-->
+		<!--resultType="com.wzitech.gamegold.order.entity.ConfigPowerEO">-->
+		<!--${value}-->
+	<!--</select>-->
+</mapper>

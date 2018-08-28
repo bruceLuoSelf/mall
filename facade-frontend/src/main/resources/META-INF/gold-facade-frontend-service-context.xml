@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:lang="http://www.springframework.org/schema/lang" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd
+		http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+	  	http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<description>FACADE SERVICE公共配置文件 </description>
+
+	<!-- 导入cxf的配置文件 -->
+	<import resource="classpath:/META-INF/cxf/cxf.xml" />
+
+	<jaxrs:server id="RESTService" address="/">
+		<!-- 开启cxf日志 -->
+		<jaxrs:features>
+			<cxf:logging />
+		</jaxrs:features>
+		<!-- 导入所有的Service Bean -->
+		<jaxrs:serviceBeans>
+			<ref bean="OrderService" />
+			<ref bean="GoodsInfoService" />
+			<ref bean="DiscountInfoService" />
+			<ref bean="QueryServicer" />
+			<ref bean="MainGameConfigService"/>
+			<ref bean="RepositoryService" />
+			<ref bean="TradePlaceService" />
+			<ref bean="SellerService" />
+			<ref bean="GameInfoService" />
+			<ref bean="ServicerVoteService" />
+			<ref bean="QueryRepositoryService" />
+			<ref bean="RepositoryManageService" />
+			<ref bean="CheckRepositoryManageService" /><!-- 新增验证用户cookie -->
+			<ref bean="SellerOrderService" />
+			<ref bean="ServiceEvaluateService"/>
+			<ref bean="GameAccountService"/>
+			<ref bean="PurchaseOrderService"/>
+			<ref bean="DeliveryOrderService" />
+			<ref bean="OrderOutService"/>
+			<ref bean="SplitRepositoryLogService"/>
+			<ref bean="PayOrderService"/>
+			<ref bean="RefundOrderService"/>
+			<ref bean="AddressConfigService"/>
+			<ref bean="ManualDeliveryOrderService"/>
+			<ref bean="ReceiveMain"/>
+			<ref bean="DeliverySubOrderService"/>
+			<ref bean="ShGameConfigService"/>
+			<ref bean="PurchaseDataService"/>
+			<ref bean="PurchaseGameService"/>
+			<ref bean="OrderLogService"/>
+			<ref bean="MConnectionService"/>
+			<ref bean="GameCategoryConfigService"/>
+			<ref bean="AgrreService"/><!-- 初始化老用户 -->
+			<ref bean="ReadAggrementService"/>
+			<ref bean="HxOrderService"/>
+			<ref bean="RemoveDeliveryOrderService"/><!--撤单-->
+			<ref bean="DealFallOrderService" />
+			<ref bean="CurrencyConfigService" /><!--通货配单-->
+			<ref bean="ShGameTradeService"/>
+			<ref bean="NewCheckRepositoryService"/>
+			<ref bean="SplitRepositoryService"/><!--分仓-->
+			<ref bean="SyncRepositoryService"/>
+		</jaxrs:serviceBeans>
+		<!-- 配置控制过滤器 -->
+		<jaxrs:inInterceptors>
+			<ref bean="authenticationInterceptor" />
+		</jaxrs:inInterceptors>
+		<jaxrs:outInterceptors>
+			<ref bean="formattedJAXBInterceptor" />
+		</jaxrs:outInterceptors>
+
+		<jaxrs:extensionMappings>
+			<entry key="json" value="application/json"/>
+			<entry key="xml" value="application/xml"/>
+			<entry key="text" value="text/plain" />
+		</jaxrs:extensionMappings>
+
+		<!-- 使用jackson作为序列化器,根据URL中是否具有callback参数支持动态JSONP -->
+		<jaxrs:providers>
+			<bean class="com.wzitech.gamegold.facade.frontend.providers.JacksonJsonpProvider" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<!-- 配置认证拦截器 -->
+	<bean id="authenticationInterceptor"
+		class="com.wzitech.gamegold.facade.frontend.interceptor.AuthenticationInterceptor">
+		<!-- 配置不用做认证auth检查的url(注意全部小写) -->
+		<property name="ignoreAuthUrlsList">
+			<list>
+				<value>/services/goods/querygoods</value>
+				<value>/services/goods/selectgoods</value>
+				<value>/services/goods/singlegoods</value>
+                <value>/services/goods/QueryAllCategoryGoods</value>
+                <value>/services/goods/QuerySingleCategoryGoods</value>
+				<value>/services/queryservicer/orderservice</value>
+				<value>/services/queryservicer/applyservice</value>
+				<value>/services/order/queryorderbyid</value>
+				<value>/services/querytradeplace/queryplace</value>
+				<value>/services/count/index</value>
+				<value>/services/goods/queryunitprice</value>
+				<value>/services/goods/queryLowerPriceGoods</value>
+				<value>/services/servicer/queryServicers</value>
+				<value>/services/gameinfo/getdetailgame</value>
+				<value>/services/queryRepository/queryLowestPriceListservice</value>
+				<value>/services/seller/order/simpleOrders</value>
+				<value>/services/repository/countSellerGoodslist</value>
+				<value>/services/repository/querySellerGoodslist</value>
+				<value>/services/order/insideQueryOrder</value>
+				<value>/services/repository/querySellerAvgPriceRepository</value>
+				<value>/services/addressConfig/getConfigByGameName</value>
+				<value>/services/purchaseOrder/page</value>
+				<value>/services/manualShOrder/getMyIp</value>
+				<value>/services/maingameconfig/getgamelist</value>
+				<value>/services/shGameConfig/getConfigByGameName</value>
+				<value>/services/mConnection/getReferencePrice</value>
+				<value>/services/gameCategory/getAllGameCategory</value>
+				<!-- ZW_C_JB_00008_20170514_ADD '阵营查询' -->
+				<value>/services/gameinfo/getGameRaceInfo</value>
+				<value>/services/shGameConfig/getAllConfigByGameName</value>
+				<value>/services/shGameConfig/getGameConfig</value><!-- 新增最低购买金额查询 -->
+				<value>/services/firms</value><!-- 新增cookie验证登录请求_20170707_START -->
+				<!--<value>/services/agrre/agreeInitAccount</value>&lt;!&ndash;tongld   初始化老用户 &ndash;&gt;-->
+				<value>/services/payOrder/queryPurchaseDataFromZbao</value>
+				<value>/services/payOrder/updatePurchaseDataWithZbao</value>
+				<value>/services/payOrder/deletePayOrder</value>
+				<value>/services/receiveMain/reduceAmount</value><!--主站回调-->
+				<value>/services/order/orderPushToOrderCenterWithDate</value>
+				<value>/services/order/deliveryOrderPushToOrderCenter</value>
+				<value>/services/order/orderPushToOrderCenter</value>
+				<value>/services/dealfallorder/malldeal</value>
+				<value>/services/currencyConfig/queryCurrencyConfig</value><!--通货配置-->
+				<value>/services/payOrder/queryPayOrderById</value>
+				<value>/services/shGameConfig/getGameList</value>
+				<value>/services/shGameTrade/getShModeByGame</value>
+				<value>/services/shGameTrade/getTradeByGameAndShMode</value>
+				<value>/services/v1.0/mallOpen</value>
+				<value>/services/chorder/getIP</value>
+				<value>/services/queryRepository/queryRepositoryTest</value>
+			</list>
+		</property>
+	</bean>
+
+	<cxf:bus>
+		<cxf:properties>
+			<!-- 定义上传文件的最大长度，限制为256M -->
+			<entry key="org.apache.cxf.stax.maxTextLength" value="2048" />
+		</cxf:properties>
+	</cxf:bus>
+
+	<!-- 配置jaxb 输出拦截器 -->
+	<bean id="formattedJAXBInterceptor"
+		  class="com.wzitech.gamegold.facade.frontend.interceptor.FormattedJAXBInterceptor">
+	</bean>
+</beans>

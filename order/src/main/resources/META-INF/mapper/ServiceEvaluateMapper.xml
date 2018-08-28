@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.ServiceEvaluate">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.ServiceEvaluate">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="SERVICE_ID" property="serviceId" jdbcType="NUMERIC" javaType="long" />
+		<result column="SCORE" property="score" jdbcType="NUMERIC" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="ORDER_STATE" property="orderState" jdbcType="NUMERIC" />
+		<result column="IS_DEFAULT" property="isDefault" jdbcType="BOOLEAN" />
+		<result column="OPERATOR_ACCOUNT" property="evaluatorAccount" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.order.entity.ServiceEvaluate"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_SERVICE_EVALUATE"("ORDER_ID", "SERVICE_ID", "SCORE", "REMARK", "ORDER_STATE", "IS_DEFAULT", "OPERATOR_ACCOUNT", "CREATE_TIME")
+		VALUES(#{orderId}, #{serviceId}, #{score}, #{remark},#{orderState}, #{isDefault}, #{evaluatorAccount}, #{createTime})
+	</insert>
+
+	<!--根据订单号查询所有的评价记录-->
+	<select id="queryByOrderId" parameterType="String" resultMap="BaseResultMap">
+		SELECT *
+		FROM "TBL_GAMEGOLD_SERVICE_EVALUATE"
+		WHERE "ORDER_ID"=#{orderId}
+	</select>
+
+	<!--根据订单号删除评价记录-->
+	<delete id="removeByOrderId" parameterType="Map">
+		DELETE FROM "TBL_GAMEGOLD_SERVICE_EVALUATE"
+		WHERE "ORDER_ID"=#{orderId}
+	</delete>
+
+	<sql id="selectSql">
+		<where>
+			1=1
+			<if test="startCreateTime != null and startCreateTime != ''">
+				<![CDATA[
+					AND A."CREATE_TIME">=#{startCreateTime}
+				]]>
+			</if>
+			<if test="endCreateTime != null and endCreateTime != ''">
+				<![CDATA[
+					 AND A."CREATE_TIME"<=#{endCreateTime}
+				]]>
+			</if>
+			<if test="serviceId != null">
+				AND A."SERVICE_ID"=#{serviceId}
+			</if>
+			<if test="account != null">
+				AND B."LOGIN_ACCOUNT"=#{account}
+			</if>
+		</where>
+	</sql>
+
+	<!--按时间统计客服评价信息-->
+	<select id="statistics" parameterType="Map" resultMap="com.wzitech.gamegold.order.entity.ServiceEvaluateStatistics.BaseResultMap">
+		SELECT *,ROUND(("VERY_GOOD_COUNT"+"GOOD_COUNT"+"NORMAL_COUNT")*1.0/"TOTAL_COUNT"*100, 2)  "GOOD_RATE"--好评率
+		FROM (
+			SELECT "SERVICE_ID" "ID",--客服ID
+				"ACCOUNT", --客服账号
+				SUM("VERY_GOOD_COUNT"+"GOOD_COUNT"+"NORMAL_COUNT"+"YAWP_COUNT"+"VERY_YAWP_COUNT") "TOTAL_COUNT",--评价笔数
+				SUM("VERY_GOOD_COUNT") "VERY_GOOD_COUNT", --非常满意笔数
+				SUM("GOOD_COUNT") "GOOD_COUNT",--满意笔数
+				SUM("NORMAL_COUNT") "NORMAL_COUNT",--一般笔数
+				SUM("YAWP_COUNT") "YAWP_COUNT",--不满意笔数
+				SUM("VERY_YAWP_COUNT") "VERY_YAWP_COUNT",--非常不满意笔数
+				SUM("DEFAULT_COUNT") "DEFAULT_COUNT"--默认评价笔数
+			FROM (
+				select A."SERVICE_ID","LOGIN_ACCOUNT" "ACCOUNT",A."SCORE",
+					(CASE WHEN "SCORE"=5 THEN 1 ELSE 0 END) "VERY_GOOD_COUNT",
+					(CASE WHEN "SCORE"=4 THEN 1 ELSE 0 END) "GOOD_COUNT",
+					(CASE WHEN "SCORE"=3 THEN 1 ELSE 0 END) "NORMAL_COUNT",
+					(CASE WHEN "SCORE"=2 THEN 1 ELSE 0 END) "YAWP_COUNT",
+					(CASE WHEN "SCORE"=1 THEN 1 ELSE 0 END) "VERY_YAWP_COUNT",
+					(CASE WHEN "IS_DEFAULT"=TRUE THEN 1 ELSE 0 END) "DEFAULT_COUNT"
+				FROM "TBL_GAMEGOLD_SERVICE_EVALUATE" A JOIN "TBL_GAMEGOLD_USERS" B ON B."ID"=A."SERVICE_ID"
+				<include refid="selectSql" />
+			)AA
+			GROUP BY "SERVICE_ID", "ACCOUNT"
+		)BB
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByStatistics" parameterType="Map" resultType="int">
+		SELECT COUNT(distinct "SERVICE_ID")
+		FROM "TBL_GAMEGOLD_SERVICE_EVALUATE" A JOIN "TBL_GAMEGOLD_USERS" B ON B."ID"=A."SERVICE_ID"
+		<include refid="selectSql" />
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+			resultType="com.wzitech.gamegold.order.entity.ServiceEvaluate">
+		SELECT a."ID", a."ORDER_ID", a."SERVICE_ID", a."SCORE", a."REMARK", a."ORDER_STATE",
+		a."IS_DEFAULT", a."OPERATOR_ACCOUNT", a."CREATE_TIME",b."LOGIN_ACCOUNT"
+		FROM "TBL_GAMEGOLD_SERVICE_EVALUATE" a ,  "TBL_GAMEGOLD_USERS" b
+		<include refid="selectSqlEvaluate"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<select id="countByMap" parameterType="Map" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_SERVICE_EVALUATE"a ,  "TBL_GAMEGOLD_USERS" b
+		<include refid="selectSqlEvaluate"/>
+	</select>
+
+	<sql id="selectSqlEvaluate">
+		<where>
+			a."SERVICE_ID"=b."ID"
+			<if test="startCreateTime != null and startCreateTime != ''">
+				<![CDATA[
+					AND a."CREATE_TIME">=#{startCreateTime}
+				]]>
+			</if>
+			<if test="endCreateTime != null and endCreateTime != ''">
+				<![CDATA[
+					 AND a."CREATE_TIME"<=#{endCreateTime}
+				]]>
+			</if>
+			<if test="serviceId != null">
+				AND a."SERVICE_ID"=#{serviceId}
+			</if>
+			<if test="loginAccount != null">
+				AND a."LOGIN_ACCOUNT"=#{loginAccount}
+			</if>
+			<if test="score != null">
+				AND a."SCORE"=#{score}
+			</if>
+			<if test="orderId != null">
+				AND a."ORDER_ID"=#{orderId}
+			</if>
+			<if test="isDefault != null">
+				AND a."IS_DEFAULT"=#{isDefault}
+			</if>
+		</where>
+	</sql>
+</mapper>

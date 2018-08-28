@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="shrobot:war">
+    <output-path>$PROJECT_DIR$/shrobot/target</output-path>
+    <root id="archive" name="shrobot.war">
+      <element id="artifact" artifact-name="shrobot:war exploded" />
+    </root>
+  </artifact>
+</component>

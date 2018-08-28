@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.SentMessage">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.order.entity.SentMessage">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long"/>
+        <result column="MESSAGE_RULE_ID" property="messageRuleId" jdbcType="NUMERIC"/>
+        <result column="ORDER_STATUS" property="orderStatus" jdbcType="NUMERIC" />
+        <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <association property="order" select="com.wzitech.gamegold.order.entity.OrderInfoEO.selectByOrderId"
+                     column="ORDER_ID" javaType="com.wzitech.gamegold.order.entity.OrderInfoEO"  jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.wzitech.gamegold.order.entity.SentMessage" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO "TBL_GAMEGOLD_SENT_MESSAGE"("MESSAGE_RULE_ID","ORDER_ID","ORDER_STATUS","CONTENT","CREATE_TIME")
+        VALUES(
+            #{messageRuleId},
+            #{order.orderId},
+            #{orderStatus},
+            #{content},
+            #{createTime}
+        )
+    </insert>
+
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+      SELECT * FROM "TBL_GAMEGOLD_SENT_MESSAGE" WHERE "ID"=#{id}
+    </select>
+
+    <sql id="selectSql" >
+      <where>
+          <if test="gameName != null and gameName != ''">
+              AND "ORDERS"."GAME_NAME" LIKE '%'||#{gameName}||'%'
+          </if>
+          <if test="orderId != null and orderId != ''">
+              AND "ORDERS"."ORDER_ID"=#{orderId}
+          </if>
+          <if test="triggerOrderStatus != null">
+              AND "SENT_MSG"."ORDER_STATUS"=#{triggerOrderStatus}
+          </if>
+          <if test="messageRuleId != null">
+              AND "SENT_MSG"."MESSAGE_RULE_ID"=#{messageRuleId}
+          </if>
+          <if test="createStartTime != null">
+              <![CDATA[
+                AND "SENT_MSG"."CREATE_TIME" >= #{createStartTime}
+              ]]>
+          </if>
+          <if test="createEndTime != null">
+              <![CDATA[
+                AND "SENT_MSG"."CREATE_TIME" <= #{createEndTime}
+              ]]>
+          </if>
+      </where>
+    </sql>
+
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.order.entity.MessageRuleLog">
+        SELECT *
+        FROM "TBL_GAMEGOLD_SENT_MESSAGE" "SENT_MSG"
+        <if test="gameName != null or orderId != null">
+          LEFT JOIN "TBL_GAMEGOLD_ORDERS" "ORDERS" ON "ORDERS"."ORDER_ID"="SENT_MSG"."ORDER_ID"
+        </if>
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "SENT_MSG"."${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_SENT_MESSAGE" "SENT_MSG"
+        <if test="gameName != null or orderId != null">
+            LEFT JOIN "TBL_GAMEGOLD_ORDERS" "ORDERS" ON "ORDERS"."ORDER_ID"="SENT_MSG"."ORDER_ID"
+        </if>
+        <include refid="selectSql"/>
+    </select>
+</mapper>

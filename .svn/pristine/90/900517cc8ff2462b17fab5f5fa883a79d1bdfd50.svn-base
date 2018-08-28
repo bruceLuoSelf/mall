@@ -1,0 +1,1661 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+    <resultMap id="BaseResultMap"
+               type="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long"/>
+        <result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT_UID" property="accountUid" jdbcType="VARCHAR"/>
+        <result column="SERVICER_ID" property="servicerId" jdbcType="NUMERIC" javaType="long"/>
+        <result column="GAME_ACCOUNT" property="gameAccount" jdbcType="VARCHAR"/>
+        <result column="GAME_PASSWORD" property="gamePassWord" jdbcType="VARCHAR"/>
+        <result column="SON_GAME_PASSWORD" property="sonGamePassWord" jdbcType="VARCHAR"/>
+        <result column="GAME_NAME" property="gameName" jdbcType="VARCHAR"/>
+        <result column="REGION" property="region" jdbcType="VARCHAR"/>
+        <result column="SERVER" property="server" jdbcType="VARCHAR"/>
+        <result column="SON_ACCOUNT" property="sonAccount" jdbcType="VARCHAR"/>
+        <result column="SELLER_GAME_ROLE" property="sellerGameRole" jdbcType="VARCHAR"/>
+        <result column="MONEY_NAME" property="moneyName" jdbcType="VARCHAR"/>
+        <result column="GAME_RACE" property="gameRace" jdbcType="VARCHAR"/>
+        <result column="GOLD_COUNT" property="goldCount" jdbcType="NUMERIC" javaType="long"/>
+        <result column="SELLABLE_COUNT" property="sellableCount" jdbcType="NUMERIC" javaType="long"/>
+        <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL"/>
+        <result column="UNIT_PRICE_SELLER" property="unitPriceSeller" jdbcType="DECIMAL"/>
+        <result column="PASSPOD_URL" property="passpodUrl" jdbcType="VARCHAR"/>
+        <result column="ROLE_PASSWORD" property="rolePassword" jdbcType="VARCHAR"/>
+        <result column="FUNDS_PASSWORD" property="fundsPassword" jdbcType="VARCHAR"/>
+        <result column="HOUSE_PASSWORD" property="housePassword" jdbcType="VARCHAR"/>
+        <result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN"/>
+        <!-- 新增‘商品类目’查询条件 add by wubiao on 2017/05/12 -->
+        <result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="NUMERIC" javaType="long"/>
+        <result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR"/>
+        <result column="stock_count" property="stockCount" javaType="long"/>
+        <association property="sellerInfo" select="selectSeller" column="LOGIN_ACCOUNT" javaType="String"/>
+    </resultMap>
+
+    <resultMap id="SellerResultMap"
+               type="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long"/>
+        <result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT_UID" property="accountUid" jdbcType="VARCHAR"/>
+        <result column="SERVICER_ID" property="servicerId" jdbcType="NUMERIC" javaType="long"/>
+        <result column="GAME_ACCOUNT" property="gameAccount" jdbcType="VARCHAR"/>
+        <result column="GAME_PASSWORD" property="gamePassWord" jdbcType="VARCHAR"/>
+        <result column="SON_GAME_PASSWORD" property="sonGamePassWord" jdbcType="VARCHAR"/>
+        <result column="GAME_NAME" property="gameName" jdbcType="VARCHAR"/>
+        <result column="REGION" property="region" jdbcType="VARCHAR"/>
+        <result column="SERVER" property="server" jdbcType="VARCHAR"/>
+        <result column="SON_ACCOUNT" property="sonAccount" jdbcType="VARCHAR"/>
+        <result column="SELLER_GAME_ROLE" property="sellerGameRole" jdbcType="VARCHAR"/>
+        <result column="MONEY_NAME" property="moneyName" jdbcType="VARCHAR"/>
+        <result column="GAME_RACE" property="gameRace" jdbcType="VARCHAR"/>
+        <result column="GOLD_COUNT" property="goldCount" jdbcType="NUMERIC" javaType="long"/>
+        <result column="SELLABLE_COUNT" property="sellableCount" jdbcType="NUMERIC" javaType="long"/>
+        <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL"/>
+        <result column="PASSPOD_URL" property="passpodUrl" jdbcType="VARCHAR"/>
+        <result column="ROLE_PASSWORD" property="rolePassword" jdbcType="VARCHAR"/>
+        <result column="FUNDS_PASSWORD" property="fundsPassword" jdbcType="VARCHAR"/>
+        <result column="HOUSE_PASSWORD" property="housePassword" jdbcType="VARCHAR"/>
+        <result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="IS_DELETED" property="isDeleted" jdbcType="BOOLEAN"/>
+        <result column="IS_SHIELDED_TYPE" property="isShieldedType" jdbcType="BOOLEAN"/>
+        <!-- 新增‘商品类目’查询条件 add by wubiao on 2017/05/12 -->
+        <result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="NUMERIC" javaType="long"/>
+        <result column="GOODS_TYPE_NAME" property="goodsTypeName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 查询客服信息 -->
+    <select id="selectSeller" parameterType="String"
+            resultMap="com.wzitech.gamegold.repository.entity.SellerInfo.BaseResultMap">
+        SELECT * FROM "TBL_GAMEGOLD_SELLER" WHERE "LOGIN_ACCOUNT" = #{loginAccount}
+    </select>
+
+    <!-- 通过主键批量删除记录 -->
+    <update id="batchDeleteByIds" parameterType="list">
+        UPDATE "TBL_GAMEGOLD_REPOSITORY" SET "IS_DELETED"= true WHERE "ID" IN
+        <foreach collection="list" item="item" open="(" separator=","
+                 close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 删除卖家库存记录 -->
+    <update id="deleteSellerRepository" parameterType="map">
+        <foreach collection="ids" item="item" separator=";">
+            UPDATE "TBL_GAMEGOLD_REPOSITORY"
+            SET "IS_DELETED"= true
+            WHERE "ID" = #{item} AND "LOGIN_ACCOUNT"= #{seller.loginAccount} AND "ACCOUNT_UID" = #{seller.uid}
+        </foreach>
+    </update>
+
+    <insert id="batchInsert" parameterType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO "TBL_GAMEGOLD_REPOSITORY"
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.servicerId!=null">
+                    "SERVICER_ID",
+                </if>
+                <if test="item.loginAccount!=null and item.loginAccount!=''">
+                    "LOGIN_ACCOUNT",
+                </if>
+                <if test="item.accountUid!=null">
+                    "ACCOUNT_UID",
+                </if>
+                <if test="item.sonAccount!=null and item.sonAccount!=''">
+                    "SON_ACCOUNT",
+                </if>
+                <if test="item.gameAccount!=null and item.gameAccount!=''">
+                    "GAME_ACCOUNT",
+                </if>
+                <if test="item.gamePassWord!=null and item.gamePassWord!=''">
+                    "GAME_PASSWORD",
+                </if>
+                <if test="item.sonGamePassWord!=null and item.sonGamePassWord!=''">
+                    "SON_GAME_PASSWORD",
+                </if>
+                <if test="item.gameName!=null and item.gameName!=''">
+                    "GAME_NAME",
+                </if>
+                <if test="item.sellerGameRole!=null and item.sellerGameRole!=''">
+                    "SELLER_GAME_ROLE",
+                </if>
+                <if test="item.moneyName!=null and item.moneyName!=''">
+                    "MONEY_NAME",
+                </if>
+                <if test="item.goodsTypeId!=null and item.goodsTypeId!=''">
+                    "GOODS_TYPE_ID",
+                </if>
+                <if test="item.goodsTypeName!=null and item.goodsTypeName!=''">
+                    "GOODS_TYPE_NAME",
+                </if>
+                <if test="item.region!=null and item.region!=''">
+                    "REGION",
+                </if>
+                <if test="item.server!=null and item.server!=''">
+                    "SERVER",
+                </if>
+                <if test="item.gameRace!=null and item.gameRace!=''">
+                    "GAME_RACE",
+                </if>
+                <if test="item.goldCount!=null">
+                    "GOLD_COUNT",
+                </if>
+                <if test="item.sellableCount!=null">
+                    "SELLABLE_COUNT",
+                </if>
+                <if test="item.unitPrice!=null and item.unitPrice!=''">
+                    "UNIT_PRICE",
+                </if>
+                <if test="item.passpodUrl!=null and item.passpodUrl!=''">
+                    "PASSPOD_URL",
+                </if>
+                <if test="item.rolePassword!=null and item.rolePassword!=''">
+                    "ROLE_PASSWORD",
+                </if>
+                <if test="item.fundsPassword!=null and item.fundsPassword!=''">
+                    "FUNDS_PASSWORD",
+                </if>
+                <if test="item.housePassword!=null and item.housePassword!=''">
+                    "HOUSE_PASSWORD",
+                </if>
+                <if test="item.lastUpdateTime!=null">
+                    "LAST_UPDATE_TIME",
+                </if>
+                <if test="item.createTime!=null">
+                    "CREATE_TIME",
+                </if>
+                <if test="item.isDeleted!=null">
+                    "IS_DELETED"
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.servicerId!=null">
+                    #{item.servicerId},
+                </if>
+                <if test="item.loginAccount!=null and item.loginAccount!=''">
+                    #{item.loginAccount},
+                </if>
+                <if test="item.accountUid!=null">
+                    #{item.accountUid},
+                </if>
+                <if test="item.sonAccount!=null and item.sonAccount!=''">
+                    #{item.sonAccount},
+                </if>
+                <if test="item.gameAccount!=null and item.gameAccount!=''">
+                    #{item.gameAccount},
+                </if>
+                <if test="item.gamePassWord!=null and item.gamePassWord!=''">
+                    #{item.gamePassWord},
+                </if>
+                <if test="item.sonGamePassWord!=null and item.sonGamePassWord!=''">
+                    #{item.sonGamePassWord},
+                </if>
+                <if test="item.gameName!=null and item.gameName!=''">
+                    #{item.gameName},
+                </if>
+                <if test="item.sellerGameRole!=null and item.sellerGameRole!=''">
+                    #{item.sellerGameRole},
+                </if>
+                <if test="item.moneyName!=null and item.moneyName!=''">
+                    #{item.moneyName},
+                </if>
+                <if test="item.goodsTypeId!=null and item.goodsTypeId!=''">
+                    #{item.goodsTypeId},
+                </if>
+                <if test="item.goodsTypeName!=null and item.goodsTypeName!=''">
+                    #{item.goodsTypeName},
+                </if>
+                <if test="item.region!=null and item.region!=''">
+                    #{item.region},
+                </if>
+                <if test="item.server!=null and item.server!=''">
+                    #{item.server},
+                </if>
+                <if test="item.gameRace!=null and item.gameRace!=''">
+                    #{item.gameRace},
+                </if>
+                <if test="item.goldCount!=null">
+                    #{item.goldCount},
+                </if>
+                <if test="item.sellableCount!=null">
+                    #{item.sellableCount},
+                </if>
+                <if test="item.unitPrice!=null and item.unitPrice!=''">
+                    #{item.unitPrice},
+                </if>
+                <if test="item.passpodUrl!=null and item.passpodUrl!=''">
+                    #{item.passpodUrl},
+                </if>
+                <if test="item.rolePassword!=null and item.rolePassword!=''">
+                    #{item.rolePassword},
+                </if>
+                <if test="item.fundsPassword!=null and item.fundsPassword!=''">
+                    #{item.fundsPassword},
+                </if>
+                <if test="item.housePassword!=null and item.housePassword!=''">
+                    #{item.housePassword},
+                </if>
+                <if test="item.lastUpdateTime!=null">
+                    #{item.lastUpdateTime},
+                </if>
+                <if test="item.createTime!=null">
+                    #{item.createTime},
+                </if>
+                <if test="item.isDeleted!=null">
+                    #{item.isDeleted}
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 新增记录 -->
+    <insert id="insert"
+            parameterType="com.wzitech.gamegold.repository.entity.RepositoryInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO "TBL_GAMEGOLD_REPOSITORY"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="servicerId != null">
+                "SERVICER_ID",
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                "LOGIN_ACCOUNT",
+            </if>
+            <if test="accountUid != null">
+                "ACCOUNT_UID",
+            </if>
+            <if test="sonAccount != null and sonAccount != ''">
+                "SON_ACCOUNT",
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                "GAME_ACCOUNT",
+            </if>
+            <if test="gamePassWord != null and gamePassWord != ''">
+                "GAME_PASSWORD",
+            </if>
+            <if test="sonGamePassWord != null and sonGamePassWord != ''">
+                "SON_GAME_PASSWORD",
+            </if>
+            <if test="gameName != null and gameName != ''">
+                "GAME_NAME",
+            </if>
+            <if test="sellerGameRole != null and sellerGameRole != ''">
+                "SELLER_GAME_ROLE",
+            </if>
+            <if test="moneyName != null">
+                "MONEY_NAME",
+            </if>
+            <!-- 新增通货'商品类目' add by wubiao on 2017/05/12 -->
+            <if test="goodsTypeId != null">
+                "GOODS_TYPE_ID",
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                "GOODS_TYPE_NAME",
+            </if>
+            <if test="region != null and region != ''">
+                "REGION",
+            </if>
+            <if test="server != null and server != ''">
+                "SERVER",
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                "GAME_RACE",
+            </if>
+            <if test="goldCount != null">
+                "GOLD_COUNT",
+            </if>
+            <if test="sellableCount != null">
+                "SELLABLE_COUNT",
+            </if>
+            <if test="unitPrice != null">
+                "UNIT_PRICE",
+            </if>
+            <if test="passpodUrl != null and passpodUrl != ''">
+                "PASSPOD_URL",
+            </if>
+            <if test="rolePassword != null and rolePassword != ''">
+                "ROLE_PASSWORD",
+            </if>
+            <if test="fundsPassword != null and fundsPassword != ''">
+                "FUNDS_PASSWORD",
+            </if>
+            <if test="housePassword != null and housePassword != ''">
+                "HOUSE_PASSWORD",
+            </if>
+            <if test="lastUpdateTime != null">
+                "LAST_UPDATE_TIME",
+            </if>
+            <if test="createTime != null">
+                "CREATE_TIME",
+            </if>
+            <if test="isDeleted != null">
+                "IS_DELETED"
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="servicerId != null">
+                #{servicerId},
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                #{loginAccount},
+            </if>
+            <if test="accountUid != null">
+                #{accountUid},
+            </if>
+            <if test="sonAccount != null and sonAccount != ''">
+                #{sonAccount},
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                #{gameAccount},
+            </if>
+            <if test="gamePassWord != null and gamePassWord != ''">
+                #{gamePassWord},
+            </if>
+            <if test="sonGamePassWord != null and sonGamePassWord != ''">
+                #{sonGamePassWord},
+            </if>
+            <if test="gameName != null and gameName != ''">
+                #{gameName},
+            </if>
+            <if test="sellerGameRole != null and sellerGameRole != ''">
+                #{sellerGameRole},
+            </if>
+            <if test="moneyName != null">
+                #{moneyName},
+            </if>
+            <!-- 新增通货'商品类目' add by wubiao on 2017/05/12 -->
+            <if test="goodsTypeId != null">
+                #{goodsTypeId},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                #{goodsTypeName},
+            </if>
+            <if test="region != null and region != ''">
+                #{region},
+            </if>
+            <if test="server != null and server != ''">
+                #{server},
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                #{gameRace},
+            </if>
+            <if test="goldCount != null">
+                #{goldCount},
+            </if>
+            <if test="sellableCount != null">
+                #{sellableCount},
+            </if>
+            <if test="unitPrice != null">
+                #{unitPrice},
+            </if>
+            <if test="passpodUrl != null and passpodUrl != ''">
+                #{passpodUrl},
+            </if>
+            <if test="rolePassword != null and rolePassword != ''">
+                #{rolePassword},
+            </if>
+            <if test="fundsPassword != null and fundsPassword != ''">
+                #{fundsPassword},
+            </if>
+            <if test="housePassword != null and housePassword != ''">
+                #{housePassword},
+            </if>
+            <if test="lastUpdateTime != null">
+                #{lastUpdateTime},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量更新记录 -->
+    <update id="batchUpdate"
+            parameterType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        <foreach collection="list" item="item" index="index"
+                 separator=";">
+            UPDATE "TBL_GAMEGOLD_REPOSITORY"
+            <set>
+                <if test="item.servicerId != null">
+                    "SERVICER_ID"= #{item.servicerId},
+                </if>
+                <if test="item.loginAccount != null">
+                    "LOGIN_ACCOUNT"= #{item.loginAccount},
+                </if>
+                <if test="item.accountUid != null">
+                    "ACCOUNT_UID"= #{item.accountUid},
+                </if>
+                <if test="item.sonAccount != null">
+                    "SON_ACCOUNT"= #{item.sonAccount},
+                </if>
+                <if test="item.gameAccount != null">
+                    "GAME_ACCOUNT"= #{item.gameAccount},
+                </if>
+                <if test="item.gamePassWord != null">
+                    "GAME_PASSWORD"= #{item.gamePassWord},
+                </if>
+                <if test="item.sonGamePassWord != null and item.sonGamePassWord != ''">
+                    "SON_GAME_PASSWORD" = #{item.sonGamePassWord},
+                </if>
+                <if test="item.gameName != null">
+                    "GAME_NAME"= #{item.gameName},
+                </if>
+                <if test="item.moneyName != null">
+                    "MONEY_NAME"= #{item.moneyName},
+                </if>
+                <if test="item.region != null">
+                    "REGION"= #{item.region},
+                </if>
+                <if test="item.server != null">
+                    "SERVER"= #{item.server},
+                </if>
+                <if test="item.gameRace != null">
+                    "GAME_RACE"= #{item.gameRace},
+                </if>
+                <if test="item.goldCount != null">
+                    "GOLD_COUNT"= #{item.goldCount},
+                </if>
+                <if test="item.sellableCount != null">
+                    "SELLABLE_COUNT"= #{item.sellableCount},
+                </if>
+                <if test="item.unitPrice != null">
+                    "UNIT_PRICE"= #{item.unitPrice},
+                </if>
+                <if test="item.passpodUrl != null and item.passpodUrl != ''">
+                    "PASSPOD_URL" = #{item.passpodUrl},
+                </if>
+                <if test="item.rolePassword != null and item.rolePassword != ''">
+                    "ROLE_PASSWORD" = #{item.rolePassword},
+                </if>
+                <if test="item.fundsPassword != null and item.fundsPassword != ''">
+                    "FUNDS_PASSWORD" = #{item.fundsPassword},
+                </if>
+                <if test="item.housePassword != null and item.housePassword != ''">
+                    "HOUSE_PASSWORD" = #{item.housePassword},
+                </if>
+                <if test="item.lastUpdateTime != null">
+                    "LAST_UPDATE_TIME"= #{item.lastUpdateTime},
+                </if>
+                <if test="item.isDeleted != null">
+                    "IS_DELETED"= #{item.isDeleted},
+                </if>
+                <if test="item.sellerGameRole != null and item.sellerGameRole != ''">
+                    "SELLER_GAME_ROLE" = #{item.sellerGameRole},
+                </if>
+                <if test="item.goodsTypeName!=null and item.goodsTypeName!=''">
+                    "GOODS_TYPE_NAME"=#{item.goodsTypeName},
+                </if>
+                <if test="item.stockCount != null">
+                    "STOCK_COUNT" = #{item.stockCount},
+                </if>
+            </set>
+            <trim prefix="WHERE" prefixOverrides="AND |OR ">
+                <if test="item.id != null">
+                    AND "ID" = #{item.id}
+                </if>
+                <if test="item.loginAccount != null and item.loginAccount != ''">
+                    AND "LOGIN_ACCOUNT" = #{item.loginAccount}
+                </if>
+                <if test="item.accountUid != null and item.accountUid != ''">
+                    AND "ACCOUNT_UID" = #{item.accountUid}
+                </if>
+                <if test="item.gameAccount != null and item.gameAccount != ''">
+                    AND "GAME_ACCOUNT" = #{item.gameAccount}
+                </if>
+                <if test="item.gameName != null and item.gameName != ''">
+                    AND "GAME_NAME" = #{item.gameName}
+                </if>
+                <if test="item.region != null and item.region != ''">
+                    AND "REGION" = #{item.region}
+                </if>
+                <if test="item.server != null and item.server != ''">
+                    AND "SERVER" = #{item.server}
+                </if>
+                <if test="item.gameRace != null and item.gameRace != ''">
+                    AND "GAME_RACE"= #{item.gameRace}
+                </if>
+                <if test="item.sellerGameRole != null and item.sellerGameRole != ''">
+                    AND "SELLER_GAME_ROLE" = #{item.sellerGameRole}
+                </if>
+                <if test="item.goodsTypeName!=null and item.goodsTypeName!=''">
+                    AND "GOODS_TYPE_NAME"=#{item.goodsTypeName}
+                </if>
+                <if test="item.isDeleted != null">
+                    AND "IS_DELETED"= #{item.isDeleted}
+                </if>
+            </trim>
+        </foreach>
+    </update>
+
+    <update id="updateRepository" parameterType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        UPDATE "TBL_GAMEGOLD_REPOSITORY"
+        <set>
+            <if test="moneyName != null">
+                "MONEY_NAME"= #{moneyName},
+            </if>
+            <if test="unitPrice != null">
+                "UNIT_PRICE"= #{unitPrice},
+            </if>
+            <if test="goldCount != null">
+                "GOLD_COUNT"= #{goldCount},
+            </if>
+            <if test="sellableCount != null">
+                "SELLABLE_COUNT"= #{sellableCount},
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                "GAME_ACCOUNT"= #{gameAccount},
+            </if>
+            <if test="gamePassWord != null and gamePassWord != ''">
+                "GAME_PASSWORD"= #{gamePassWord},
+            </if>
+            <if test="sellerGameRole != null and sellerGameRole != ''">
+                "SELLER_GAME_ROLE" = #{sellerGameRole},
+            </if>
+            <if test="lastUpdateTime != null">
+                "LAST_UPDATE_TIME"= #{lastUpdateTime},
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="id != null">
+                AND "ID" = #{id}
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                AND "LOGIN_ACCOUNT" = #{loginAccount}
+            </if>
+            <if test="accountUid != null and accountUid != ''">
+                AND "ACCOUNT_UID" = #{accountUid}
+            </if>
+        </trim>
+    </update>
+
+    <sql id="selectSql">
+        <where>
+            <if test="servicerId != null">
+                "SERVICER_ID" = #{servicerId}
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                AND "REPOSITORY"."LOGIN_ACCOUNT" = #{loginAccount}
+            </if>
+            <if test="accountUid != null and accountUid != ''">
+                <!--AND "ACCOUNT_UID" LIKE '%'||#{accountUid}||'%'-->
+                AND "ACCOUNT_UID" = #{accountUid}
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                AND "GAME_ACCOUNT" = #{gameAccount}
+            </if>
+            <if test="isDeleted != null">
+                AND "REPOSITORY"."IS_DELETED" = #{isDeleted}
+            </if>
+            <if test="id != null">
+                AND "ID"= #{id}
+            </if>
+            <if test="sellableCount != null">
+                <![CDATA[
+				AND	"SELLABLE_COUNT" >= #{sellableCount}
+				]]>
+            </if>
+            <if test="sellableCountMax != null">
+                <![CDATA[
+				AND	"SELLABLE_COUNT" <= #{sellableCountMax}
+				]]>
+            </if>
+            <if test="orderUnitPrice != null">
+                <![CDATA[
+				AND	"UNIT_PRICE" <= #{orderUnitPrice}
+				]]>
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND "GAME_NAME" LIKE '%'||#{gameName}||'%'
+            </if>
+            <if test="region != null and region != ''">
+                AND "REGION" LIKE '%'||#{region}||'%'
+            </if>
+            <if test="server != null and server != ''">
+                AND "SERVER" LIKE '%'||#{server}||'%'
+            </if>
+            <if test="backGameName != null and backGameName != ''">
+                AND "GAME_NAME" = #{backGameName}
+            </if>
+            <if test="backRegion != null and backRegion != ''">
+                AND "REGION" = #{backRegion}
+            </if>
+            <if test="backServer != null and backServer != ''">
+                AND "SERVER" = #{backServer}
+            </if>
+            <if test="servers != null and servers != ''">
+                AND "SERVER" IN (${servers})
+            </if>
+            <if test="backGameRace != null and backGameRace != ''">
+                AND "GAME_RACE" = #{backGameRace}
+            </if>
+            <if test="goodsTypeId != null">
+                AND "GOODS_TYPE_ID" = #{goodsTypeId}
+            </if>
+            <!-- lvshuyan 增加通货查询 -->
+            <if test="id == null">
+                <if test="goodsTypeName == null or  goodsTypeName == ''">
+                    AND "GOODS_TYPE_NAME" = '游戏币'
+                </if>
+                <if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName!='全部'">
+                    AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+                </if>
+            </if>
+            <if test="sonAccount != null and sonAccount != ''">
+                AND "SON_ACCOUNT" LIKE '%'||#{sonAccount}||'%'
+            </if>
+            <if test="sellerGameRole != null and sellerGameRole != ''">
+                AND "SELLER_GAME_ROLE" = #{sellerGameRole}
+            </if>
+            <if test="backSellerGameRole != null and backSellerGameRole != ''">
+                AND "SELLER_GAME_ROLE" LIKE '%'||#{backSellerGameRole}||'%'
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND "GAME_RACE" LIKE '%'||#{gameRace}||'%'
+            </if>
+            <if test="notEqualId != null and notEqualId != ''">
+                <![CDATA[
+					  AND "ID" <> #{notEqualId}
+				]]>
+            </if>
+        </where>
+    </sql>
+
+    <sql id="selectSql3">
+        <where>
+            <if test="servicerId != null">
+                "REPOSITORY"."SERVICER_ID" = #{servicerId}
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                AND "REPOSITORY"."LOGIN_ACCOUNT" = #{loginAccount}
+            </if>
+            <if test="accountUid != null and accountUid != ''">
+                AND "REPOSITORY"."ACCOUNT_UID" LIKE '%'||#{accountUid}||'%'
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                AND "REPOSITORY"."GAME_ACCOUNT" = #{gameAccount}
+            </if>
+            <if test="isDeleted != null">
+                AND "REPOSITORY"."IS_DELETED" = #{isDeleted}
+            </if>
+            <if test="id != null">
+                AND "REPOSITORY"."ID"= #{id}
+            </if>
+            <!-- lvshuyan 增加通货查询 -->
+            <if test="id == null">
+                <if test="goodsTypeName == null or  goodsTypeName == ''">
+                    AND "REPOSITORY"."GOODS_TYPE_NAME" = '游戏币'
+                </if>
+                <if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName!='全部'">
+                    AND "REPOSITORY"."GOODS_TYPE_NAME" = #{goodsTypeName}
+                </if>
+            </if>
+            <if test="sellableCount != null">
+                <![CDATA[
+				AND	"REPOSITORY"."SELLABLE_COUNT" >= #{sellableCount}
+				]]>
+            </if>
+            <if test="sellableCountMax != null">
+                <![CDATA[
+				AND	"REPOSITORY"."SELLABLE_COUNT" <= #{sellableCountMax}
+				]]>
+            </if>
+            <if test="orderUnitPrice != null">
+                <![CDATA[
+				AND	"REPOSITORY"."UNIT_PRICE" <= #{orderUnitPrice}
+				]]>
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND "REPOSITORY"."GAME_NAME" LIKE '%'||#{gameName}||'%'
+            </if>
+            <if test="region != null and region != ''">
+                AND "REPOSITORY"."REGION" LIKE '%'||#{region}||'%'
+            </if>
+            <if test="backGameName != null and backGameName != ''">
+                AND "REPOSITORY"."GAME_NAME" = #{backGameName}
+            </if>
+            <if test="backRegion != null and backRegion != ''">
+                AND "REPOSITORY"."REGION" = #{backRegion}
+            </if>
+            <if test="backServer != null and backServer != ''">
+                AND "REPOSITORY"."SERVER" = #{backServer}
+            </if>
+            <if test="sonAccount != null and sonAccount != ''">
+                AND "REPOSITORY"."SON_ACCOUNT" LIKE '%'||#{sonAccount}||'%'
+            </if>
+            <if test="sellerGameRole != null and sellerGameRole != ''">
+                AND "REPOSITORY"."SELLER_GAME_ROLE" = #{sellerGameRole}
+            </if>
+            <if test="backSellerGameRole != null and backSellerGameRole != ''">
+                AND "REPOSITORY"."SELLER_GAME_ROLE" LIKE '%'||#{backSellerGameRole}||'%'
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND "REPOSITORY"."GAME_RACE" = #{gameRace}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="selectSql2">
+        <where>
+            <if test="servicerId != null">
+                "REPOSITORY"."SERVICER_ID" = #{servicerId}
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                AND "REPOSITORY"."LOGIN_ACCOUNT" = #{loginAccount}
+            </if>
+            <if test="accountUid != null and accountUid != ''">
+                AND "REPOSITORY"."ACCOUNT_UID" LIKE '%'||#{accountUid}||'%'
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                AND "REPOSITORY"."GAME_ACCOUNT" = #{gameAccount}
+            </if>
+            <if test="isDeleted != null">
+                AND "REPOSITORY"."IS_DELETED" = #{isDeleted}
+            </if>
+            <if test="id != null">
+                AND "REPOSITORY"."ID"= #{id}
+            </if>
+            <!-- lvshuyan 增加通货查询 -->
+            <if test="id == null">
+                <if test="goodsTypeName == null or  goodsTypeName == ''">
+                    AND "REPOSITORY"."GOODS_TYPE_NAME" = '游戏币'
+                </if>
+                <if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName!='全部'">
+                    AND "REPOSITORY"."GOODS_TYPE_NAME" = #{goodsTypeName}
+                </if>
+            </if>
+            <if test="sellableCount != null">
+                <![CDATA[
+				AND	"REPOSITORY"."SELLABLE_COUNT" >= #{sellableCount}
+				]]>
+            </if>
+            <if test="sellableCountMax != null">
+                <![CDATA[
+				AND	"REPOSITORY"."SELLABLE_COUNT" <= #{sellableCountMax}
+				]]>
+            </if>
+            <if test="orderUnitPrice != null">
+                <![CDATA[
+				AND	"REPOSITORY"."UNIT_PRICE" <= #{orderUnitPrice}
+				]]>
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND "REPOSITORY"."GAME_NAME" LIKE '%'||#{gameName}||'%'
+            </if>
+            <if test="region != null and region != ''">
+                AND "REPOSITORY"."REGION" LIKE '%'||#{region}||'%'
+            </if>
+            <if test="server != null and server != ''">
+                AND "REPOSITORY"."SERVER" LIKE '%'||#{server}||'%'
+            </if>
+            <if test="backGameName != null and backGameName != ''">
+                AND "REPOSITORY"."GAME_NAME" = #{backGameName}
+            </if>
+            <if test="backRegion != null and backRegion != ''">
+                AND "REPOSITORY"."REGION" = #{backRegion}
+            </if>
+            <if test="backServer != null and backServer != ''">
+                AND "REPOSITORY"."SERVER" = #{backServer}
+            </if>
+            <if test="servers != null and servers != ''">
+                AND "REPOSITORY"."SERVER" IN (${servers})
+            </if>
+            <if test="sonAccount != null and sonAccount != ''">
+                AND "REPOSITORY"."SON_ACCOUNT" LIKE '%'||#{sonAccount}||'%'
+            </if>
+            <if test="sellerGameRole != null and sellerGameRole != ''">
+                AND "REPOSITORY"."SELLER_GAME_ROLE" = #{sellerGameRole}
+            </if>
+            <if test="backSellerGameRole != null and backSellerGameRole != ''">
+                AND "REPOSITORY"."SELLER_GAME_ROLE" LIKE '%'||#{backSellerGameRole}||'%'
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND "REPOSITORY"."GAME_RACE" = #{gameRace}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 返回库存中指定游戏下并达到订单游戏币数目的库存所属客服 -->
+    <select id="queryServicer" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        SELECT "SERVICER_ID" FROM "TBL_GAMEGOLD_REPOSITORY"
+        <where>
+            1=1
+            <if test="gameName != null and gameName != ''">
+                AND "GAME_NAME" like '%${gameName}%'
+            </if>
+            <if test="region != null and region != ''">
+                AND "REGION" like '%${region}%'
+            </if>
+            <if test="server != null and server != ''">
+                AND "SERVER" like '%${server}%'
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND "GAME_RACE" like '%${gameRace}%'
+            </if>
+        </where>
+        GROUP BY "SERVICER_ID" HAVING SUM("GOLD_COUNT") >= #{goldCount}
+    </select>
+
+    <!-- 返回库存中指定游戏下库存金币总数 -->
+    <select id="queryGoldCount" parameterType="map" resultType="Double">
+        SELECT SUM("SELLABLE_COUNT") AS "SELLABLE_COUNT" FROM "TBL_GAMEGOLD_REPOSITORY"
+        <where>
+            1=1
+            <if test="gameName != null and gameName != ''">
+                AND "GAME_NAME" = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND "REGION" = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND "SERVER" = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND "GAME_RACE" = #{gameRace}
+            </if>
+            <!-- ZW_C_JB_00008_START-->
+            <if test="goodsTypeName == null or  goodsTypeName == ''">
+                AND "GOODS_TYPE_NAME" = '游戏币'
+            </if>
+            <if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName!='全部'">
+                AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+            </if>
+            <!-- ZW_C_JB_00008_END-->
+            <if test="servicerId != null">
+                AND "SERVICER_ID" = #{servicerId}
+            </if>
+            <if test="servers != null and servers != ''">
+                AND "SERVER" IN (${servers})
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                AND "LOGIN_ACCOUNT" = #{loginAccount}
+            </if>
+            <if test="orderUnitPrice != null">
+                <![CDATA[
+				AND	"UNIT_PRICE" <= #{orderUnitPrice}
+				]]>
+            </if>
+            <if test="isDeleted != null">
+                AND "IS_DELETED" = #{isDeleted}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        SELECT * FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        <!--只显示卖家在线的库存-->
+        <if test="isOnline != null and isOnline == true">
+            JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+            "SELLER"."IS_ONLINE"=TRUE)
+        </if>
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="lockMode != null">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <select id="selectRepositoryList" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        SELECT * FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        <!--只显示卖家在线的库存-->
+        <if test="isOnline != null and isOnline == true">
+            JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+            "SELLER"."IS_ONLINE"=TRUE)
+        </if>
+        <include refid="selectSql"/>
+        <if test="orderBy != null and orderBy != ''">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        <!--只显示卖家在线的库存-->
+        <if test="isOnline != null and isOnline == true">
+            JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+            "SELLER"."IS_ONLINE"=TRUE)
+        </if>
+        <include refid="selectSql"/>
+    </select>
+
+    <!-- 通过商品的ID，获得商品信息 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        SELECT * FROM "TBL_GAMEGOLD_REPOSITORY"
+        <where>
+            "ID" = #{id}
+        </where>
+    </select>
+
+    <!-- 根据原生Sql查询记录 -->
+    <select id="selectByNativeSql" parameterType="String" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+		${value}
+	</select>
+
+    <select id="selectMinPriceRepositoryFrom" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        "REP"."ID",
+        "REP"."UNIT_PRICE",
+        "REP"."GAME_NAME",
+        "REP"."REGION",
+        "REP"."GAME_RACE",
+        "REP"."MONEY_NAME",
+        "REP"."GOODS_TYPE_ID",
+        "REP"."GOODS_TYPE_NAME",
+        T ."SORT",
+        T ."IS_SHIELDED_TYPE",
+        "REP"."SERVER",
+        SUM (T ."SELLABLE_COUNT")
+        FROM
+        (
+        SELECT
+        MIN ("REPOSITORY"."ID") "ID",
+        "SELL_SETTING"."SORT",
+        "SELLER"."IS_SHIELDED_TYPE",
+        SUM ("SELLABLE_COUNT") "SELLABLE_COUNT",
+        t_sh_game.min_buy_amount
+        FROM
+        "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        LEFT JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON "SELLER"."LOGIN_ACCOUNT" = "REPOSITORY"."LOGIN_ACCOUNT"
+        LEFT JOIN t_sh_game ON t_sh_game.game_name = "REPOSITORY"."GAME_NAME"
+        AND t_sh_game.goods_type_name = "REPOSITORY"."GOODS_TYPE_NAME"
+        JOIN "TBL_GAMEGOLD_SELL_SETTING" "SELL_SETTING" ON (
+        "SELL_SETTING"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT"
+        AND "SELL_SETTING"."GAME_NAME"="REPOSITORY"."GAME_NAME"
+        AND "SELL_SETTING"."GOODS_TYPE_NAME"="REPOSITORY"."GOODS_TYPE_NAME"
+        <if test="onShowShopRepository">
+            AND "SELL_SETTING"."IS_DELETED"=FALSE
+        </if>
+        )
+        WHERE
+        "REPOSITORY"."IS_DELETED" = FALSE
+        AND "REPOSITORY"."GAME_NAME" = #{backGameName}
+        <if test="onShowConsignmentRepository">
+            AND "SELLER"."IS_SHIELDED"=TRUE
+        </if>
+        AND (CASE WHEN "SELLER"."IS_CROSS" =FALSE THEN "REPOSITORY"."SERVER" =#{server} AND "SELLER"."IS_CROSS" = FALSE
+        WHEN "SELLER"."IS_CROSS" = TRUE THEN "REPOSITORY"."SERVER" IN (${servers}) AND "SELLER"."IS_CROSS" = TRUE END
+        )
+        AND "REPOSITORY"."GOODS_TYPE_NAME" = #{goodsTypeName}
+        AND "SELLER"."IS_ONLINE" = TRUE
+        AND "REPOSITORY"."UNIT_PRICE" > 0
+        AND "SELLABLE_COUNT" > t_sh_game.min_count
+        GROUP BY
+        "REPOSITORY"."UNIT_PRICE",
+        "REPOSITORY"."GAME_NAME",
+        "REPOSITORY"."GAME_RACE",
+        "REPOSITORY"."GOODS_TYPE_NAME",
+        "SELL_SETTING"."SORT",
+        "SELLER"."IS_SHIELDED_TYPE",
+        t_sh_game.min_buy_amount
+        HAVING
+        SUM ("SELLABLE_COUNT") * "UNIT_PRICE" > t_sh_game.min_buy_amount
+        ) T,"TBL_GAMEGOLD_REPOSITORY" "REP"
+        WHERE
+        T ."ID" = "REP"."ID"
+        GROUP BY
+        "REP"."UNIT_PRICE",
+        "REP"."GAME_NAME",
+        "REP"."GAME_RACE",
+        "REP"."GOODS_TYPE_NAME",
+        T ."SORT",
+        T ."IS_SHIELDED_TYPE",
+        "REP"."MONEY_NAME",
+        "REP"."GOODS_TYPE_ID",
+        "REP"."SERVER",
+        "REP"."ID"
+        ORDER BY
+        "SORT" DESC,
+        "UNIT_PRICE" ASC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+
+    <!-- 对卖家库存单价进行分组，按单价由低到高，库存由多到少排序 -->
+    <select id="queryGroupRepository" parameterType="map" resultMap="BaseResultMap">
+        SELECT MIN("REPOSITORY"."ID") "ID","REPOSITORY"."LOGIN_ACCOUNT", "REPOSITORY"."UNIT_PRICE",
+        SUM("SELLABLE_COUNT") "SELLABLE_COUNT",
+        "REPOSITORY"."GAME_NAME","REPOSITORY"."REGION","REPOSITORY"."SERVER",
+        "REPOSITORY"."GAME_RACE",
+        "REPOSITORY"."MONEY_NAME",
+        "REPOSITORY"."GOODS_TYPE_NAME"
+        FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        LEFT JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON "SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT"
+        AND "SELLER"."CHECK_STATE"=1
+        <!--只显示店铺库存-->
+        <if test="onShowShopRepository">
+            JOIN "TBL_GAMEGOLD_SELL_SETTING" "SELL_SETTING" ON (
+            "SELL_SETTING"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT"
+            AND "SELL_SETTING"."GAME_NAME"="REPOSITORY"."GAME_NAME"
+            AND "SELL_SETTING"."GOODS_TYPE_NAME"="REPOSITORY"."GOODS_TYPE_NAME"
+            AND "SELL_SETTING"."IS_DELETED"=FALSE
+            )
+        </if>
+        <include refid="selectSql2"/>
+        <!--只显示寄售库存-->
+        <if test="onShowConsignmentRepository">
+            AND "SELLER"."IS_SHIELDED"=TRUE
+        </if>
+        <!--只显示卖家在线的库存-->
+        <if test="isOnline != null and isOnline == true">
+            AND "SELLER"."IS_ONLINE" = TRUE
+        </if>
+        <choose>
+            <!--<when test="smallestAmount != null">-->
+            <!--AND "SELLABLE_COUNT"*"UNIT_PRICE">#{smallestAmount}-->
+            <!--</when>-->
+            <when test="minSellableCount != null">
+                AND "SELLABLE_COUNT">#{minSellableCount}
+            </when>
+        </choose>
+        AND "REPOSITORY"."UNIT_PRICE" > 0
+        GROUP BY "REPOSITORY"."UNIT_PRICE","REPOSITORY"."LOGIN_ACCOUNT","REPOSITORY"."GAME_NAME",
+        "REPOSITORY"."REGION","REPOSITORY"."SERVER",
+        "REPOSITORY"."GAME_RACE",
+        "REPOSITORY"."MONEY_NAME","REPOSITORY"."GOODS_TYPE_NAME"
+        having SUM("SELLABLE_COUNT")*"UNIT_PRICE">#{smallestAmount}
+        ORDER BY "UNIT_PRICE" ASC, "SELLABLE_COUNT" DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <select id="queryLowerPriceRepository" parameterType="map" resultMap="BaseResultMap">
+        select DISTINCT
+        t."UNIT_PRICE","t"."SERVER",t."GAME_NAME",t."REGION",t."GOODS_TYPE_NAME",SUM("t"."SELLABLE_COUNT")
+        "SELLABLE_COUNT" from (
+        select
+        s."UNIT_PRICE","REP"."SERVER",s."GAME_NAME",s."REGION","REP"."GOODS_TYPE_NAME","REP"."LOGIN_ACCOUNT","REP"."SELLABLE_COUNT"
+        from (
+        SELECT MIN("UNIT_PRICE") "UNIT_PRICE","GAME_NAME","REGION" FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        where "REPOSITORY"."GAME_NAME"=#{gameName} AND "REPOSITORY"."REGION"=#{region} AND "REPOSITORY"."SERVER" in
+        (${servers})
+        <if test="race != null and race !=''">
+            AND "REPOSITORY"."GAME_RACE" = #{race}
+        </if>
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName == null or  goodsTypeName == ''">
+            AND "REPOSITORY"."GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName!='全部'">
+            AND "REPOSITORY"."GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        AND "IS_DELETED"='F' AND "SELLABLE_COUNT"*"UNIT_PRICE">#{unitPrice} AND "UNIT_PRICE">0
+        GROUP BY "GAME_NAME","REGION", "GOODS_TYPE_NAME"
+        ) s
+        LEFT JOIN "TBL_GAMEGOLD_REPOSITORY" "REP" ON "REP"."GAME_NAME"=#{gameName} AND "REP"."REGION"=#{region} AND
+        "REP"."SERVER" in (${servers})
+        <if test="race != null and race !=''">
+            AND "REP"."GAME_RACE" = #{race}
+        </if>
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName == null or  goodsTypeName == ''">
+            AND "REP"."GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName!='全部'">
+            AND "REP"."GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        AND "REP"."IS_DELETED"='F' AND "REP"."SELLABLE_COUNT"*"REP"."UNIT_PRICE">#{unitPrice} AND "REP"."UNIT_PRICE">0
+        AND s."UNIT_PRICE"="REP"."UNIT_PRICE") t
+        GROUP BY t."LOGIN_ACCOUNT",t."UNIT_PRICE","t"."SERVER",t."GAME_NAME",t."REGION", t."GOODS_TYPE_NAME"
+        ORDER BY "SELLABLE_COUNT" DESC
+    </select>
+
+    <select id="queryServerRepository" parameterType="map" resultMap="BaseResultMap">
+        select "GAME_NAME","REGION","SERVER", "GOODS_TYPE_NAME" from "TBL_GAMEGOLD_REPOSITORY" where
+        "GAME_NAME"=#{gameName} AND "REGION"=#{region}
+        <if test="race != null and race !=''">
+            AND "GAME_RACE" = #{race}
+        </if>
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName == null or  goodsTypeName == ''">
+            AND "GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName != null and  goodsTypeName != '' and goodsTypeName!='全部'">
+            AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        AND "IS_DELETED"='F'
+        GROUP BY "GAME_NAME","REGION","SERVER", "GOODS_TYPE_NAME"
+    </select>
+
+    <!-- 增加库存数量 -->
+    <update id="incrRepositoryCount" parameterType="Map">
+        UPDATE "TBL_GAMEGOLD_REPOSITORY"
+        <set>
+            "SELLABLE_COUNT"="SELLABLE_COUNT"+#{sellableCount},
+            "GOLD_COUNT"="GOLD_COUNT"+#{goldCount}
+            <if test="stockCount != null">
+                ,"STOCK_COUNT" = #{stockCount}
+            </if>
+        </set>
+        WHERE "ID"=#{id}
+    </update>
+
+    <!-- 增加库存数量 -->
+    <update id="updateStockCountById" parameterType="Map">
+        UPDATE "TBL_GAMEGOLD_REPOSITORY"
+        <set>
+            "STOCK_COUNT" = #{stockCount}
+        </set>
+        WHERE "ID"=#{id}
+    </update>
+
+    <!-- 减少库存数量 -->
+    <update id="decrRepositoryCount" parameterType="Map">
+		UPDATE "TBL_GAMEGOLD_REPOSITORY"
+		SET "SELLABLE_COUNT"="SELLABLE_COUNT"-#{sellableCount},
+		"GOLD_COUNT"="GOLD_COUNT"-#{goldCount}
+		WHERE "ID"=#{id}
+	</update>
+
+    <select id="querySellerRepository" parameterType="map" resultMap="SellerResultMap">
+        SELECT T."ID","REP"."LOGIN_ACCOUNT", "REP"."UNIT_PRICE", "REP"."GAME_NAME",
+        "REP"."REGION","REP"."GAME_RACE", "REP"."MONEY_NAME", "REP"."GOODS_TYPE_ID", "REP"."GOODS_TYPE_NAME",
+        T."SORT",T."IS_SHIELDED_TYPE", "REP"."SERVER",T."SELLABLE_COUNT" from(
+        SELECT MIN("REPOSITORY"."ID") "ID","SELL_SETTING"."SORT","SELLER"."IS_SHIELDED_TYPE",SUM("SELLABLE_COUNT")
+        "SELLABLE_COUNT",t_sh_game.min_buy_amount
+        FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        LEFT JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON "SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT"
+        LEFT JOIN t_sh_game ON t_sh_game.game_name="REPOSITORY"."GAME_NAME" AND
+        t_sh_game.goods_type_name="REPOSITORY"."GOODS_TYPE_NAME"
+        JOIN "TBL_GAMEGOLD_SELL_SETTING" "SELL_SETTING"
+        ON ( "SELL_SETTING"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+        "SELL_SETTING"."GAME_NAME"="REPOSITORY"."GAME_NAME" AND
+        "SELL_SETTING"."GOODS_TYPE_NAME"="REPOSITORY"."GOODS_TYPE_NAME" AND "SELL_SETTING"."IS_DELETED"=FALSE )
+        WHERE "REPOSITORY"."IS_DELETED" = false AND "REPOSITORY"."GAME_NAME" =#{gameName}
+        <if test="gameRace != null and gameRace !=''">
+            AND "REPOSITORY"."GAME_RACE" = #{gameRace}
+        </if>
+        <if test="goodsTypeName !=null and goodsTypeName!=''">
+            AND "REPOSITORY"."GOODS_TYPE_NAME"=#{goodsTypeName}
+        </if>
+        AND (CASE WHEN "SELLER"."IS_CROSS" =FALSE THEN "REPOSITORY"."SERVER" =#{server} AND "SELLER"."IS_CROSS" = FALSE
+        WHEN "SELLER"."IS_CROSS" = TRUE THEN "REPOSITORY"."SERVER" IN (${servers}) END
+        )
+        AND "SELLER"."IS_ONLINE" = TRUE AND "REPOSITORY"."UNIT_PRICE" > 0 AND "SELLABLE_COUNT" > t_sh_game.min_count
+        GROUP BY "REPOSITORY"."UNIT_PRICE","REPOSITORY"."LOGIN_ACCOUNT","REPOSITORY"."GAME_NAME",
+        "REPOSITORY"."GAME_RACE","REPOSITORY"."GOODS_TYPE_NAME",
+        "SELL_SETTING"."SORT","SELLER"."IS_SHIELDED_TYPE",t_sh_game.min_buy_amount
+        having SUM("SELLABLE_COUNT")*"UNIT_PRICE">t_sh_game.min_buy_amount) T,"TBL_GAMEGOLD_REPOSITORY" "REP"
+        where T."ID"="REP"."ID"
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY ${ORDERBY}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+        <if test="lockMode != null">
+            FOR UPDATE
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countSellerRepositoryByMap" parameterType="map" resultType="int">
+        SELECT COUNT(1) from(
+        SELECT MIN("REPOSITORY"."ID") "ID","SELL_SETTING"."SORT","SELLER"."IS_SHIELDED_TYPE",SUM("SELLABLE_COUNT")
+        "SELLABLE_COUNT",t_sh_game.min_buy_amount
+        FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        LEFT JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON "SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT"
+        LEFT JOIN t_sh_game ON t_sh_game.game_name="REPOSITORY"."GAME_NAME" AND
+        t_sh_game.goods_type_name="REPOSITORY"."GOODS_TYPE_NAME"
+        JOIN "TBL_GAMEGOLD_SELL_SETTING" "SELL_SETTING"
+        ON ( "SELL_SETTING"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+        "SELL_SETTING"."GAME_NAME"="REPOSITORY"."GAME_NAME" AND
+        "SELL_SETTING"."GOODS_TYPE_NAME"="REPOSITORY"."GOODS_TYPE_NAME" AND "SELL_SETTING"."IS_DELETED"=FALSE )
+        WHERE "REPOSITORY"."IS_DELETED" = false AND "REPOSITORY"."GAME_NAME" =#{gameName}
+        <if test="region != null and region !=''">
+            AND "REPOSITORY"."REGION"=#{region}
+        </if>
+        <if test="servers != null and servers !=''">
+            AND "REPOSITORY"."SERVER" in (${servers})
+        </if>
+        <if test="gameRace != null and gameRace !=''">
+            AND "REPOSITORY"."GAME_RACE" = #{gameRace}
+        </if>
+        <!-- lvchengsheng 增加通货查询 -->
+        <if test="goodsTypeNameList != null">
+            AND "REPOSITORY"."GOODS_TYPE_NAME" in
+            <foreach item="item" collection="goodsTypeNameList" separator="," open="(" close=")" index="">
+                #{item}
+            </foreach>
+        </if>
+        AND "SELLER"."IS_ONLINE" = TRUE AND "REPOSITORY"."UNIT_PRICE" > 0
+        GROUP BY "REPOSITORY"."UNIT_PRICE","REPOSITORY"."LOGIN_ACCOUNT","REPOSITORY"."GAME_NAME", "REPOSITORY"."REGION",
+        "REPOSITORY"."GAME_RACE","REPOSITORY"."GOODS_TYPE_NAME",
+        "SELL_SETTING"."SORT","SELLER"."IS_SHIELDED_TYPE",t_sh_game.min_buy_amount having
+        SUM("SELLABLE_COUNT")*"UNIT_PRICE">t_sh_game.min_buy_amount) T,"TBL_GAMEGOLD_REPOSITORY" "REP"
+        where T."ID"="REP"."ID"
+        <!--SELECT COUNT(1) FROM (select DISTINCT "REP"."UNIT_PRICE","REP"."SERVER","REP"."GAME_NAME","REP"."REGION","REP"."LOGIN_ACCOUNT","s"-->
+        <!--."SELLABLE_COUNT" ,"REP"."MONEY_NAME","REP"."ID"-->
+        <!--from (-->
+        <!--SELECT MIN("ID") "ID",SUM("SELLABLE_COUNT") "SELLABLE_COUNT" FROM-->
+        <!--(SELECT MIN("UNIT_PRICE") "UNIT_PRICE","LOGIN_ACCOUNT"-->
+        <!--FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"-->
+        <!--where "REPOSITORY"."GAME_NAME"=#{gameName}-->
+        <!--<if test="region != null and region !=''">-->
+        <!--AND "REPOSITORY"."REGION"=#{region}-->
+        <!--</if>-->
+        <!--<if test="servers != null and servers !=''">-->
+        <!--AND "REPOSITORY"."SERVER" in (${servers})-->
+        <!--</if>-->
+        <!--<if test="gameRace != null and gameRace !=''">-->
+        <!--AND "REPOSITORY"."GAME_RACE" = #{gameRace}-->
+        <!--</if>-->
+        <!--AND "IS_DELETED"=false AND "SELLABLE_COUNT"*"UNIT_PRICE">#{unitPrice} AND "UNIT_PRICE">0-->
+        <!--GROUP BY "LOGIN_ACCOUNT") t-->
+        <!--left join "TBL_GAMEGOLD_REPOSITORY" "REP" on "REP"."GAME_NAME"=#{gameName}-->
+        <!--<if test="region != null and region !=''">-->
+        <!--AND "REP"."REGION"=#{region}-->
+        <!--</if>-->
+        <!--<if test="servers != null and servers !=''">-->
+        <!--AND "REP"."SERVER" in (${servers})-->
+        <!--</if>-->
+        <!--<if test="gameRace != null and gameRace !=''">-->
+        <!--AND "REP"."GAME_RACE" = #{gameRace}-->
+        <!--</if>-->
+        <!--AND "REP"."IS_DELETED"=false AND "REP"."SELLABLE_COUNT"*"REP"."UNIT_PRICE">#{unitPrice} AND "REP"."UNIT_PRICE">0-->
+        <!--group by "REP"."UNIT_PRICE","REP"."LOGIN_ACCOUNT"-->
+        <!--) s,"TBL_GAMEGOLD_REPOSITORY" "REP","TBL_GAMEGOLD_SELL_SETTING" "SETTING","TBL_GAMEGOLD_SELLER" "SELLER"-->
+        <!--where "REP"."ID"=s."ID" and "REP"."LOGIN_ACCOUNT"="SETTING"."LOGIN_ACCOUNT" and "SETTING"."IS_DELETED"=false-->
+        <!--and "REP"."LOGIN_ACCOUNT"="SELLER"."LOGIN_ACCOUNT" and "SELLER"."IS_ONLINE"=true) p-->
+    </select>
+
+    <select id="selectLowerRepositoryList" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        SELECT * FROM "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        <!--只显示卖家在线的库存-->
+        <if test="isOnline != null and isOnline == true">
+            JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+            "SELLER"."IS_ONLINE"=TRUE)
+        </if>
+        WHERE "REPOSITORY"."IS_DELETED"='F' AND "SELLABLE_COUNT"*"UNIT_PRICE">#{unitPrice} AND "UNIT_PRICE">0
+        <if test="gameName != null and gameName != ''">
+            AND "GAME_NAME" = #{gameName}
+        </if>
+        <if test="region != null and region != ''">
+            AND "REGION" = #{region}
+        </if>
+        <if test="server != null and server != ''">
+            AND "SERVER" = #{server}
+        </if>
+        <if test="backGameName != null and backGameName != ''">
+            AND "GAME_NAME" = #{backGameName}
+        </if>
+        <if test="backRegion != null and backRegion != ''">
+            AND "REGION" = #{backRegion}
+        </if>
+        <if test="backServer != null and backServer != ''">
+            AND "SERVER" = #{backServer}
+        </if>
+        <if test="servers != null and servers != ''">
+            AND "SERVER" IN (${servers})
+        </if>
+        <if test="gameRace != null and gameRace !=''">
+            AND "GAME_RACE" = #{gameRace}
+        </if>
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName==null or goodsTypeName==''">
+            AND "GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName!=null and goodsTypeName!='' and goodsTypeName!='全部'">
+            AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        <if test="orderBy != null and orderBy != ''">
+            ORDER BY ${orderBy}
+        </if>
+    </select>
+
+    <select id="selectLowestList" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.repository.entity.RepositoryInfo">
+        select a."GAME_NAME",a."REGION",a."SERVER",a."GOODS_TYPE_NAME",a."UNIT_PRICE" "UNIT_PRICE",b."UNIT_PRICE"
+        "UNIT_PRICE_SELLER" from
+        (SELECT "GAME_NAME","REGION","SERVER" ,"GOODS_TYPE_NAME",min("UNIT_PRICE") "UNIT_PRICE" FROM
+        "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        <!--只显示卖家在线的库存-->
+        <if test="isOnline != null and isOnline == true">
+            JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+            "SELLER"."IS_ONLINE"=TRUE)
+        </if>
+        WHERE "REPOSITORY"."IS_DELETED"='F' AND "SELLABLE_COUNT"*"UNIT_PRICE">#{minBuyAmount} AND "UNIT_PRICE">0 and
+        "REPOSITORY"."LOGIN_ACCOUNT"!=#{loginAccount}
+        <if test="gameName != null and gameName != ''">
+            AND "GAME_NAME" = #{gameName}
+        </if>
+        <if test="region != null and region != ''">
+            AND "REGION" = #{region}
+        </if>
+        <if test="server != null and server != ''">
+            AND "SERVER" = #{server}
+        </if>
+        <if test="backGameName != null and backGameName != ''">
+            AND "GAME_NAME" = #{backGameName}
+        </if>
+        <if test="backRegion != null and backRegion != ''">
+            AND "REGION" = #{backRegion}
+        </if>
+        <if test="backServer != null and backServer != ''">
+            AND "SERVER" = #{backServer}
+        </if>
+        <if test="servers != null and servers != ''">
+            AND "SERVER" IN (${servers})
+        </if>
+        <if test="gameRace != null and gameRace !=''">
+            AND "GAME_RACE" = #{gameRace}
+        </if>
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName==null or goodsTypeName==''">
+            AND "GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName!=null and goodsTypeName!='' and goodsTypeName!='全部'">
+            AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        group by "GAME_NAME","REGION","SERVER","GOODS_TYPE_NAME"
+        <if test="orderBy != null and orderBy != ''">
+            ORDER BY ${orderBy}
+        </if>) a left join
+        (SELECT "GAME_NAME","REGION","SERVER" ,"GOODS_TYPE_NAME",min("UNIT_PRICE") "UNIT_PRICE" FROM
+        "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        <!--只显示卖家在线的库存-->
+        <if test="isOnline != null and isOnline == true">
+            JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+            "SELLER"."IS_ONLINE"=TRUE)
+        </if>
+        WHERE "REPOSITORY"."IS_DELETED"='F' AND "SELLABLE_COUNT"*"UNIT_PRICE">#{minBuyAmount} AND "UNIT_PRICE">0 and
+        "REPOSITORY"."LOGIN_ACCOUNT"=#{loginAccount}
+        <if test="gameName != null and gameName != ''">
+            AND "GAME_NAME" = #{gameName}
+        </if>
+        <if test="region != null and region != ''">
+            AND "REGION" = #{region}
+        </if>
+        <if test="server != null and server != ''">
+            AND "SERVER" = #{server}
+        </if>
+        <if test="backGameName != null and backGameName != ''">
+            AND "GAME_NAME" = #{backGameName}
+        </if>
+        <if test="backRegion != null and backRegion != ''">
+            AND "REGION" = #{backRegion}
+        </if>
+        <if test="backServer != null and backServer != ''">
+            AND "SERVER" = #{backServer}
+        </if>
+        <if test="servers != null and servers != ''">
+            AND "SERVER" IN (${servers})
+        </if>
+        <if test="gameRace != null and gameRace !=''">
+            AND "GAME_RACE" = #{gameRace}
+        </if>
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName==null or goodsTypeName==''">
+            AND "GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName!=null and goodsTypeName!='' and goodsTypeName!='全部'">
+            AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        group by "GAME_NAME","REGION","SERVER","GOODS_TYPE_NAME"
+        <if test="orderBy != null and orderBy != ''">
+            ORDER BY ${orderBy}
+        </if>) b
+        on a."GAME_NAME"=b."GAME_NAME" and a."REGION"=b."REGION" and a."SERVER"=b."SERVER" and
+        a."GOODS_TYPE_NAME"=b."GOODS_TYPE_NAME"
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <!-- 查询符合条件的实体对象 -->
+    <select id="countLowestList" parameterType="map" resultType="int">
+        SELECT COUNT(1) FROM (SELECT "GAME_NAME","REGION","SERVER","GOODS_TYPE_NAME",min("UNIT_PRICE") "UNIT_PRICE" FROM
+        "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        <!--只显示卖家在线的库存-->
+        <if test="isOnline != null and isOnline == true">
+            JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+            "SELLER"."IS_ONLINE"=TRUE)
+        </if>
+        WHERE "REPOSITORY"."IS_DELETED"='F' AND "SELLABLE_COUNT"*"UNIT_PRICE">#{minBuyAmount} AND "UNIT_PRICE">0 and
+        "REPOSITORY"."LOGIN_ACCOUNT"!=#{loginAccount}
+        <if test="gameName != null and gameName != ''">
+            AND "GAME_NAME" = #{gameName}
+        </if>
+        <if test="region != null and region != ''">
+            AND "REGION" = #{region}
+        </if>
+        <if test="server != null and server != ''">
+            AND "SERVER" = #{server}
+        </if>
+        <if test="backGameName != null and backGameName != ''">
+            AND "GAME_NAME" = #{backGameName}
+        </if>
+        <if test="backRegion != null and backRegion != ''">
+            AND "REGION" = #{backRegion}
+        </if>
+        <if test="backServer != null and backServer != ''">
+            AND "SERVER" = #{backServer}
+        </if>
+        <if test="servers != null and servers != ''">
+            AND "SERVER" IN (${servers})
+        </if>
+        <if test="gameRace != null and gameRace !=''">
+            AND "GAME_RACE" = #{gameRace}
+        </if>
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName==null or goodsTypeName==''">
+            AND "GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName!=null and goodsTypeName!='' and goodsTypeName!='全部'">
+            AND "GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        group by "GAME_NAME","REGION","SERVER","GOODS_TYPE_NAME") t
+    </select>
+
+    <!--店铺卖家平均价查询-->
+    <select id="querySellerAvgPriceRepository" parameterType="map" resultMap="SellerResultMap">
+        select "GAME_NAME", "REGION","SERVER","GAME_RACE","GOODS_TYPE_NAME",avg("UNIT_PRICE") "UNIT_PRICE"
+        from (
+        select a."GAME_NAME", a."REGION",a."SERVER",a."GAME_RACE",a."GOODS_TYPE_NAME",a."UNIT_PRICE", ROW_NUMBER()
+        OVER(partition by a."GAME_NAME", a."REGION",a."SERVER" order by a."UNIT_PRICE" ) num
+        FROM "TBL_GAMEGOLD_REPOSITORY" a
+        LEFT JOIN "TBL_GAMEGOLD_SELLER" b
+        ON b."LOGIN_ACCOUNT"=a."LOGIN_ACCOUNT"
+        JOIN "TBL_GAMEGOLD_SELL_SETTING" c
+        ON ( c."LOGIN_ACCOUNT"=a."LOGIN_ACCOUNT" AND c."GAME_NAME"=a."GAME_NAME" AND
+        c."GOODS_TYPE_NAME"=a."GOODS_TYPE_NAME" AND c."IS_DELETED"=FALSE )
+        WHERE a."IS_DELETED" = false
+        AND b."IS_ONLINE" = TRUE
+        AND "SELLABLE_COUNT"*"UNIT_PRICE">#{unitPrice}
+        AND a."UNIT_PRICE" > 0
+        <if test="gameName != null and gameName != ''">
+            and a."GAME_NAME"=#{gameName}
+        </if>
+        <if test="region != null and region != ''">
+            AND a."REGION" = #{region}
+        </if>
+        <if test="servers != null and servers !=''">
+            AND a."SERVER" in (${servers})
+        </if>
+        <if test="gameRace != null and gameRace !=''">
+            AND a."GAME_RACE" = #{gameRace}
+        </if>
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName==null or goodsTypeName==''">
+            AND a."GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName!=null and goodsTypeName!='' and goodsTypeName!='全部'">
+            AND a."GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        GROUP BY a."UNIT_PRICE",a."LOGIN_ACCOUNT",a."GAME_NAME", a."REGION",a."SERVER",
+        a."GAME_RACE",a."GOODS_TYPE_NAME", c."SORT",b."IS_SHIELDED_TYPE"
+        ) a
+        <![CDATA[
+			where num<=3
+		]]>
+        group by "GAME_NAME", "REGION","SERVER","GAME_RACE","GOODS_TYPE_NAME"
+    </select>
+
+    <select id="selectMINunitPriceByOtherGame" parameterType="map" resultMap="BaseResultMap">
+        select * from "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+        "SELLER"."IS_ONLINE"=TRUE)
+        where "REPOSITORY"."REGION" = #{region} and "REPOSITORY"."GAME_NAME" = #{gameName} and "REPOSITORY"."SERVER" IN
+        (${server}) AND "REPOSITORY"."UNIT_PRICE" >= 0 AND "REPOSITORY"."IS_DELETED"='F'
+        <!-- lvshuyan 增加通货查询 -->
+        <if test="goodsTypeName==null or goodsTypeName==''">
+            AND "REPOSITORY"."GOODS_TYPE_NAME" = '游戏币'
+        </if>
+        <if test="goodsTypeName!=null and goodsTypeName!='' and goodsTypeName!='全部'">
+            AND "REPOSITORY"."GOODS_TYPE_NAME" = #{goodsTypeName}
+        </if>
+        <if test="gameRace != null and game!=''">
+            and "REPOSITORY"."GAME_RACE"=#{gameRace}
+        </if>
+        <if test="sellableCount != null and sellableCount != 0">
+            and "REPOSITORY"."SELLABLE_COUNT" >= #{sellableCount}
+        </if>
+        ORDER BY "REPOSITORY"."UNIT_PRICE" ASC , "REPOSITORY"."SELLABLE_COUNT" DESC
+        <if test="limit != 2">
+            LIMIT 1
+        </if>
+        <if test="limit == 2">
+            LIMIT 2
+        </if>
+    </select>
+
+    <select id="selectMINunitPriceByOtherGameForCross" parameterType="map" resultMap="BaseResultMap">
+        select "UNIT_PRICE",sum("REPOSITORY"."SELLABLE_COUNT")  "SELLABLE_COUNT","REPOSITORY"."MONEY_NAME" from "TBL_GAMEGOLD_REPOSITORY" "REPOSITORY"
+        JOIN "TBL_GAMEGOLD_SELLER" "SELLER" ON ("SELLER"."LOGIN_ACCOUNT"="REPOSITORY"."LOGIN_ACCOUNT" AND
+        "SELLER"."IS_ONLINE"=TRUE)
+        where "REPOSITORY"."GAME_NAME" = #{gameName} AND "REPOSITORY"."UNIT_PRICE" >= 0 AND
+        "REPOSITORY"."IS_DELETED"='F'
+        AND "REPOSITORY"."GOODS_TYPE_NAME" = '游戏币'
+        /*合区合服配置修改添加 */
+        AND
+        (case when "SELLER"."IS_CROSS"=false then
+        "REPOSITORY"."REGION" = #{region} AND "REPOSITORY"."SERVER" =#{singleServer} and "SELLER"."IS_CROSS"=false when
+        "SELLER"."IS_CROSS"=true then "REPOSITORY"."SERVER" in (${moreServer}) and "SELLER"."IS_CROSS"=true end)
+
+        <if test="gameRace != null and game!=''">
+            and "REPOSITORY"."GAME_RACE"=#{gameRace}
+        </if>
+        <if test="sellableCount != null and sellableCount != 0">
+            and "REPOSITORY"."SELLABLE_COUNT" >= #{sellableCount}
+        </if>
+        GROUP BY "REPOSITORY"."UNIT_PRICE","REPOSITORY"."LOGIN_ACCOUNT","REPOSITORY"."MONEY_NAME"
+        ORDER BY "REPOSITORY"."UNIT_PRICE" ASC , "SELLABLE_COUNT" DESC
+        <if test="limit != 2">
+            LIMIT 1
+        </if>
+        <if test="limit == 2">
+            LIMIT 2
+        </if>
+    </select>
+
+
+    <update id="updateRepositoryCountBySync" parameterType="map">
+        UPDATE "TBL_GAMEGOLD_REPOSITORY"
+        <set>
+            <if test="modifySellableCount != null">
+                <![CDATA[
+				    "SELLABLE_COUNT" = (CASE WHEN  COALESCE("SELLABLE_COUNT",0)+#{modifySellableCount} < 0 THEN 0 else COALESCE("SELLABLE_COUNT",0)+#{modifySellableCount} end)
+				]]>
+                ,
+            </if>
+            <if test="modifyGoldCount != null">
+                <![CDATA[
+				    "GOLD_COUNT" = (CASE WHEN  COALESCE("GOLD_COUNT",0)+#{modifyGoldCount} < 0 THEN 0 else COALESCE("GOLD_COUNT",0)+#{modifyGoldCount} end)
+				]]>
+                ,
+            </if>
+            <if test="sellableCount != null">
+                "SELLABLE_COUNT"=#{sellableCount},
+            </if>
+            <if test="goldCount != null">
+                "GOLD_COUNT"=#{goldCount},
+            </if>
+            <if test="stockCount != null">
+                "STOCK_COUNT" = #{stockCount},
+            </if>
+            <if test="lastUpdateTime != null">
+                "LAST_UPDATE_TIME"= #{lastUpdateTime},
+            </if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="id != null">
+                AND "ID" = #{id}
+            </if>
+            <if test="loginAccount != null and loginAccount != ''">
+                AND "LOGIN_ACCOUNT" = #{loginAccount}
+            </if>
+            <if test="accountUid != null and accountUid != ''">
+                AND "ACCOUNT_UID" = #{accountUid}
+            </if>
+            <if test="gameAccount != null and gameAccount != ''">
+                AND "GAME_ACCOUNT" = #{gameAccount}
+            </if>
+            <if test="gameName != null and gameName != ''">
+                AND "GAME_NAME" = #{gameName}
+            </if>
+            <if test="region != null and region != ''">
+                AND "REGION" = #{region}
+            </if>
+            <if test="server != null and server != ''">
+                AND "SERVER" = #{server}
+            </if>
+            <if test="gameRace != null and gameRace != ''">
+                AND "GAME_RACE"= #{gameRace}
+            </if>
+            <if test="sellerGameRole != null and sellerGameRole != ''">
+                AND "SELLER_GAME_ROLE" = #{sellerGameRole}
+            </if>
+            <if test="goodsTypeName!=null and goodsTypeName!=''">
+                AND "GOODS_TYPE_NAME"=#{goodsTypeName}
+            </if>
+            <if test="isDeleted != null">
+                AND "IS_DELETED"= #{isDeleted}
+            </if>
+        </trim>
+    </update>
+</mapper>

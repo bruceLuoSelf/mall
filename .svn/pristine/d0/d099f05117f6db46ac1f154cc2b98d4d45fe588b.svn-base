@@ -1,0 +1,367 @@
+/************************************************************************************
+ *  Copyright 2014 WZITech Corporation. All rights reserved.
+ *
+ *	模	块：		GoodsInfoDBDAOImpl
+ *	包	名：		com.wzitech.gamegold.goodsmgmt.dao.impl
+ *	项目名称：	gamegold-goods
+ *	作	者：		SunChengfei
+ *	创建时间：	2014-2-15
+ *	描	述：		
+ *	更新纪录：	1. SunChengfei 创建于 2014-2-15 上午11:42:01
+ *
+ ************************************************************************************/
+package com.wzitech.gamegold.repository.dao.impl;
+
+import com.google.common.collect.Maps;
+import com.wzitech.chaos.framework.server.dataaccess.mybatis.AbstractMyBatisDAO;
+import com.wzitech.chaos.framework.server.dataaccess.pagination.GenericPage;
+import com.wzitech.gamegold.common.entity.SortField;
+import com.wzitech.gamegold.repository.dao.IRepositoryDBDAO;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.apache.ibatis.session.RowBounds;
+import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author SunChengfei
+ */
+@Repository
+public class RepositoryDBDAOImpl extends AbstractMyBatisDAO<RepositoryInfo, Long> implements IRepositoryDBDAO {
+
+    @Override
+    public List<RepositoryInfo> queryGameInfo(String loginAccount, String uid) {
+        if (StringUtils.isEmpty(loginAccount) || StringUtils.isEmpty(uid)) {
+            return null;
+        }
+        String sql = "SELECT \"GAME_NAME\",\"GAME_ACCOUNT\",\"PASSPOD_URL\" FROM \"TBL_GAMEGOLD_REPOSITORY\""
+                + " WHERE \"LOGIN_ACCOUNT\"= '" + loginAccount + "' AND \"ACCOUNT_UID\" = '" + uid
+                + "' AND \"IS_DELETED\" = false GROUP BY \"GAME_NAME\",\"GAME_ACCOUNT\",\"PASSPOD_URL\"";
+        return selectByNativeSql(sql);
+    }
+
+    @Override
+    public long selectGoldCount(Map<String, Object> queryMap) {
+        Validate.notEmpty(queryMap);
+        Double sum = this.getSqlSession().selectOne(this.mapperNamespace + ".queryGoldCount", queryMap);
+        return (sum == null) ? 0 : sum.longValue();
+    }
+
+    /**
+     * 查询库存
+     *
+     * @param queryParam
+     * @param sortFields
+     * @return
+     */
+    public List<RepositoryInfo> selectRepositoryList(Map<String, Object> queryParam, List<SortField> sortFields) {
+        if (null == queryParam) {
+            queryParam = new HashMap<String, Object>();
+        }
+
+        String orderByStr = "";
+        for (int i = 0, j = sortFields.size(); i < j; i++) {
+            SortField field = sortFields.get(i);
+            orderByStr += "\"" + field.getField() + "\" " + field.getSort();
+            if (i != (j - 1)) {
+                orderByStr += ",";
+            }
+        }
+        queryParam.put("orderBy", orderByStr);
+
+        return this.getSqlSession().selectList(this.mapperNamespace + ".selectRepositoryList", queryParam);
+    }
+
+    /**
+     * 查询库存
+     *
+     * @param queryParam
+     * @param sortFields
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    public List<RepositoryInfo> selectRepositoryList(Map<String, Object> queryParam, List<SortField> sortFields, int start, int pageSize) {
+        if (null == queryParam) {
+            queryParam = new HashMap<String, Object>();
+        }
+
+        String orderByStr = "";
+        for (int i = 0, j = sortFields.size(); i < j; i++) {
+            SortField field = sortFields.get(i);
+            orderByStr += "\"" + field.getField() + "\" " + field.getSort();
+            if (i != (j - 1)) {
+                orderByStr += ",";
+            }
+        }
+        queryParam.put("orderBy", orderByStr);
+
+        return this.getSqlSession().selectList(this.mapperNamespace + ".selectRepositoryList", queryParam, new RowBounds(start, pageSize));
+    }
+
+    /**
+     * 分页查询库存
+     *
+     * @param paramMap
+     * @param sortFields
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    public GenericPage<RepositoryInfo> queryPageRepository(Map<String, Object> paramMap, List<SortField> sortFields,
+                                                           int start, int pageSize) {
+        if (null == paramMap) {
+            paramMap = new HashMap<String, Object>();
+        }
+
+        //检查分页参数
+        if (pageSize < 1) {
+            throw new IllegalArgumentException("分页pageSize参数必须大于1");
+        }
+
+        if (start < 0) {
+            throw new IllegalArgumentException("分页startIndex参数必须大于0");
+        }
+
+        String orderByStr = "";
+        for (int i = 0, j = sortFields.size(); i < j; i++) {
+            SortField field = sortFields.get(i);
+            orderByStr += "\"" + field.getField() + "\" " + field.getSort();
+            if (i != (j - 1)) {
+                orderByStr += ",";
+            }
+        }
+        paramMap.put("orderBy", orderByStr);
+
+        int totalSize = countByMap(paramMap);
+
+        // 如果数据Count为0，则直接返回
+        if (totalSize == 0) {
+            return new GenericPage<RepositoryInfo>(start, totalSize, pageSize, null);
+        }
+
+        List<RepositoryInfo> pagedData = this.getSqlSession().selectList(this.mapperNamespace + ".selectRepositoryList",
+                paramMap, new RowBounds(start, pageSize));
+
+        return new GenericPage<RepositoryInfo>(start, totalSize, pageSize, pagedData);
+    }
+
+    /**
+     * 对卖家库存单价进行分组，按单价由低到高，库存由多到少排序
+     */
+    @Override
+    public List<RepositoryInfo> queryGroupRepository(Map<String, Object> queryParam, int start, int pageSize) {
+        return this.getSqlSession().selectList(this.mapperNamespace + ".queryGroupRepository", queryParam, new RowBounds(start, pageSize));
+    }
+
+
+    /**
+     * 此查询仅适用于地下城与勇士  金币 跨区跨服查询 参数经过processRepositoryTransfer 方法处理 query有变化
+     *  去除了server servers唯一性限制 跨区合服需要在商城开启服务才可 对应查询
+     */
+    @Override
+    public List<RepositoryInfo> queryMinUnitPriceRepository(Map<String, Object> query, int start, int pageSize) {
+        return this.getSqlSession().selectList(this.mapperNamespace + ".selectMinPriceRepositoryFrom", query, new RowBounds(start, pageSize));
+    }
+
+    public List<RepositoryInfo> queryLowerPriceList(Map<String, Object> queryParam) {
+        return this.getSqlSession().selectList(this.mapperNamespace + ".queryLowerPriceRepository", queryParam);
+    }
+
+    public List<RepositoryInfo> queryServerList(Map<String, Object> queryParam) {
+        return this.getSqlSession().selectList(this.mapperNamespace + ".queryServerRepository", queryParam);
+    }
+
+    /**
+     * 删除卖家库存
+     *
+     * @param map
+     */
+    @Override
+    public void deleteSellerRepository(Map<String, Object> map) {
+        this.getSqlSession().delete(this.getMapperNamespace() + ".deleteSellerRepository", map);
+    }
+
+    /**
+     * 增加库存数量
+     *
+     * @param id    库存ID
+     * @param count
+     */
+    @Override
+    public void incrRepositoryCount(Long id, Long count , Long stockCount) {
+        Map<String, Object> map = Maps.newHashMap();
+        if(stockCount != null){
+            map.put("stockCount", stockCount);
+        }
+        map.put("id", id);
+        map.put("sellableCount", count);
+        map.put("goldCount", count);
+        this.getSqlSession().update(this.getMapperNamespace() + ".incrRepositoryCount", map);
+    }
+
+    /**
+     * 增加库存数量
+     *
+     * @param id    库存ID
+     */
+    @Override
+    public void updateStockCountById(Long id, Long stockCount) {
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("stockCount", stockCount);
+        map.put("id", id);
+        this.getSqlSession().update(this.getMapperNamespace() + ".updateStockCountById", map);
+    }
+
+    /**
+     * 减少库存数量
+     *
+     * @param id
+     * @param count
+     */
+    @Override
+    public void decrRepositoryCount(Long id, Long count) {
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("id", id);
+        map.put("sellableCount", count);
+        map.put("goldCount", count);
+        this.getSqlSession().update(this.getMapperNamespace() + ".decrRepositoryCount", map);
+    }
+
+    /**
+     * 查询营业的店铺的库存列表信息
+     *
+     * @param queryParam
+     * @return
+     */
+    @Override
+    public List<RepositoryInfo> querySellerRepositoryList(Map<String, Object> queryParam) {
+        return this.getSqlSession().selectList(this.mapperNamespace + ".querySellerRepository", queryParam);
+    }
+
+    /**
+     * 营业的店铺的库存列表总数
+     *
+     * @param queryParam
+     * @return
+     */
+    @Override
+    public int countSellerRepository(Map<String, Object> queryParam) {
+        return (Integer) this.getSqlSession().selectOne(this.mapperNamespace + ".countSellerRepositoryByMap", queryParam);
+    }
+
+    /**
+     * 前台最低价格列表
+     *
+     * @param queryParam
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public List<RepositoryInfo> queryPriceRepository(Map<String, Object> queryParam, List<SortField> sortFields, int start, int pageSize) {
+        if (null == queryParam) {
+            queryParam = new HashMap<String, Object>();
+        }
+
+        String orderByStr = "";
+        for (int i = 0, j = sortFields.size(); i < j; i++) {
+            SortField field = sortFields.get(i);
+            orderByStr += "\"" + field.getField() + "\" " + field.getSort();
+            if (i != (j - 1)) {
+                orderByStr += ",";
+            }
+        }
+        queryParam.put("orderBy", orderByStr);
+        return this.getSqlSession().selectList(this.mapperNamespace + ".selectLowerRepositoryList", queryParam, new RowBounds(start, pageSize));
+    }
+
+    /**
+     * 更新卖家库存
+     *
+     * @param repositoryInfo
+     * @return
+     */
+    @Override
+    public int updateSellerRepository(RepositoryInfo repositoryInfo) {
+        return getSqlSession().update(this.getMapperNamespace() + ".updateRepository", repositoryInfo);
+    }
+
+    /**
+     * 分页获取所有区服的最低价
+     *
+     * @param queryParam
+     * @param sortFields
+     * @param start
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public GenericPage<RepositoryInfo> selectLowestList(Map<String, Object> queryParam, List<SortField> sortFields, int start, int pageSize) {
+        if (null == queryParam) {
+            queryParam = new HashMap<String, Object>();
+        }
+
+        String orderByStr = "";
+        for (int i = 0, j = sortFields.size(); i < j; i++) {
+            SortField field = sortFields.get(i);
+            orderByStr += "\"" + field.getField() + "\" " + field.getSort();
+            if (i != (j - 1)) {
+                orderByStr += ",";
+            }
+        }
+        queryParam.put("orderBy", orderByStr);
+        int totalSize = countLowestListByMap(queryParam);
+
+        // 如果数据Count为0，则直接返回
+        if (totalSize == 0) {
+            return new GenericPage<RepositoryInfo>(start, totalSize, pageSize, null);
+        }
+
+        List<RepositoryInfo> pagedData = this.getSqlSession().selectList(this.mapperNamespace + ".selectLowestList",
+                queryParam, new RowBounds(start, pageSize));
+
+        return new GenericPage<RepositoryInfo>(start, totalSize, pageSize, pagedData);
+    }
+
+    public int countLowestListByMap(Map<String, Object> queryParam) {
+        return (Integer) this.getSqlSession().selectOne(this.mapperNamespace + ".countLowestList", queryParam);
+    }
+
+    /**
+     * 查询所有符合条件的店铺卖家平均价
+     *
+     * @param queryParam
+     * @return
+     */
+    @Override
+    public List<RepositoryInfo> querySellerAvgPriceRepository(Map<String, Object> queryParam) {
+        return this.getSqlSession().selectList(this.mapperNamespace + ".querySellerAvgPriceRepository", queryParam);
+    }
+
+    @Override
+    public List<RepositoryInfo> selectMINunitPriceByOtherGame(Map<String, Object> queryParam) {
+        return this.getSqlSession().selectList(this.mapperNamespace + ".selectMINunitPriceByOtherGame", queryParam);
+    }
+
+    @Override
+    public List<RepositoryInfo> selectMINunitPriceByOtherGameForCross(Map<String, Object> queryParam) {
+        return this.getSqlSession().selectList(this.mapperNamespace + ".selectMINunitPriceByOtherGameForCross", queryParam);
+    }
+
+    @Override
+    public int updateRepositoryCountBySync(Map<String, Object> queryParam) {
+        return this.getSqlSession().update(this.mapperNamespace + ".updateRepositoryCountBySync", queryParam);
+    }
+
+    @Override
+    public long selectSalableCount(Map<String, Object> queryMap) {
+        Validate.notEmpty(queryMap);
+        Long count = this.getSqlSession().selectOne(this.mapperNamespace + ".selectSalableCount", queryMap);
+        return count == null ? 0 : count;
+    }
+}

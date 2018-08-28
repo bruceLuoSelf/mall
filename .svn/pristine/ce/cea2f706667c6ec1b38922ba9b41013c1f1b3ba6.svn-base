@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.MessageRule">
+    <resultMap id="BaseResultMap" type="com.wzitech.gamegold.order.entity.MessageRule">
+        <result column="ID" property="id" jdbcType="NUMERIC" javaType="long"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="GAME_NAME" property="gameName" jdbcType="VARCHAR"/>
+        <result column="ORDER_STATUS" property="orderStatus" jdbcType="NUMERIC"/>
+        <result column="DELAY" property="delay" jdbcType="NUMERIC"/>
+        <result column="PERIOD" property="period" jdbcType="SMALLINT"/>
+        <result column="CONTENT" property="content" jdbcType="VARCHAR"/>
+        <result column="LAST_UPDATE_TIME" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
+        <result column="ENABLED" property="enabled" jdbcType="BOOLEAN"/>
+
+        <association property="operator" select="com.wzitech.gamegold.repository.entity.SellerInfo.selectServicer"
+                     column="OPERATOR_ID" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.wzitech.gamegold.order.entity.MessageRule">
+        INSERT INTO "TBL_GAMEGOLD_MESSAGE_RULE"("NAME","GAME_NAME","ORDER_STATUS","DELAY","PERIOD","CONTENT","OPERATOR_ID","LAST_UPDATE_TIME","ENABLED")
+        VALUES(#{name},#{gameName},#{orderStatus},#{delay},#{period},#{content},#{operator.id},#{lastUpdateTime}, #{enabled})
+        <selectKey order="AFTER" keyProperty="id" resultType="long">
+            SELECT currval('seq_gamegold_message_rule') as id
+        </selectKey>
+    </insert>
+
+    <select id="selectById" parameterType="Long" resultMap="BaseResultMap">
+      SELECT * FROM "TBL_GAMEGOLD_MESSAGE_RULE" WHERE "ID"=#{id}
+    </select>
+
+    <delete id="batchDeleteByIds" parameterType="list">
+        <foreach collection="list" item="item">
+            DELETE FROM "TBL_GAMEGOLD_MESSAGE_RULE" WHERE "ID"=#{item}
+        </foreach>
+    </delete>
+
+    <update id="batchUpdate" parameterType="com.wzitech.gamegold.order.entity.MessageRule">
+        <foreach collection="list" item="item" index="index" separator=";">
+        UPDATE "TBL_GAMEGOLD_MESSAGE_RULE"
+        <set>
+            <if test="item.name != null">
+                "NAME"=#{item.name},
+            </if>
+            <if test="item.gameName != null">
+                "GAME_NAME"=#{item.gameName},
+            </if>
+            <if test="item.orderStatus != null">
+                "ORDER_STATUS"=#{item.orderStatus},
+            </if>
+            <if test="item.delay != null">
+                "DELAY"=#{item.delay},
+            </if>
+            <if test="item.period != null">
+                "PERIOD"=#{item.period},
+            </if>
+            <if test="item.content != null">
+                "CONTENT"=#{item.content},
+            </if>
+            <if test="item.operator != null">
+                "OPERATOR_ID"=#{item.operator.id},
+            </if>
+            <if test="item.lastUpdateTime != null">
+                "LAST_UPDATE_TIME"=#{item.lastUpdateTime},
+            </if>
+            <if test="item.enabled != null">
+                "ENABLED"=#{item.enabled}
+            </if>
+        </set>
+        WHERE "ID" = #{item.id}
+        </foreach>
+    </update>
+
+    <update id="enabled" parameterType="Long">
+        UPDATE "TBL_GAMEGOLD_MESSAGE_RULE"
+        SET "ENABLED"=TRUE
+        WHERE "ID"=#{id}
+    </update>
+
+    <update id="disabled" parameterType="Long">
+        UPDATE "TBL_GAMEGOLD_MESSAGE_RULE"
+        SET "ENABLED"=FALSE
+        WHERE "ID"=#{id}
+    </update>
+
+    <sql id="selectSql" >
+      <where>
+          <if test="gameName != null">
+            "GAME_NAME" LIKE '%'||#{gameName}||'%'
+          </if>
+          <if test="enabled != null">
+              "ENABLED" = #{enabled}
+          </if>
+      </where>
+    </sql>
+
+    <select id="selectByMap" parameterType="map" resultMap="BaseResultMap"
+            resultType="com.wzitech.gamegold.order.entity.MessageRule">
+        SELECT * FROM "TBL_GAMEGOLD_MESSAGE_RULE" "RULE"
+        <include refid="selectSql"/>
+        <if test="ORDERBY != null and ORDERBY != ''">
+            ORDER BY "${ORDERBY}"
+        </if>
+        <if test="ORDER != null and ORDER != ''">
+            ${ORDER}
+        </if>
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+        <if test="start != null">
+            OFFSET #{start}
+        </if>
+    </select>
+
+    <select id="countByMap" parameterType="string" resultType="int">
+        SELECT COUNT(1) FROM "TBL_GAMEGOLD_MESSAGE_RULE" "ORDERS"
+        <include refid="selectSql"/>
+    </select>
+</mapper>

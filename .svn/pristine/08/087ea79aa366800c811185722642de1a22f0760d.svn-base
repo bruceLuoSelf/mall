@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.entity.ServiceEvaluateStatistics">
+	<resultMap id="BaseResultMap"
+		type="com.wzitech.gamegold.order.entity.ServiceEvaluateStatistics">
+		<result column="ID" property="id" jdbcType="NUMERIC" javaType="long" />
+		<result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+		<result column="TOTAL_COUNT" property="totalCount" jdbcType="NUMERIC" />
+		<result column="GOOD_RATE" property="goodRate" jdbcType="NUMERIC"/>
+		<result column="VERY_GOOD_COUNT" property="veryGoodCount" jdbcType="NUMERIC" />
+		<result column="GOOD_COUNT" property="goodCount" jdbcType="NUMERIC" />
+		<result column="NORMAL_COUNT" property="normalCount" jdbcType="NUMERIC" />
+		<result column="YAWP_COUNT" property="yawpCount" jdbcType="NUMERIC" />
+		<result column="VERY_YAWP_COUNT" property="veryYawpCount" jdbcType="NUMERIC" />
+		<result column="DEFAULT_COUNT" property="defaultCount" jdbcType="NUMERIC" />
+	</resultMap>
+
+	<!-- 新增记录 -->
+	<insert id="insert"
+		parameterType="com.wzitech.gamegold.order.entity.ServiceEvaluateStatistics"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO "TBL_GAMEGOLD_SERVICE_EVALUATE_STATISTICS"("ID", "TOTAL_COUNT", "GOOD_RATE", "VERY_GOOD_COUNT", "GOOD_COUNT", "NORMAL_COUNT", "YAWP_COUNT", "VERY_YAWP_COUNT","DEFAULT_COUNT")
+		VALUES(#{id}, #{totalCount}, #{goodRate}, #{veryGoodCount},#{goodCount}, #{normalCount}, #{yawpCount}, #{veryYawpCount}, #{defaultCount})
+	</insert>
+
+	<update id="batchUpdate" parameterType="com.wzitech.gamegold.order.entity.ServiceEvaluateStatistics" >
+		<foreach collection="list" item="item" index="index" separator=";">
+			UPDATE "TBL_GAMEGOLD_SERVICE_EVALUATE_STATISTICS"
+			<set>
+				<if test="item.totalCount != null">
+					"TOTAL_COUNT" = #{item.totalCount},
+				</if>
+				<if test="item.goodRate != null">
+					"GOOD_RATE" = #{item.goodRate},
+				</if>
+				<if test="item.veryGoodCount != null">
+					"VERY_GOOD_COUNT" = #{item.veryGoodCount},
+				</if>
+				<if test="item.goodCount != null">
+					"GOOD_COUNT" = #{item.goodCount},
+				</if>
+				<if test="item.normalCount != null">
+					"NORMAL_COUNT" = #{item.normalCount},
+				</if>
+				<if test="item.yawpCount != null">
+					"YAWP_COUNT" = #{item.yawpCount},
+				</if>
+				<if test="item.veryYawpCount != null">
+					"VERY_YAWP_COUNT" = #{item.veryYawpCount},
+				</if>
+			</set>
+			<where>
+				<if test="item.id !=null">
+					"ID" = #{item.id}
+				</if>
+			</where>
+		</foreach>
+	</update>
+
+	<sql id="selectSql">
+		<where>
+			<if test="id != null">
+				"ID"=#{id}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="selectByMap" parameterType="map" resultMap="BaseResultMap" >
+		SELECT * FROM "TBL_GAMEGOLD_SERVICE_EVALUATE_STATISTICS"
+		<include refid="selectSql"/>
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询符合条件的实体对象 -->
+	<select id="countByMap" parameterType="map" resultType="int">
+		SELECT COUNT(1) FROM "TBL_GAMEGOLD_SERVICE_EVALUATE_STATISTICS"
+		<include refid="selectSql"/>
+	</select>
+
+	<!--删除系统中已经被删除的客服账号的评价记录-->
+	<delete id="deleteNotExistServices">
+		DELETE FROM "TBL_GAMEGOLD_SERVICE_EVALUATE_STATISTICS" A
+		WHERE NOT EXISTS(
+			SELECT 1 FROM "TBL_GAMEGOLD_USERS" B WHERE B."ID"=A."ID"
+		)
+	</delete>
+
+	<select id="selectById" parameterType="long" resultMap="BaseResultMap">
+		SELECT * FROM "TBL_GAMEGOLD_SERVICE_EVALUATE_STATISTICS" WHERE "ID" = #{id}
+	</select>
+</mapper>

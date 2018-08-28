@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>分仓库存接口</title>
+    <script src="jquery.js"></script>
+    <script src="jquery.json-2.4.min.js"></script>
+</head>
+<body>
+<script>
+    var request = {
+        order_id: "SH1603280000100",
+        role_name: "测试111",
+        sign: "a079d4a959f82eafe524a03112b4afb4"
+    };
+    $.ajax({
+        type: "post",
+        url: "../services/repository/update",
+        data: $.toJSON(request),
+        contentType: "application/json;charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        },
+        error: function (resp) {
+            console.log(resp);
+        }
+    });
+    $.ajax({
+        type: "get",
+        url: "../services/repository/changeState",
+        data: request,
+        contentType: "application/json;charset=UTF-8",
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function (resp) {
+            console.log(resp);
+        },
+        error: function (resp) {
+            console.log(resp);
+        }
+    });
+</script>
+</body>
+</html>

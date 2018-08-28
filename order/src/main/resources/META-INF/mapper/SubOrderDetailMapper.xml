@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzitech.gamegold.order.dto.SubOrderDetailDTO">
+	<resultMap id="SubOrderDetailResultMap" type="com.wzitech.gamegold.order.dto.SubOrderDetailDTO">
+		<id column="ID" property="id"/>
+		<result column="ORDER_ID" property="orderId" />
+		<result column="GOODS_CAT" property="goodsCat" />
+		<result column="TITLE" property="title" />
+		<result column="TRADE_TYPE" property="tradeType" />
+		<result column="CONFIG_GOLD_COUNT" property="goldCount" />
+		<result column="ORDER_UNIT_PRICE" property="orderUnitPrice" />
+		<result column="REPOSITORY_UNIT_PRICE" property="repositoryUnitPrice" />
+		<result column="UNIT_PRICE" property="unitPrice" />
+		<result column="TOTAL_PRICE" property="totalPrice" />
+		<result column="TRADER_ID" property="traderId" />
+		<result column="INCOME" property="income" />
+		<result column="COMMISSION" property="commission" />
+		<result column="BALANCE" property="balance" />
+		<result column="IS_DELETED" property="isDeleted" />
+		<result column="STATE" property="state" />
+		<result column="IS_CONSIGNMENT" property="isConsignment" />
+		<result column="CONFIG_TIME" property="configTime" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="PAY_TIME" property="payTime" />
+		<result column="END_TIME" property="endTime" />
+		<result column="PLACE_NAME" property="placeName" />
+		<result column="GOODS_TYPE_NAME" property="goodsTypeName" />
+		<result column="FIELD" property="field" />
+		<result column="SEND_REGION" property="sendRegion"/>
+		<result column="SEND_SERVER" property="sendServer"/>
+		<result column="SEND_RACE" property="sendRace"/>
+		<association property="gameInfo" javaType="com.wzitech.gamegold.common.dto.GameInfoDTO">
+			<result column="GAME_NAME" property="gameName" />
+			<result column="GAME_REGION" property="gameRegion" />
+			<result column="GAME_SERVER" property="gameServer" />
+			<result column="GAME_RACE" property="gameRace" />
+			<result column="GAME_ID" property="gameId" />
+			<result column="REGION_ID" property="gameRegionId" />
+			<result column="SERVER_ID" property="gameServerId" />
+			<result column="RACE_ID" property="gameRaceId" />
+		</association>
+		<association property="buyerInfo" javaType="com.wzitech.gamegold.order.dto.BuyerInfoDTO">
+			<result column="BUYER_ACCOUNT" property="account" />
+			<result column="BUYER_MOBILE_NUMBER" property="phone" />
+			<result column="BUYER_QQ" property="qq" />
+			<result column="BUYER_GAME_ROLE" property="gameRole" />
+			<result column="BUYER_GAME_LEVEL" property="gameLevel" />
+		</association>
+		<association property="sellerInfo" javaType="com.wzitech.gamegold.order.dto.SellerInfoDTO">
+			<result column="SELLER_ACCOUNT" property="account" />
+			<result column="IS_HELPER" property="isHelper" />
+		</association>
+		<association property="serviceInfo" javaType="com.wzitech.gamegold.usermgmt.dto.CustomerServiceDTO">
+			<result column="ID" property="id" />
+			<result column="SERVICE_NAME" property="name" />
+			<result column="REAL_NAME" property="realName" />
+			<result column="SERVICE_ACCOUNT" property="account" />
+			<result column="SERVICE_QQ" property="qq" />
+			<result column="SERVICE_WEIXIN" property="weixin" />
+			<result column="SERVICE_PHONE" property="phone" />
+		</association>
+	</resultMap>
+
+	<sql id="whereCondition">
+		<where>
+			<if test="sellerAccount != null and sellerAccount != ''">
+				AND "SELLER_ACCOUNT" = #{sellerAccount}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND "ORDER_ID" = #{orderId}
+			</if>
+			<if test="subOrderId != null and subOrderId != ''">
+				AND "ID" = #{subOrderId}
+			</if>
+			<if test="gameName != null and gameName != ''">
+				AND "GAME_NAME" = #{gameName}
+			</if>
+			<if test="gameRegion != null and gameRegion != ''">
+				AND "GAME_REGION" = #{gameRegion}
+			</if>
+			<if test="gameServer != null and gameServer != ''">
+				AND "GAME_SERVER" = #{gameServer}
+			</if>
+			<if test="gameRace != null and gameRace != ''">
+				AND "GAME_RACE" = #{gameRace}
+			</if>
+			<if test="isDeleted != null">
+				AND "IS_DELETED" = #{isDeleted}
+			</if>
+			<if test="isConsignment != null">
+				AND "IS_CONSIGNMENT" = #{isConsignment}
+			</if>
+			<if test="state != null">
+				AND "STATE" = #{state}
+			</if>
+			<if test="startCreateTime != null">
+				AND "CREATE_TIME" >= #{startCreateTime}
+			</if>
+			<if test="endCreateTime != null">
+				<![CDATA[
+				AND "CREATE_TIME" <= #{endCreateTime}
+				]]>
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectByMap" parameterType="Map" resultMap="SubOrderDetailResultMap">
+		SELECT *
+		FROM "SUB_ORDER_DETAIL"
+		<include refid="whereCondition" />
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<select id="countByMap" parameterType="map" resultType="int">
+		SELECT COUNT(1) FROM "SUB_ORDER_DETAIL"
+		<include refid="whereCondition"/>
+	</select>
+
+	<!-- 查询卖家订单列表-->
+	<select id="selectSellerOrder" parameterType="Map" resultMap="SubOrderDetailResultMap">
+		SELECT "ID", "ORDER_ID", "GOODS_CAT", "TITLE", "GAME_NAME", "GAME_REGION",
+			"GAME_SERVER", "GAME_RACE", "GAME_ID", "REGION_ID", "SERVER_ID",
+			"RACE_ID", "BUYER_GAME_LEVEL","BUYER_GAME_ROLE", "TRADE_TYPE",
+			"SERVICER_ID", "SERVICE_NAME", "REAL_NAME", "SERVICE_ACCOUNT", "SERVICE_QQ",
+			"SERVICE_WEIXIN", "SERVICE_PHONE", "SELLER_ACCOUNT", "CONFIG_GOLD_COUNT",
+			"ORDER_UNIT_PRICE", "REPOSITORY_UNIT_PRICE", "GOLD_UNIT", "TOTAL_PRICE",
+			"TRADER_ID", "INCOME", "COMMISSION", "BALANCE", "IS_DELETED",
+			"STATE", "CONFIG_TIME", "IS_CONSIGNMENT", "IS_HELPER", "CREATE_TIME",
+			"PAY_TIME", "END_TIME", "PLACE_NAME", "GOODS_TYPE_NAME", "FIELD","SEND_REGION","SEND_SERVER","SEND_RACE"
+		FROM "SUB_ORDER_DETAIL"
+		<include refid="whereCondition" />
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+
+	<!-- 查询卖家订单列表，提供少量字段 -->
+	<select id="selectSellerSimpleOrder" parameterType="Map" resultMap="SubOrderDetailResultMap">
+		SELECT "ID", "ORDER_ID", "TITLE", "GAME_NAME", "GAME_REGION", "GAME_SERVER", "GAME_RACE",
+			"BUYER_GAME_ROLE", "BUYER_GAME_LEVEL", "SELLER_ACCOUNT", "SERVICE_NAME",
+			"SERVICE_QQ", "CONFIG_GOLD_COUNT", "REPOSITORY_UNIT_PRICE", "GOLD_UNIT", "TOTAL_PRICE",
+			"IS_DELETED", "STATE", "IS_CONSIGNMENT", "IS_HELPER", "CREATE_TIME",
+			"PAY_TIME", "END_TIME", "TRADE_TYPE","PLACE_NAME","SEND_REGION","SEND_SERVER","SEND_RACE"
+		FROM "SUB_ORDER_DETAIL"
+		<include refid="whereCondition" />
+		<if test="ORDERBY != null and ORDERBY != ''">
+			ORDER BY "${ORDERBY}"
+		</if>
+		<if test="ORDER != null and ORDER != ''">
+			${ORDER}
+		</if>
+		<if test="limit != null">
+			LIMIT #{limit}
+		</if>
+		<if test="start != null">
+			OFFSET #{start}
+		</if>
+	</select>
+</mapper>

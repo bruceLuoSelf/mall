@@ -1,0 +1,66 @@
+package com.wzitech.gamegold.facade.frontend.service.repository.impl;
+
+import com.wzitech.chaos.framework.server.common.AbstractBaseService;
+import com.wzitech.chaos.framework.server.common.IServiceResponse;
+import com.wzitech.chaos.framework.server.common.ResponseStatus;
+import com.wzitech.chaos.framework.server.common.exception.SystemException;
+import com.wzitech.gamegold.common.entity.SortField;
+import com.wzitech.gamegold.common.enums.ResponseCodes;
+import com.wzitech.gamegold.facade.frontend.service.repository.IQueryRepositoryService;
+import com.wzitech.gamegold.facade.frontend.service.repository.dto.QueryLowestPriceRequest;
+import com.wzitech.gamegold.facade.frontend.service.repository.dto.QueryLowestPriceResponse;
+import com.wzitech.gamegold.repository.business.IRepositoryManager;
+import com.wzitech.gamegold.repository.entity.RepositoryInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by 335854 on 2015/7/10.
+ */
+@Service("QueryRepositoryService")
+@Path("queryRepository")
+@Produces("application/json;charset=UTF-8")
+@Consumes("application/json;charset=UTF-8")
+public class QueryRepositoryServiceImpl extends AbstractBaseService implements IQueryRepositoryService{
+    @Autowired
+    IRepositoryManager repositoryManager;
+
+    @Path("queryLowestPriceListservice")
+    @Override
+    @GET
+    public IServiceResponse queryLowestPriceList(@QueryParam("")QueryLowestPriceRequest queryLowestPriceRequest, @Context HttpServletRequest request) {
+        logger.debug("当前获取最低价库存请求信息:{}", queryLowestPriceRequest);
+        // 初始化返回数据
+        QueryLowestPriceResponse response = new QueryLowestPriceResponse();
+        ResponseStatus responseStatus = new ResponseStatus();
+        response.setResponseStatus(responseStatus);
+        try {
+            String gameName=queryLowestPriceRequest.getGameName();
+            String region=queryLowestPriceRequest.getRegion();
+            String race=queryLowestPriceRequest.getRace();
+
+            List<RepositoryInfo> genericPage = repositoryManager.queryLowerPriceList(gameName,region,race);
+            response.setRepositoryInfos(genericPage);
+            responseStatus.setStatus(ResponseCodes.Success.getCode(), ResponseCodes.Success.getMessage());
+
+        } catch (SystemException ex) {
+            // 捕获系统异常
+            responseStatus.setStatus(ex.getErrorCode(), ex.getArgs()[0].toString());
+            logger.error("最低价库存查询发生异常:{}", ex);
+        } catch (Exception ex) {
+            // 捕获未知异常
+            responseStatus.setStatus(ResponseCodes.UnKnownError.getCode(), ResponseCodes.UnKnownError.getMessage());
+            logger.error("最低价库存查询发生异常:{}", ex);
+        }
+        logger.debug("最低价库存查询响应信息:{}", response);
+        return response;
+    }
+}

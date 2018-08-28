@@ -1,0 +1,502 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<link rel="shortcut icon" href="http://images001.5173cdn.com/images/common/1y/ico.ico">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=7">
+	<title>5173.com-网络游戏|装备|游戏币|游戏帐号|寄售担保交易|游戏点卡|代练-安全快速贴心游戏交易服务平台</title>
+	<link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/fed/build/1.00/css/toolstip.css">
+	<link rel="stylesheet" type="text/css" href="http://images001.5173cdn.com/css/sell/v4/1m/sellflow_v43.css">
+	<link rel="stylesheet" type="text/css" href="http://images001.5173cdn.com/css/common/public_v30.css">
+	<link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/common/build/1.00/css/common1.6-950.css" />
+	<link rel="stylesheet" type="text/css" href="http://img01.5173cdn.com/fed/build/1.00/css/fed.css" />
+	<link rel="stylesheet" type="text/css" href="http://images001.5173cdn.com/css/sell/v4/1m/sellflow_v43.css">
+	<link rel="stylesheet" type="text/css" href="./js/easyui/themes/bootstrap/easyui.css">
+	<link rel="stylesheet" type="text/css" href="./js/easyui/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="css/service_add.css?v=1">
+	<link rel="stylesheet" type="text/css" href="css/createorder1.css?v=1">
+	<script src="./js/jquery.js" type="text/javascript"></script>
+	<script src="./js/jquery-migrate-1.2.1.js" type="text/javascript"></script>
+	<script src="./js/jquery.cookie.js" type="text/javascript"></script>
+	<script src="./js/jquery.json-2.4.min.js" type="text/javascript"></script>
+	<script src="./js/easyui/easyui.js" type="text/javascript"></script>
+	<script src="./js/business/common2.js" type="text/javascript"></script>
+	<script src="./js/jquery.raty.min.js" type="text/javascript"></script>
+	<script src="./js/business/createorder1.js?v=3" type="text/javascript"></script>
+
+	<!-- urchin -->
+	<script>document.domain= "5173.com";</script>
+	<script src="http://urchin.5173.com/urchin.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		try {
+			_userv = 2;
+			_udn = ".5173.com";
+			_uacct = "UA-16260521-1";
+			urchinTracker();
+		} catch (err) { }
+	</script>
+</head>
+<body>
+<!-- Header Start -->
+<div class="header">
+	<!-- 顶部登陆条+快捷菜单条 -->
+	<div class="top">
+		<div class="top_box clearfix">
+			<!-- 未登录状态 -->
+			<ul class="top_left" id="loginList">
+				<li>您好！</li>
+				<li><a href="https://passport.5173.com/?returnUrl=http://www.5173.com">请登录</a></li>
+				<li><a href="https://passport.5173.com/Partner/LoginFrom?appNo=qq&returnUrl=http://www.5173.com" class="qq_login f_666">QQ登录</a></li>
+				<li><a href="https://passport.5173.com/user/register">免费注册</a></li>
+			</ul>
+			<ul class="top_right" id="topRight">
+				<li>
+					<a href="http://user.5173.com/default.aspx">买家中心<s class="like_arrow_down black_arrow"></s><em class="line">|</em></a>
+					<div class="sub_box">
+						<ul class="user_list">
+							<li><a href="http://trading.5173.com/list/viewmyorderlist.aspx">我购买的商品</a></li>
+							<li><a href="http://yxbmall.5173.com/myorders.html">我的商城订单</a></li>
+							<li><a href="http://trading.5173.com">购买</a></li>
+							<li><a href="https://mypay.ebatong.com/charge/chargeebank.aspx?flag=1">充值</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="http://user.5173.com/default.aspx">卖家中心<s class="like_arrow_down black_arrow"></s><em class="line">|</em></a>
+					<div class="sub_box">
+						<ul class="user_list">
+							<li><a href="http://trading.5173.com/list/myorder_manage.aspx">我的订单管理</a></li>
+							<li><a href="http://trading.5173.com/list/viewmybizofferslist2.aspx">出售中的商品</a></li>
+							<li><a href="http://trading.5173.com/list/viewpausedbizofferslist.aspx">仓库中的商品</a></li>
+							<li><a href="http://trading.5173.com/list/ViewLastestDealList.aspx">最新成交价格</a></li>
+							<li><a href="http://trading.5173.com/auction/newpublish.aspx">出售</a></li>
+							<li><a href="https://mypay.ebatong.com/charge/userwithdrawal.aspx">提现</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="mark_cart" id="markCart">
+					<a href="http://trading.5173.com/list/viewmyshoppingcart.aspx" target="_blank">
+						<s class="icon_cart"></s>购物车&nbsp;<b class="num">0</b>&nbsp;件<em class="line">|</em>
+					</a>
+				</li>
+				<li>
+					<a href="http://kf.5173.com/" target="_blank">客服中心<s class="like_arrow_down black_arrow"></s><em class="line">|</em></a>
+					<div class="sub_box">
+						<ul class="support_list">
+							<li><a href="http://sc.5173.com" target="_blank">咨询中心</a></li>
+							<li><a href="http://safe.5173.com" target="_blank">安全中心</a></li>
+							<li><a href="http://aid.5173.com/" target="_blank">帮助中心</a></li>
+							<li><a href="http://ask.5173.com/question.aspx" target="_blank">我要提问</a></li>
+							<li><a href="http://bar.5173.com/showforum-357.aspx" target="_blank">投诉建议</a></li>
+						</ul>
+						<div class="support_qq">
+							<p>
+								<strong>7×24小时QQ咨询</strong>
+							</p>
+							<a href="http://wpa.qq.com/msgrd?v=3&uin=4002885173&site=qq&menu=yes" target="_blank" class="btn_qq">立即咨询</a>
+						</div>
+					</div>
+				</li>
+				<li>
+					<a href="#">网站导航<s class="like_arrow_down black_arrow"></s><em class="line">|</em></a>
+					<div class="sub_box map_box">
+						<dl class="map_list">
+							<dt>商品类</dt>
+							<dd>
+								<a href="http://yxb.5173.com/default.aspx">游戏币</a>
+							</dd>
+							<dd>
+								<a href="http://gameid.5173.com/index.aspx">帐号</a>
+							</dd>
+							<dd>
+								<a href="http://dkjy.5173.com/IndexV3.aspx">点卡</a>
+							</dd>
+							<dd>
+								<a href="http://zb.5173.com">装备</a>
+							</dd>
+							<dd>
+								<a href="http://dlc2c.5173.com">代练</a>
+							</dd>
+							<dd>
+								<a href="http://webgame.5173.com/ChannelHome.aspx">网页游戏</a>
+							</dd>
+							<dd>
+								<a href="http://zzjy.5173.com">棋牌游戏</a>
+							</dd>
+							<dd>
+								<a href="http://quan.5173.com">消费券</a>
+							</dd>
+						</dl>
+						<dl class="map_list">
+							<dt>服务类</dt>
+							<dd>
+								<a href="http://51tao.5173.com">51淘</a>
+							</dd>
+						</dl>
+						<dl class="map_list last_dl">
+							<dt>其他</dt>
+							<dd>
+								<a href="http://html.5173.com/operation/201106/0630sj/index.html" target="_blank">手机5173</a>
+							</dd>
+							<dd>
+								<a href="http://news.5173.com/" target="_blank">游戏资讯</a>
+							</dd>
+							<dd>
+								<a href="http://bar.5173.com/" target="_blank">论坛</a>
+							</dd>
+						</dl>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<!--网站Logo+四级联动搜索条-->
+<div class="header_box clearfix">
+	<h1 class="logo">
+		<a href="http://www.5173.com" title="中国网络游戏服务网">5173</a>
+	</h1>
+</div>
+
+<div class="flow_v_service">
+	<dl>
+		<dd class="on">
+			<strong>1</strong>选客服填写订单
+		</dd>
+		<dd>
+			<strong>2</strong>支付订单
+		</dd>
+		<dd>
+			<strong>3</strong>收货
+		</dd>
+	</dl>
+</div>
+
+<div class="wrapper_service">
+	<div class="wrapper">
+		<div class="column">
+			<div class="order">
+				<h3>
+					<div class="fleft">1.请选择为您服务的客服</div>
+					<div class="fmid">
+						<div id="serviceTip" class="c1">侠女军团归来，亲爱的，再也不怕看不到美女了！</div>
+					</div>
+					<div class="fright">
+						<input id="search" type="text" placeholder="请输入客服昵称或QQ号" class="i1" />
+						<input id="search_button" type="button" value="搜索" class="i2"/>
+					</div>
+				</h3>
+				<div class="service_list">
+					<div class="chose_service_list"></div>
+					<div class="chose_service_pages">
+						<ul class="chose_servie_ul"></ul>
+					</div>
+					<div class="service_box" class="hide">
+						<div class="service_head">
+							<div class="service_img">
+								<img id="service_avatar" src="img/head.png" />
+							</div>
+							<div class="service_name">公主</div>
+						</div>
+						<div class="service_right">
+							<div class="service_pp">
+								<span class="service_pp_span"></span>
+								<div class="service_word">
+									<!--  <p>感谢您选择我，我会帮您帮您完成购买。</p>-->
+								</div>
+							</div>
+							<div class="service_contact">
+								<span class="chose_service_qq"></span>
+								<span class="service_qq">QQ：</span>
+								<!--<span class="chose_service_phone">手机<strong></strong></span>-->
+								<!--<span class="chose_service_wechat">微信<strong></strong></span>-->
+								<span class="chose_service_yy">YY<strong></strong></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<h3>
+					<div class="fleft">2.填写订单信息</div><div class="fright_1"><span class="orange">*</span> 为必填项</div>
+				</h3>
+				<div class="buyTips">
+					<div>
+						<s class="ico_style ico_warning_1"></s>
+						<span class="title">友情提醒</span>
+					</div>
+					<!--友情提醒-->
+					<div id="buyTipDiv" class="buyTipDiv">
+						<!--地下城-->
+						<div id="remind">
+							1.请正确填写您的收货角色名并选择正确的区服，如果因为上述两个原因错误导致的问题，损失由买家自行承担。<br>
+							2.由于DNF邮寄上限问题，您购买的订单可能分多次邮寄给您，请耐心等待。<br>
+							<b><font color="red">
+								3.如您的角色名有特殊符号或者其它无法正确输入的情况，请查看<a href="http://aid.5173.com/js/buyer/gmsp/951.html" target="_blank" class="fblue">《DNF如何复制角色名》</a>获取帮助。
+							</font></b><br>
+							<b><font color="red">4.角色名请不要带空格，提交发货时会自动去掉，如果因为该原因导致的问题，损失由买家自行承担。</font></b><br>
+							5.商城订单无需填写游戏等级，如果因为该原因导致的问题，损失由买家自行承担。<br>
+							6.因游戏官方问题，邮件会出现延时到账情况，请您退出游戏后重新上号查收。<br>
+						</div>
+						<!--&lt;!&ndash;魔兽世界&ndash;&gt;-->
+						<!--<div id="mssjTipDiv" class="hide">-->
+							<!--1.游戏里如有卖家出现<strong><font color="red">代练、代打、让您输入/script开头的命令（利用游戏漏洞诈骗）</font></strong>或者交易完成后<strong><font color="red">以洗黑金、截图为借口</font></strong>向您取回交易物品的都是骗子，谨防被骗。<br>-->
+							<!--2.购买订单后您只需在交易地点等待工作人员主动交易给您货物，<strong><font color="red">请勿回答任何人的问题</font></strong>。<br>-->
+							<!--3.尊敬的买家，由于魔兽世界游戏币交易的特殊性，建议您在<strong><font color="red">下线之前使用完所购买的游戏币</font></strong>，以免造成不必要的损失。<br>-->
+							<!--4.<strong><font color="red">凡用户购买商城魔兽世界游戏币，3天内游戏币被找回或者被官方没收等，一经查证属实，均由卖家全额赔款</font></strong>。<br>-->
+						<!--</div>-->
+						<!--&lt;!&ndash;剑灵&ndash;&gt;-->
+						<!--<div id="jianlingTipDiv" class="hide">-->
+							<!--①任何一个以<b><font color="red">黑货</font></b>或<b><font color="red">封号</font></b>或<b><font color="red">返利</font></b>等其它理由取回交易商品的人都是骗子，谨防被骗。<br>-->
+							<!--②购买订单后您只需在交易地点等待工作人员主动交易给您货物，请勿回答任何人的问题。<br>-->
+							<!--③游戏内询问您订单信息的全部是骗子，更加不要点击别人发给您的网站或者QQ邮件，均是骗子。<br>-->
+							<!--④游戏内不存在任何5173工作人员.不要在游戏内泄漏自己的QQ号码或者手机号码 。<br>-->
+							<!--交易成功以后,请不要理会任何来联系您的人,有任何疑问请马上通过联系QQ客服。<br>-->
+						<!--</div>-->
+						<!--&lt;!&ndash;QQ三国&ndash;&gt;-->
+						<!--<div id="qqsgTipDiv" class="hide">-->
+							<!--1.该游戏交易地点<b><font color="red">自称工作人员的骗子</font></b>众多，谨防被骗。<br>-->
+							<!--2.购买订单后您只需在交易地点等待工作人员主动交易给您货物，<b><font color="red">请勿回答任何人的问题</font></b>。<br>-->
+							<!--3.任何一个以<b><font color="red">黑货</font></b>或<b><font color="red">其它理由</font></b>取回交易商品的人都是骗子，谨防被骗。-->
+						<!--</div>-->
+						<!--&lt;!&ndash;剑侠情缘3&ndash;&gt;-->
+						<!--<div id="jxqy3TipDiv" class="hide">-->
+							<!--1.为加快交易速度，订单支付成功后，请您在<strong><font color="red">扬州城西面交易区&lt;信使&gt;</font></strong>处等待物服员与您交易。<br>-->
+							<!--2.购买订单后您只需在交易地点等待工作人员主动交易给您货物，<strong><font color="red">请勿回答任何人的问题</font></strong>。<br>-->
+							<!--3.任何一个以<strong><font color="red">黑货</font></strong>或<strong><font color="red">其它理由</font></strong>取回交易商品的人都是骗子，谨防被骗。<br>-->
+							<!--4.请正确填写您的收货角色名并选择正确的区服，如果因为上述两个原因错误导致的问题，损失由买家自行承担。-->
+						<!--</div>-->
+						<!--&lt;!&ndash;疾风之刃&ndash;&gt;-->
+						<!--<div id="jfzrTipDiv" class="hide">-->
+							<!--1. 拍卖交易，请您将挂好的物品截图发给您的接手客服，游戏收取5%的手续费需要买家您承担。<br>2. 该游戏存在携带上限，可点击<strong><font color="red"><a target="_blank" href="http://aid.5173.com/db/tiro/1675.html">【疾风之刃携带上限表】</a></font></strong>查看具体携带金额，如携带上限请及时告知客服，防止邮件金额过多无法取出。<br>3. 拍卖详细请见说明<a target="_blank" href="http://aid.5173.com/sc/jbsc/1787.html">http://aid.5173.com/sc/jbsc/1787.html</a>-->
+						<!--</div>-->
+						<!--&lt;!&ndash;斗战神&ndash;&gt;-->
+						<!--<div id="dzsTipDiv" class="hide">-->
+							<!--1. 商品默认以邮寄方式发送给您，邮寄交易和当面交易游戏运营商都收取<strong><font color="red">3%</font></strong>的手续费<strong><font color="red">（由买家承担）。</font></strong>-->
+						<!--</div>-->
+						<!--&lt;!&ndash;天涯明月刀&ndash;&gt;-->
+						<!--<div id="tymydTipDiv" class="hide">-->
+							<!--1. 为加快交易速度，订单支付成功后，请您确保没有在队伍状态下前往主线<strong><font color="red">杭州拍卖行附近邮差【杭州(1844,458)】</font></strong>处等待交易。<br>-->
+							<!--2. <strong><font color="red">20级</font></strong>以下角色不可进行交易，建议您升到<strong><font color="red">20级</font></strong>以上进行购买。<br>-->
+							<!--3. 游戏不支持邮寄,请您上游戏交易。<br>-->
+							<!--4. 商家会采用等价或拍卖方式交易，请配合商家进行交易，如果出现被劫金风险，将由商家承担处理，确保您安全无忧的买到金币。如未能遵循卖家的操作，导致的损失将由您本人承担（<strong><font color="red">拍卖行所产生的手续费由买家自行承担。</font></strong>） <br>-->
+							<!--5. <a href="http://aid.5173.com/sc/jbsc/1780.html" target="_blank">天涯明月刀收购和拍卖估价交易步骤说明。</a>-->
+						<!--</div>-->
+						<!--&lt;!&ndash;龙之谷&ndash;&gt;-->
+						<!--<div id="lzgTipDiv" class="hide">-->
+							<!--1. 游戏币交易，游戏运营商收取<strong><font color="red">n*0.3%</font></strong>的手续费<strong><font color="red">（手续费由买家承担）。</font></strong><br>注：n=游戏币数量 单位：金<br>-->
+							<!--2. 为快速交易，请您支付后及时在交易地点等候并加接手客服QQ进行交易，感谢您的配合<br/>-->
+							<!--3. 建议您使用45级以上角色收货，以免携带达到上限导致邮件无法取出。<br/>-->
+							<!--4. 如何复制自身角色名：<a href="http://aid.5173.com/js/yxzysx/1781.html" target="_blank">http://aid.5173.com/js/yxzysx/1781.html</a><br/>-->
+							<!--5. 角色名前后请不要带空格，提交时会自动去掉，如果因为该原因导致的问题，损失由买家自行承担<br/>-->
+						<!--</div>-->
+						<!--&lt;!&ndash;上古世纪&ndash;&gt;-->
+						<!--<div id="sgsjTipDiv" class="hide">-->
+							<!--1.该游戏默认支持邮寄交易，请您注意查收邮件,并定期清理您的邮件数量。<br/>-->
+							<!--2.由于该游戏采取邮寄交易，请在购买时核实选择的区服是否正确，若因选错区服导致的损失，由买家承担。-->
+						<!--</div>-->
+						<!--&lt;!&ndash;怪物猎人OL&ndash;&gt;-->
+						<!--<div id="gulrolTipDiv" class="hide">-->
+							<!--1.游戏限制未满20级不允许进行交易或者邮寄，请您使用20级以上的角色进行购买，以免无法交易给您带来损失。<br/>-->
+							<!--2.请正确填写您的收货角色名并选择正确的区服，如果因为上述两个原因错误导致的问题，损失由买家自行承担。<br/>-->
+							<!--3.订单默认邮寄给您，如卖家角色邮寄上限，将通过当面交易进行交易，请及时联系客服获取交易地点，以便尽快完成交易。-->
+						<!--</div>-->
+						<!--&lt;!&ndash;冒险岛&ndash;&gt;-->
+						<!--<div id="mxd2TipDiv" class="hide">-->
+							<!--请选择您的交易方式，交易方式共分为2种，无论通过哪种方式进行交易，税费都由买家承担，还请您知晓。<br/>-->
+							<!--1丶黑市交易：请您在黑市上架一件随意物品，上架数量按照购买商品数量，上架后请将上架物品名称或者上架物品截图及时发给客服（游戏内黑市收取买家5%手续费，每天只有5次上架次数）。<br/>-->
+							<!--2丶当面交易：如选择当面交易，建议您选择有会员的号联系客服进行交易哦，游戏税：会员5%，非会员10%。-->
+						<!--</div>-->
+					</div>
+				</div>
+				<form id="orderForm" method="post">
+					<table class="orderTable">
+						<tr>
+							<td class="lab"><label>游戏信息：</label></td>
+							<td>
+								<div class="goodsInfo">
+									<!--区服信息-->
+									<span id="goodsServerInfo" class="c1"></span>
+									<span>单价：</span>
+									<span id="goodsUnitPrice" class="c1"></span>
+									<span>剩余库存：</span>
+									<span id="goodsRepository" class="c1"></span>
+								</div>
+							</td>
+						</tr>
+						<tr id="tradeTypeLine" class="hide">
+							<td><label>交易方式：</label><i class="need_star">*</i></td>
+							<td>
+								<input type="radio" id="tradeType1" name="tradeType" value="1" checked="checked" class="t2">
+								<label for="tradeType1" class="radioLabel">当面交易</label>
+							</td>
+						</tr>
+						<tr>
+							<td><label>购买方式：</label><i class="need_star">*</i></td>
+							<td>
+								<input id="buycount" name="buyway" type="radio" value="buycount" checked="checked" class="t2"/>
+								<label for="buycount" class="radioLabel">按数量购买</label>
+								<input id="buyyuan" name="buyway" type="radio" value="buyyuan" class="t2"/>
+								<label for="buyyuan" class="radioLabel">按元购买</label>
+							</td>
+						</tr>
+						<tr>
+							<td><label id="buyWayLabel">购买数量：</label><i class="need_star">*</i></td>
+							<td>
+								<!--购买的游戏币数量或购买金额-->
+								<input type="text" name="buycount" class="t1" maxlength="8"/>
+								<!--单位-->
+								<span id="buyWayUnitSpan"></span>
+								<span class="dnfYouJiName" style="color:red;margin-left: 10px;display:none;">邮寄产生5%左右的税费由买家承担。</span>
+							</td>
+						</tr>
+						<tr id="gamegold_count_line" class="hide">
+							<!--按元购买显示可以兑换多少游戏币数量-->
+							<td><label>购买数量：</label></td>
+							<td><span id="gamegold_count" class="gamegold_count"></span></td>
+						</tr>
+						<tr id="selectReceivingRolesLine" class="hide">
+							<td><label>我的收货角色名：</label><i class="need_star">*</i></td>
+							<td>
+								<select id="receivingRolesCombo" class="gameRoleList">
+									<option value="-1">请选择您的收货角色名</option>
+								</select>
+								<span class="dnfYouJiFirst" style="color:red;margin-left: 10px;display:none;">暂不支持跨区交易，请用本区角色名进行购买。</span>
+							</td>
+						</tr>
+						<tr id="inputReceivingRoleLine1">
+							<td><label>填写收货角色名：</label><i class="need_star">*</i></td>
+							<td>
+								<input type="text" name="receivingRole1" value="" placeholder="请填写收货的游戏角色名" maxlength="40" class="t1"/>
+								<span class="dnfYouJi" style="color:red;margin-left: 10px;display:none;">暂不支持跨区交易，请用本区角色名进行购买。</span>
+							</td>
+						</tr>
+						<tr id="inputReceivingRoleLine2">
+							<td><label>确认收货角色名：</label><i class="need_star">*</i></td>
+							<td><input type="text" name="receivingRole2" value="" placeholder="请确认收货的游戏角色名" maxlength="40" class="t1"/></td>
+						</tr>
+						<tr id="gameRoleLevelLine" class="hide">
+							<td><label>收货角色等级：</label><i class="need_star">*</i></td>
+							<td><input type="text" name="roleLevel" placeholder="请填写收货角色等级" maxlength="5" class="t1"/></td>
+						</tr>
+						<tr id="account_numberId" class="hide" >
+							<td><label>收货角色数字ID：</label><i class="need_star">*</i></td>
+							<td><input type="text" name="accountNumberID" placeholder="请填写收货角色数字ID" maxlength="35" class="t1"/></td>
+						</tr>
+						<tr>
+							<td><label>您的电话：</label><i class="need_star">*</i></td>
+							<td>
+								<input type="text" name="phone" maxlength="13" class="t1"/>
+							</td>
+						</tr>
+						<tr id="qq">
+							<td><label>您的ＱＱ：</label><i class="need_star">*</i></td>
+							<td>
+								<input type="text" name="qq" maxlength="14" class="t1">
+							</td>
+						</tr>
+						<tr style="display: none;">
+							<td><label>优惠券：</label></td>
+							<td>
+								<span>
+									<input type="checkbox" id="useRedEnvelope" name="useRedEnvelope" value="useRedEnvelope"/>
+									<label for="useRedEnvelope" class="radioLabel">使用红包</label>
+								</span>
+								<span id="useShopCouponContainer" class="hide">
+									<input type="checkbox" id="useShopCoupon" name="useShopCoupon" value="useShopCoupon"/>
+									<label for="useShopCoupon" class="radioLabel">使用店铺券</label>
+								</span>
+								<!--使用红包窗口-->
+								<div id="redEnvelopeDialog" class="discountCoupon">
+									<p>红包号码：<i class="need_star">*</i>&nbsp;<input type="text" name="redEnvelopeCode" value="" maxlength="20"/></p>
+									<p>红包密码：<i class="need_star">*</i>&nbsp;<input type="password" name="redEnvelopePwd" value="" maxlength="20"/></p>
+									<p class="btn_line"><a id="btn_use_red_envelope" href="javascript:void(0);" class="easyui-linkbutton btn_1">确认</a></p>
+								</div>
+								<!--使用店铺券窗口-->
+								<div id="shopCouponDialog" class="discountCoupon">
+									<p>店铺券号码：<i class="need_star">*</i>&nbsp;<input type="text" name="shopCouponCode" value="" maxlength="20"/></p>
+									<p>店铺券密码：<i class="need_star">*</i>&nbsp;<input type="password" name="shopCouponPwd" value="" maxlength="20"/></p>
+									<p class="btn_line"><a id="btn_use_shop_coupon" href="javascript:void(0);" class="easyui-linkbutton btn_1">确认</a></p>
+								</div>
+							</td>
+						</tr>
+						<!--显示使用的优惠券号码-->
+						<tr id="discountCouponLine" class="hide">
+							<td></td>
+							<td>
+								<!--显示红包和店铺券的号码和金额-->
+								<span class="hongbao" class="hide"></span>
+								<span class="dianpuquan" class="hide"></span>
+							</td>
+						</tr>
+						<tr id="spbzx_title" class="hide">
+							<td colspan="2">
+								<div class="spbzx">
+									<span class="title">安心买</span>
+									<span class="pic1">&nbsp;</span>
+									<!--<span>（本商品由中国人寿财险承保）</span>-->
+								</div>
+							</td>
+						</tr>
+						<tr id="spbzx_content" class="hide">
+							<td><label>安心买：</label></td>
+							<td>
+								<input id="picc_1" type="radio" name="picc" value="buyPicc" >
+								<label for="picc_1" class="radioLabel">购买</label>
+								<input id="picc_2" type="radio" name="picc" value="notBuyPicc" >
+								<label for="picc_2" class="radioLabel">不购买</label>
+                                <span>
+                                    服务费：<span id="spbzx_amount" class="spbzx_amount">0</span>元
+                                </span>
+								<div style="float:right">
+									<a target="_blank" href="http://aid.5173.com/tese/safe/1816.html">《安心买》</a>
+								</div>
+							</td>
+						</tr>
+						<tr id="spbzx_info" class="hide">
+							<td></td>
+							<td>
+								<div class="spbzx_tips">
+									<s class="ico_style ico_warning_1"></s>
+									购买后，如出现商品被回收、被找回、被封号，卖家承诺最高可退您所购买的订单金额。购买前请您仔细阅读《安心买》，购买即表示您已阅读并同意所有条款。
+									<!--<span id="spbzx_pf_amount"></span>-->
+								</div>
+							</td>
+						</tr>
+						<tr style="height:15px;">
+							<td colspan="2"></td>
+						</tr>
+						<tr>
+							<td><label id="orderCount">订单金额：</label></td>
+							<td>
+								<span class="service_price" id="orderAmount"><strong>0</strong>.00元</span>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<div style="margin-top:20px;">
+									<a id="submitOrder" class="a_service_confirm" href="javascript:void(0)"><span>立即付款</span></a>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="progress" class="post_progress" style="border: 0px;">
+	<img src="./img/loading.gif" style="vertical-align:middle;"/>
+	正在加载付款页面，请稍等......
+</div>
+<!--<div id="progress2" class="post_progress2" style="border: 0px;">
+	您没有挑选客服，系统将自动为您分配一位客服
+	<div>
+		<span id="progress2_time" class="countdown">5</span>秒后将加载付款页面，请稍等......
+	</div>
+</div>-->
+
+<script type="text/javascript" src="http://img01.5173cdn.com/fed/build/1.00/js/fed1.6-950.js"></script>
+</body>
+</html>
